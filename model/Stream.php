@@ -12,7 +12,7 @@ class Stream {
     public function getList() {
 
         $data = [];
-        $sql = "SELECT ROWID, * FROM posts ORDER BY created DESC";
+        $sql = "SELECT * FROM posts ORDER BY created DESC";
         foreach($this->db->query($sql) as $row) {
             $data[] = $row;
         }
@@ -21,7 +21,7 @@ class Stream {
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM posts WHERE rowid = :id";
+        $sql = "DELETE FROM posts WHERE id = :id";
         $statement = $this->db->prepare($sql);
         $statement->bindParam(':id', $id);
         $statement->execute();
@@ -29,7 +29,7 @@ class Stream {
 
     public function save($id, $data) {
         if($id !== NULL) {
-            $sql = "UPDATE posts SET title = :title, body = :body WHERE ROWID = :id";
+            $sql = "UPDATE posts SET title = :title, body = :body WHERE id = :id";
         } else {
             $sql = "INSERT INTO posts (title, body) VALUES(:title, :body)";
         }
@@ -45,7 +45,7 @@ class Stream {
     }
 
     public function getById($id) {
-        $statement = $this->db->prepare("SELECT ROWID, * FROM posts WHERE ROWID = :id");
+        $statement = $this->db->prepare("SELECT * FROM posts WHERE id = :id");
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
         $statement->execute();
         $row = $statement->fetch();

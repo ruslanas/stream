@@ -8,9 +8,6 @@ class DebugController extends Controller {
     }
 
     public function info() {
-        // custom C++ extension test
-        echo 'Viewed:'.ring();
-
         phpinfo();
     }
 }

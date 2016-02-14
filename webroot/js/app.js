@@ -19,7 +19,7 @@ app.controller('MainController', ['Post', function(Post) {
     this.delete = function(post) {
         post.$delete(function(res) {
             self.posts = self.posts.filter(function(el) {
-                return el.rowid !== res.rowid;
+                return el.id !== res.id;
             });
         }, function(res) {
             console.log(res);
@@ -28,10 +28,9 @@ app.controller('MainController', ['Post', function(Post) {
 }]);
 
 app.factory('Post', ['$resource', function($resource) {
-    return $resource('/posts/:id.json', {id: '@rowid'}, {
+    return $resource('/posts/:id.json', {id: "@id"}, {
         query: {
             method: 'GET',
-            params: {},
             isArray: true
         },
         delete: {

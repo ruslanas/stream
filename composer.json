@@ -1,8 +1,5 @@
 {
     "require": {
         "league/plates": "^3.1"
-    },
-    "autoload": {
-        "psr-4": {"R\\Blog": "R/"}
     }
 }
