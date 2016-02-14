@@ -45,11 +45,10 @@ spl_autoload_register(function($class_name) {
 });
 
 require_once 'index.php';
-
 try {
     $app->dispatch($_SERVER['REQUEST_URI']);
 } catch (NotFoundException $e) {
     die($e->getMessage());
 } catch (Exception $e) {
-    die('Fatal error: '.$e->getMessage());
+    die('Fatal error: '.$e->getTraceAsString());
 }

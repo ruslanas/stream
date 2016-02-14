@@ -2,6 +2,10 @@
 
 class NotFoundException extends Exception { }
 
+/**
+ * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
+ * @link http://github.com/ruslanas/stream/App.php
+ */
 class App {
 
     private $get_handlers = [];
@@ -10,13 +14,32 @@ class App {
     private $put_handlers = [];
     private $cache;
 
-    private $config = [
-        'cache_ttl' => 60
+    private static $instance = null; // shared instance
+
+    private $_config = [
+        'cache_ttl' => 60,
+        'template_path' => 'templates'
     ];
 
+    public static function getInstance() {
+        if(static::$instance === null) {
+            static::$instance = new App();
+        }
+        return static::$instance;
+    }
+
     public function __construct($config = []) {
-        $this->config = array_merge($this->config, $config);
+        $this->_config = array_merge($this->_config, $config);
         $this->cache = new Cache();
+        static::$instance = $this;
+    }
+
+    public function __get($name) {
+        if(isset($this->_config[$name])) {
+            return $this->_config[$name];
+        }
+        //throw new Exception("Not configurable `".$name."`");
+        return null;
     }
 
     public function dispatch($uri) {
@@ -59,7 +82,7 @@ class App {
 
                 if($method == 'GET') {
                     ob_start(function ($buffer) use ($uri) {
-                        $this->cache->store($uri, $buffer, $this->config['cache_ttl']);
+                        $this->cache->store($uri, $buffer, $this->cache_ttl);
                         return $buffer;
                     });
                 }
@@ -77,12 +100,6 @@ class App {
         throw new NotFoundException("Could not ".$method.' '.$uri);
 
     }
-
-    // public function __call($method, $arguments) {
-    //     if($method == 'get') {
-    //         $this->get_handlers[$arguments[0]] = $arguments[1];
-    //     }
-    // }
 
     public function get($regexp, Closure $handler) {
         $this->get_handlers[$regexp] = $handler;
