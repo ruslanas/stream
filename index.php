@@ -9,6 +9,8 @@ $app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
     $ctrl->home();
 });
 
+$app->rest('/^\/posts(\/[0-9]+)*\.json$/', 'RestController');
+
 $app->get('/^\/posts\/([0-9]+)$/', function($req) use ($ctrl) {
     $ctrl->view($req[1]);
 });
@@ -21,16 +23,12 @@ $app->post('/^\/edit\/([0-9]+)$/', function($req) use ($ctrl) {
     $ctrl->save($req[1], $_POST);
 });
 
-$app->get('/^\/posts.json$/', function($req) use ($ctrl) {
-    $ctrl->showAll();
+$app->get('/^\/tasks\/add$/', function($req) use ($ctrl) {
+    $ctrl->displayForm();
 });
 
-$app->delete('/^\/posts\/([0-9]+)\.json$/', function($req) use ($ctrl) {
-    $ctrl->delete($req[1]);
-});
-$app->post('/^\/posts\/([0-9]+)\.json$/', function($req) use ($ctrl) {
-    $raw_post_data = file_get_contents('php://input');
-    $ctrl->save($req[1], json_decode($raw_post_data, true), true);
+$app->post('/^\/tasks\/add$/', function($req) use ($ctrl) {
+    $ctrl->save(NULL, $_POST);
 });
 
 $app->get('/^\/debug$/', function($req) {
@@ -41,12 +39,4 @@ $app->get('/^\/debug$/', function($req) {
 $app->get('/^\/debug\/cache/', function($req) {
     $ctrl = new DebugController();
     $ctrl->printHeaders();
-});
-
-$app->get('/^\/tasks\/add$/', function($req) use ($ctrl) {
-    $ctrl->displayForm();
-});
-
-$app->post('/^\/tasks\/add$/', function($req) use ($ctrl) {
-    $ctrl->save(NULL, $_POST);
 });

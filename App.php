@@ -4,9 +4,11 @@ class NotFoundException extends Exception { }
 
 /**
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
- * @link http://github.com/ruslanas/stream/App.php
+ * @link http://github.com/ruslanas/stream/blob/master/App.php
  */
 class App {
+
+    private $_controllers = [];
 
     private $get_handlers = [];
     private $post_handlers = [];
@@ -42,9 +44,22 @@ class App {
         return null;
     }
 
+    /**
+     * Runs first found registered handler that matches request URI
+     *
+     * @throws NotFoundException if handler for request method not registered
+     */
     public function dispatch($uri) {
 
         $method = $_SERVER['REQUEST_METHOD'];
+
+        // try to match ReST controller first
+        $controller = $this->createController($method, $uri);
+
+        if($controller instanceof RestApi) {
+            $controller->$method();
+            return;
+        }
 
         $cached = $this->cache->fetch($uri);
         $headers = getallheaders();
@@ -101,6 +116,17 @@ class App {
 
     }
 
+    private function createController($method, $uri) {
+        foreach($this->_controllers as $regexp => $controller_class) {
+            if(preg_match($regexp, $uri, $matches)) {
+                $controller = new $controller_class();
+                $controller->params = $matches;
+                return $controller;
+            }
+        }
+        return null;
+    }
+
     public function get($regexp, Closure $handler) {
         $this->get_handlers[$regexp] = $handler;
     }
@@ -117,4 +143,7 @@ class App {
         $this->put_handlers[$regexp] = $handler;
     }
 
+    public function rest($regexp, $controller) {
+        $this->_controllers[$regexp] = $controller;
+    }
 }

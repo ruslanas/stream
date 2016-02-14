@@ -4,16 +4,28 @@ app.controller('MainController', ['Post', function(Post) {
     this.title = 'Stream';
     this.posts = Post.query();
     this.loading = false;
+    this.showForm = false;
 
     var self = this;
     this.save = function(post) {
         this.loading = true;
         post.$save(function(res) {
-            this.loading = false;
+            self.loading = false;
         }, function(res) {
-            this.loading = false;
+            self.loading = false;
             console.error(res);
         });
+    };
+
+    this.create = function(post) {
+        var newPost = new Post(post);
+
+        newPost.$save(function(res) {
+            self.showForm = false;
+        }, function(res) {
+            console.error(res);
+        });
+
     };
 
     this.delete = function(post) {

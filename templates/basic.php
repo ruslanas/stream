@@ -20,13 +20,24 @@
 
         <div class="container">
 
-            <a href="/tasks/add">__NEW__</a>
+            <button ng-show="!app.showForm" ng-click="app.showForm = true" class="btn btn-sm btn-default">New message</button>
+            <form ng-show="app.showForm">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input class="form-control" ng-model="post.title"/>
+                </div>
+                <div class="form-group">
+                    <label>Body</label>
+                    <textarea rows="7" class="form-control" ng-model="post.body"></textarea>
+                </div>
+                <button class="btn btn-success" ng-click="app.create(post)">Save</button>
+            </form>
 
             <?php echo $this->section('content');?>
 
             <div ng-show="true" ng-repeat="post in app.posts">
                 <div ng-show="!post.edit">
-                    <h1>{{post.title}}</h1>
+                    <h1>[{{post.id}}] {{post.title}}</h1>
                     <div>{{post.body}}</div>
                 </div>
                 <form ng-show="post.edit">

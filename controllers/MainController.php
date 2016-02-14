@@ -26,21 +26,10 @@ class MainController extends Controller {
         ]);
     }
 
-    public function showAll() {
-        $data = $this->model->getList();
-        echo json_encode($data);
-    }
-
     public function displayForm() {
         echo $this->templates->render('new', [
             'title' => $this->title.'__NEW__'
         ]);
-    }
-
-    public function delete($id) {
-        $item = $this->model->getById($id);
-        $this->model->delete($id);
-        echo json_encode($item);
     }
 
     public function save($id = NULL, $data = [], $ajax = FALSE) {
