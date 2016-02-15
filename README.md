@@ -8,6 +8,18 @@ php -S localhost:9001 router.php
 
 ```
 location / {
-    try_files $uri $uri/ /webroot/$uri router.php;
+    try_files /webroot/$uri router.php;
 }
+```
+
+**Apache configuration**
+
+```
+RewriteEngine On
+
+RewriteCond %{DOCUMENT_ROOT}/webroot/%{REQUEST_URI} -f
+RewriteRule ^(.+) %{DOCUMENT_ROOT}/webroot/$1 [L]
+
+RewriteCond %{REQUEST_URI} !^/webroot*
+RewriteRule ^ router.php [L]
 ```
