@@ -1,7 +1,18 @@
 <?php
 
-$config = ["template_path" => 'templates'];
-$app = new App($config);
+/**
+ * Main program
+ * Configure application and setup request handlers
+ * Application logic is implemented in controllers
+ * Controllers use models to manipulate data and templates to present it to user
+ *
+ * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
+ */
+
+$app = new App([
+    'template_path' => 'templates',
+    'title' => 'Stream'
+]);
 
 $ctrl = new MainController();
 

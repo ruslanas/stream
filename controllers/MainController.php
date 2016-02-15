@@ -1,50 +1,49 @@
 <?php
 
+/**
+ * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
+ */
 class MainController extends Controller {
 
     private $model;
-    private $title = 'Stream';
 
     public function __construct() {
         parent::__construct();
+        $this->templates->addFolder('stream', 'templates/stream');
         $this->model = new Stream();
     }
 
     public function home() {
         $data = $this->model->getList();
-        echo $this->templates->render('home', [
-            'title' => $this->title.'__RECENT__',
+        echo $this->templates->render('stream::home', [
+            'title' => $this->app->title.'__RECENT__',
             'data' => $data
         ]);
     }
 
     public function edit($id = null) {
         $item = $this->model->getById($id);
-        echo $this->templates->render('edit', [
-            'title' => $this->title.'__EDIT__',
+        echo $this->templates->render('stream::edit', [
+            'title' => $this->app->title.'__EDIT__',
             'item' => $item
         ]);
     }
 
     public function displayForm() {
-        echo $this->templates->render('new', [
-            'title' => $this->title.'__NEW__'
+        echo $this->templates->render('stream::new', [
+            'title' => $this->app->title.'__NEW__'
         ]);
     }
 
-    public function save($id = NULL, $data = [], $ajax = FALSE) {
+    public function save($id = NULL, $data = []) {
         $this->model->save($id, $data);
-        if(!$ajax) {
-            $this->redirect('/');
-        } else {
-            echo json_encode($this->model->getById($id));
-        }
+        $this->redirect('/');
     }
 
     public function view($id = null) {
         $item = $this->model->getById($id);
-        echo $this->templates->render('item', [
-            'title' => $this->title.'__VIEW__',
+        echo $this->templates->render('stream::item', [
+            'title' => $this->app->title.'__VIEW__',
             'item' => $item
         ]);
     }

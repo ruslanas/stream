@@ -1,9 +1,4 @@
 <?php
-interface RestApi {
-    public function get();
-    public function post();
-    public function delete();
-}
 
 class RestController extends Controller implements RestApi {
 

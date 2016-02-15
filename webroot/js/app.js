@@ -34,7 +34,8 @@ app.controller('MainController', ['Post', function(Post) {
                 return el.id !== res.id;
             });
         }, function(res) {
-            console.log(res);
+            alert(res.data);
+            console.error(res);
         });
     };
 }]);

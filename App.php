@@ -1,12 +1,11 @@
 <?php
 
-class NotFoundException extends Exception { }
-
 /**
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  * @link http://github.com/ruslanas/stream/blob/master/App.php
  */
-class App {
+
+class App implements AppInterface {
 
     private $_controllers = [];
 
@@ -20,7 +19,8 @@ class App {
 
     private $_config = [
         'cache_ttl' => 60,
-        'template_path' => 'templates'
+        'template_path' => 'templates',
+        'title' => 'App'
     ];
 
     public static function getInstance() {
@@ -44,6 +44,13 @@ class App {
         return null;
     }
 
+    protected function authorize($method, $uri) {
+        if($method == 'DELETE') {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Runs first found registered handler that matches request URI
      *
@@ -52,6 +59,10 @@ class App {
     public function dispatch($uri) {
 
         $method = $_SERVER['REQUEST_METHOD'];
+
+        if(!$this->authorize($method, $uri)) {
+            throw new ForbiddenException("Not allowed");
+        }
 
         // try to match ReST controller first
         $controller = $this->createController($method, $uri);
@@ -64,10 +75,11 @@ class App {
         $cached = $this->cache->fetch($uri);
         $headers = getallheaders();
 
-        $expired = (!empty($headers['Cache-Control'])
+        $revalidate = (!empty($headers['Cache-Control'])
             && strpos($headers['Cache-Control'], 'max-age=0') !== FALSE) ? true : false;
 
-        if(!$expired && $method === 'GET' && !empty($cached)) {
+        // cached and valid
+        if(!$revalidate && $method === 'GET' && !empty($cached)) {
             echo $cached;
             exit;
         }
@@ -144,6 +156,10 @@ class App {
     }
 
     public function rest($regexp, $controller) {
+        $implements = class_implements($controller);
+        if(!in_array('RestApi', $implements)) {
+            throw new Exception("Controller must implement RestApi");
+        }
         $this->_controllers[$regexp] = $controller;
     }
 }

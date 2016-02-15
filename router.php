@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
+ */
+
 if(php_sapi_name() == 'cli-server') {
     if(preg_match('/(?:png|js|css)$/i', $_SERVER['REQUEST_URI'], $matches)) {
 
@@ -27,7 +31,7 @@ if(php_sapi_name() == 'cli-server') {
 
 require 'vendor/autoload.php';
 spl_autoload_register(function($class_name) {
-    $search = ["./", "controllers/", "model/"];
+    $search = ["./", "controllers/", "model/", "interfaces/", "exceptions/"];
     $found = false;
 
     foreach($search as $location) {
@@ -38,17 +42,21 @@ spl_autoload_register(function($class_name) {
             break;
         }
     }
-
-    if(!$found) {
-        throw new Exception("Class not found `{$class_name}` in ".__FILE__.':'.__LINE__);
-    }
 });
 
-require_once 'index.php';
 try {
-    $app->dispatch($_SERVER['REQUEST_URI']);
+
+    require_once 'index.php'; // <-- application setup
+
+    App::getInstance()->dispatch($_SERVER['REQUEST_URI']);
+
 } catch (NotFoundException $e) {
+    http_response_code(404);
     die($e->getMessage());
+} catch (ForbiddenException $e) {
+    http_response_code(401);
+    die("Illegal access: ".$e->getMessage());
 } catch (Exception $e) {
+    http_response_code(500);
     die('Fatal error: '.$e->getTraceAsString());
 }
