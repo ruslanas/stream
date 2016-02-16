@@ -8,7 +8,7 @@
         <script src="/js/app.js"></script>
         <link type="text/css" rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
     </head>
-    <body data-ng-app="blog" data-ng-controller="MainController as app">
+    <body data-ng-app="stream" data-ng-controller="MainController as app">
 
         <nav class="navbar navbar-default">
             <div class="container">
@@ -17,8 +17,7 @@
                 </div>
                 <div>
                     <ul class="nav navbar-nav">
-                        <li><a href="/debug">PHP info</a></li>
-                        <li><a href="/debug/cache">APC</a></li>
+                        <li><a href="/debug/cache">Cache</a></li>
                         <li><a href="/debug/opcache">OpCache</a></li>
                     </ul>
                 </div>

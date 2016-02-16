@@ -11,7 +11,8 @@
 
 $app = new App([
     'template_path' => 'templates',
-    'title' => 'Stream'
+    'title' => 'Stream',
+    'cache_ttl' => '600'
 ]);
 
 $ctrl = new MainController();

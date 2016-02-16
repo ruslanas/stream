@@ -14,6 +14,7 @@ class App implements AppInterface {
     private $post_handlers = [];
     private $delete_handlers = [];
     private $put_handlers = [];
+
     private $cache;
 
     private static $instance = null; // shared instance
@@ -41,7 +42,6 @@ class App implements AppInterface {
         if(isset($this->_config[$name])) {
             return $this->_config[$name];
         }
-        //throw new Exception("Not configurable `".$name."`");
         return null;
     }
 
@@ -55,7 +55,10 @@ class App implements AppInterface {
     /**
      * Runs first found registered handler that matches request URI
      *
+     * @param string $uri Request URI
      * @throws NotFoundException if handler for request method not registered
+     * @throws UnknownMethodException if request method is not allowed
+     * @throws ForbiddenException if user is not authorized
      */
     public function dispatch($uri) {
 
@@ -73,12 +76,6 @@ class App implements AppInterface {
             return;
         }
 
-        $controller = $this->createDomainController($uri);
-        if($controller instanceof DomainControllerInterface) {
-            $controller->dispatch($uri);
-            return;
-        }
-
         $cached = $this->cache->fetch($uri);
         $headers = getallheaders();
 
@@ -88,50 +85,60 @@ class App implements AppInterface {
         // cached and valid
         if(!$revalidate && $method === 'GET' && !empty($cached)) {
             echo $cached;
-            exit;
+            return;
         }
 
-        $this->cache->delete($uri);
+        $controller = $this->createDomainController($uri);
 
-        switch($method) {
-
-            case 'POST':
-                $handlers = &$this->post_handlers;
-                break;
-            case 'GET':
-                $handlers = &$this->get_handlers;
-                break;
-            case 'DELETE':
-                $handlers = &$this->delete_handlers;
-                break;
-            case 'PUT':
-                $handlers = &$this->put_handlers;
-                break;
-            default:
-                throw new Exception($method." not allowed");
+        if($method == 'GET') {
+            ob_start(function ($buffer) use ($uri) {
+                $this->cache->store($uri, $buffer, $this->cache_ttl);
+                return $buffer;
+            });
         }
 
-        foreach($handlers as $regexp => $func) {
-            if(preg_match($regexp, $uri, $matches)) {
+        if($controller instanceof DomainControllerInterface) {
+            $controller->dispatch($uri);
+        } else {
 
-                if($method == 'GET') {
-                    ob_start(function ($buffer) use ($uri) {
-                        $this->cache->store($uri, $buffer, $this->cache_ttl);
-                        return $buffer;
-                    });
-                }
-
-                $func($matches);
-
-                if($method == 'GET') {
-                    ob_end_flush();
-                }
-
-                return;
+            switch($method) {
+                case 'POST':
+                    $handlers = &$this->post_handlers;
+                    break;
+                case 'GET':
+                    $handlers = &$this->get_handlers;
+                    break;
+                case 'DELETE':
+                    $handlers = &$this->delete_handlers;
+                    break;
+                case 'PUT':
+                    $handlers = &$this->put_handlers;
+                    break;
+                default:
+                    ob_end_clean();
+                    throw new UnknownMethodException($method." not allowed");
             }
+
+            $handler = null;
+            foreach($handlers as $regexp => $func) {
+                if(preg_match($regexp, $uri, $matches)) {
+                    $handler = $func;
+                    break;
+                }
+            }
+
+            if($handler === null) {
+                ob_end_clean();
+                throw new NotFoundException("Could not ".$method.' '.$uri);
+            }
+
+            $handler($matches);
+
         }
 
-        throw new NotFoundException("Could not ".$method.' '.$uri);
+        if($method == 'GET') {
+            ob_end_flush();
+        }
 
     }
 
@@ -180,5 +187,9 @@ class App implements AppInterface {
 
     public function domain($name, $controller) {
         $this->_domains[$name] = $controller;
+    }
+
+    public function cache_status() {
+        return $this->cache->status();
     }
 }

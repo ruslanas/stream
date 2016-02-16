@@ -3,6 +3,7 @@
 class DebugController extends Controller implements DomainControllerInterface {
     public function __construct() {
         parent::__construct();
+        $this->model = new Debug();
         $this->templates->addFolder('debug', 'templates/debug');
     }
 
@@ -18,7 +19,7 @@ class DebugController extends Controller implements DomainControllerInterface {
     public function cache() {
         echo $this->templates->render('debug::apc', [
             'title' => $this->app->title.'__APC',
-            'data' => apc_cache_info()
+            'data' => $this->model->catch_info()
         ]);
     }
 

@@ -1,4 +1,4 @@
-var app = angular.module('blog', ['ngResource']);
+var app = angular.module('stream', ['ngResource']);
 app.controller('MainController', ['Post', function(Post) {
 
     this.title = 'Stream';

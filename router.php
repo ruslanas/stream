@@ -56,6 +56,10 @@ try {
 } catch (ForbiddenException $e) {
     http_response_code(401);
     die("Illegal access: ".$e->getMessage());
+} catch (UnknownMethodException $e) {
+    http_response_code(405);
+    header("Allow: GET, POST, DELETE, PUT");
+    die($e->getMessage());
 } catch (Exception $e) {
     http_response_code(500);
     die('Fatal error: '.$e->getMessage());

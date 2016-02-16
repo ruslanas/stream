@@ -7,4 +7,5 @@
  */
 interface AppInterface {
     public function dispatch($uri);
+    static public function getInstance();
 }
