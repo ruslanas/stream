@@ -21,6 +21,7 @@ $app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
 });
 
 $app->rest('/^\/posts(\/[0-9]+)*\.json$/', 'RestController');
+$app->domain('/debug', 'DebugController');
 
 $app->get('/^\/posts\/([0-9]+)$/', function($req) use ($ctrl) {
     $ctrl->view($req[1]);
@@ -40,14 +41,4 @@ $app->get('/^\/tasks\/add$/', function($req) use ($ctrl) {
 
 $app->post('/^\/tasks\/add$/', function($req) use ($ctrl) {
     $ctrl->save(NULL, $_POST);
-});
-
-$app->get('/^\/debug$/', function($req) {
-    $ctrl = new DebugController();
-    $ctrl->info();
-});
-
-$app->get('/^\/debug\/cache/', function($req) {
-    $ctrl = new DebugController();
-    $ctrl->printHeaders();
 });

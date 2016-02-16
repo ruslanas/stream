@@ -8,6 +8,7 @@
 class App implements AppInterface {
 
     private $_controllers = [];
+    private $_domains = [];
 
     private $get_handlers = [];
     private $post_handlers = [];
@@ -69,6 +70,12 @@ class App implements AppInterface {
 
         if($controller instanceof RestApi) {
             $controller->$method();
+            return;
+        }
+
+        $controller = $this->createDomainController($uri);
+        if($controller instanceof DomainControllerInterface) {
+            $controller->dispatch($uri);
             return;
         }
 
@@ -139,6 +146,14 @@ class App implements AppInterface {
         return null;
     }
 
+    private function createDomainController($uri) {
+        foreach($this->_domains as $name => $controller_class) {
+            if(strpos($uri, $name) === 0) {
+                return new $controller_class();
+            }
+        }
+    }
+
     public function get($regexp, Closure $handler) {
         $this->get_handlers[$regexp] = $handler;
     }
@@ -161,5 +176,9 @@ class App implements AppInterface {
             throw new Exception("Controller must implement RestApi");
         }
         $this->_controllers[$regexp] = $controller;
+    }
+
+    public function domain($name, $controller) {
+        $this->_domains[$name] = $controller;
     }
 }

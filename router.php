@@ -58,5 +58,5 @@ try {
     die("Illegal access: ".$e->getMessage());
 } catch (Exception $e) {
     http_response_code(500);
-    die('Fatal error: '.$e->getTraceAsString());
+    die('Fatal error: '.$e->getMessage());
 }

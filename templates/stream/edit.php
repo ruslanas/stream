@@ -1,6 +1,6 @@
 <?php $this->layout('basic', ['title' => $title]); ?>
 
-<form action="/edit/<?php echo $this->e($item['rowid']);?>" method="POST">
+<form action="/edit/<?php echo $this->e($item['id']);?>" method="POST">
     <div class="form-group">
         <label>Title</label>
         <input name="title" class="form-control" type="text" value="<?php echo $this->e($item['title']); ?>" />
