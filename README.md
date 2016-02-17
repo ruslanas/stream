@@ -1,7 +1,7 @@
 **Use PHP built-in server for development**
 
 ```
-php -S localhost:9001 router.php
+php -S localhost:9001 router-dev.php
 ```
 
 **NginX configuration**

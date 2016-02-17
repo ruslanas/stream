@@ -93,12 +93,12 @@ class App implements AppInterface {
 
         $controller = $this->createDomainController($uri);
 
-        if($method == 'GET') {
-            ob_start(function ($buffer) use ($uri) {
+        ob_start(function ($buffer) use ($uri, $method) {
+            if($method == 'GET') {
                 $this->cache->store($uri, $buffer, $this->cache_ttl);
-                return $buffer;
-            });
-        }
+            }
+            return $buffer;
+        });
 
         if($controller instanceof DomainControllerInterface) {
             $controller->dispatch($uri);
@@ -139,9 +139,7 @@ class App implements AppInterface {
 
         }
 
-        if($method == 'GET') {
-            ob_end_flush();
-        }
+        ob_end_flush();
 
     }
 

@@ -13,7 +13,7 @@ app.controller('MainController', ['Post', function(Post) {
             self.loading = false;
         }, function(res) {
             self.loading = false;
-            console.error(res);
+            alert(res.data);
         });
     };
 
@@ -23,7 +23,7 @@ app.controller('MainController', ['Post', function(Post) {
         newPost.$save(function(res) {
             self.showForm = false;
         }, function(res) {
-            console.error(res);
+            alert(res.data);
         });
 
     };
@@ -35,7 +35,6 @@ app.controller('MainController', ['Post', function(Post) {
             });
         }, function(res) {
             alert(res.data);
-            console.error(res);
         });
     };
 }]);
