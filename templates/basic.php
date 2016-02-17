@@ -17,8 +17,14 @@
                 </div>
                 <div>
                     <ul class="nav navbar-nav">
-                        <li><a href="/debug/cache">Cache</a></li>
-                        <li><a href="/debug/opcache">OpCache</a></li>
+                        <?php if($authorized): ?>
+                            <li><a href="/debug/cache">Cache</a></li>
+                            <li><a href="/debug/opcache">OpCache</a></li>
+                            <li><a href="/user/logout">Sign Out</a></li>
+                        <?php else: ?>
+                            <li><a href="/user/add">Register</a></li>
+                            <li><a href="/user/login">Sign In</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>

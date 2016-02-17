@@ -1,4 +1,4 @@
-<?php $this->layout('basic', ['title' => $title]); ?>
+<?php $this->layout('basic'); ?>
 
 <form action="/edit/<?php echo $this->e($item['id']);?>" method="POST">
     <div class="form-group">

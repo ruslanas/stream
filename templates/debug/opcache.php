@@ -1,4 +1,4 @@
-<?php $this->layout('basic', ['title' => $title]); ?>
+<?php $this->layout('basic'); ?>
 <?php var_dump($data['opcache_statistics']);?>
 <table class="table table-condensed table-bordered table-striped">
     <tbody>

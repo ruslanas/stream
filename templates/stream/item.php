@@ -1,4 +1,5 @@
-<?php $this->layout('basic', ['title' => $title]); ?>
+<?php $this->layout('basic'); ?>
+
 <h2><?php echo $this->e($item['title']); ?></h2>
 <?php echo $this->e($item['body']); ?>
 <div>

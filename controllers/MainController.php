@@ -16,7 +16,6 @@ class MainController extends Controller {
     public function home() {
         $data = $this->model->getList();
         echo $this->templates->render('stream::home', [
-            'title' => $this->app->title.'__RECENT__',
             'data' => $data
         ]);
     }
@@ -24,14 +23,12 @@ class MainController extends Controller {
     public function edit($id = null) {
         $item = $this->model->getById($id);
         echo $this->templates->render('stream::edit', [
-            'title' => $this->app->title.'__EDIT__',
             'item' => $item
         ]);
     }
 
     public function displayForm() {
         echo $this->templates->render('stream::new', [
-            'title' => $this->app->title.'__NEW__'
         ]);
     }
 
@@ -43,7 +40,6 @@ class MainController extends Controller {
     public function view($id = null) {
         $item = $this->model->getById($id);
         echo $this->templates->render('stream::item', [
-            'title' => $this->app->title.'__VIEW__',
             'item' => $item
         ]);
     }

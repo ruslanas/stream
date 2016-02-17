@@ -22,6 +22,7 @@ $app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
 });
 
 $app->rest('/^\/posts(\/[0-9]+)*\.json$/', 'RestController');
+$app->domain('/user', 'UserController');
 $app->domain('/debug', 'DebugController');
 
 $app->get('/^\/posts\/([0-9]+)$/', function($req) use ($ctrl) {

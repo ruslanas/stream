@@ -34,6 +34,7 @@ class App implements AppInterface {
 
     public function __construct($config = []) {
         $this->_config = array_merge($this->_config, $config);
+        $this->acl = new Acl();
         $this->cache = new Cache();
         static::$instance = $this;
     }
@@ -46,9 +47,11 @@ class App implements AppInterface {
     }
 
     protected function authorize($method, $uri) {
-        if($method == 'DELETE') {
+
+        if(!$this->acl->allow($method, $uri)) {
             return false;
         }
+
         return true;
     }
 

@@ -1,4 +1,4 @@
-<?php $this->layout('basic', ['title' => $title]);?>
+<?php $this->layout('basic');?>
 
 <button ng-show="!app.showForm" ng-click="app.showForm = true" class="btn btn-sm btn-default">New message</button>
 <form ng-show="app.showForm">
@@ -28,18 +28,20 @@
             <textarea rows="7" class="form-control" ng-model="post.body"></textarea>
         </div>
     </form>
-    <div class="row">
-        <div class="col-xs-6">
-            <button ng-show="!post.edit" ng-click="post.edit = true"
-                    class="btn btn-sm btn-success">Edit</button>
-            <button ng-show="post.edit" ng-click="app.save(post)"
-                    class="btn btn-sm btn-success">Save</button>
-            <button ng-show="post.edit" ng-click="post.edit = false"
-                    class="btn btn-sm btn-danger">Cancel</button>
+    <?php if($authorized): ?>
+        <div class="row">
+            <div class="col-xs-6">
+                <button ng-show="!post.edit" ng-click="post.edit = true"
+                        class="btn btn-sm btn-success">Edit</button>
+                <button ng-show="post.edit" ng-click="app.save(post)"
+                        class="btn btn-sm btn-success">Save</button>
+                <button ng-show="post.edit" ng-click="post.edit = false"
+                        class="btn btn-sm btn-danger">Cancel</button>
+            </div>
+            <div class="col-xs-6 text-right">
+                <button ng-show="!post.edit" ng-click="app.delete(post)"
+                        class="btn btn-sm btn-danger">Delete</button>
+            </div>
         </div>
-        <div class="col-xs-6 text-right">
-            <button ng-show="!post.edit" ng-click="app.delete(post)"
-                    class="btn btn-sm btn-danger">Delete</button>
-        </div>
-    </div>
+    <?php endif;?>
 </div>

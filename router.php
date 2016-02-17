@@ -4,6 +4,7 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
+session_start();
 if(php_sapi_name() == 'cli-server') {
     if(preg_match('/(?:png|js|css)$/i', $_SERVER['REQUEST_URI'], $matches)) {
 

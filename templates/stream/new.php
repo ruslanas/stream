@@ -1,4 +1,5 @@
-<?php $this->layout('basic', ['title' => $title]); ?>
+<?php $this->layout('basic'); ?>
+
 <h1><?= $title ?></h1>
 <form action="/tasks/add" method="POST">
     <div class="form-group">
