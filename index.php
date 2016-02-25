@@ -21,26 +21,7 @@ $app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
     $ctrl->home();
 });
 
-$app->rest('/^\/posts(\/[0-9]+)*\.json$/', 'RestController');
+$app->rest(['/posts.json', '/posts/:id.json'], 'RestController');
+
 $app->domain('/user', 'UserController');
 $app->domain('/debug', 'DebugController');
-
-$app->get('/^\/posts\/([0-9]+)$/', function($req) use ($ctrl) {
-    $ctrl->view($req[1]);
-});
-
-$app->get('/^\/edit\/([0-9]+)$/', function($req) use ($ctrl) {
-    $ctrl->edit($req[1]);
-});
-
-$app->post('/^\/edit\/([0-9]+)$/', function($req) use ($ctrl) {
-    $ctrl->save($req[1], $_POST);
-});
-
-$app->get('/^\/tasks\/add$/', function($req) use ($ctrl) {
-    $ctrl->displayForm();
-});
-
-$app->post('/^\/tasks\/add$/', function($req) use ($ctrl) {
-    $ctrl->save(NULL, $_POST);
-});

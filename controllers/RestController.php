@@ -10,8 +10,8 @@ class RestController extends Controller implements RestApi {
     }
 
     public function get() {
-        if(sizeof($this->params) == 2) {
-            $id = ltrim($this->params[1], '/');
+        if(isset($this->params['id'])) {
+            $id = $this->params['id'];
             $data = $this->model->getById($id);
             echo json_encode($data);
         } else {
@@ -22,11 +22,11 @@ class RestController extends Controller implements RestApi {
 
     public function delete() {
 
-        if(sizeof($this->params) < 2) {
+        if(!isset($this->params['id'])) {
             throw new Exception("Too few parameters");
         }
 
-        $id = ltrim($this->params[1], '/');
+        $id = $this->params['id'];
         $item = $this->model->getById($id);
         $this->model->delete($id);
         echo json_encode($item);
@@ -34,11 +34,7 @@ class RestController extends Controller implements RestApi {
 
     public function post() {
         $raw_post_data = file_get_contents('php://input');
-        if(sizeof($this->params) < 2) {
-            $id = NULL;
-        } else {
-            $id = ltrim($this->params[1], '/');
-        }
+        $id = isset($this->params['id']) ? $this->params['id'] : null;
         $this->model->save($id, json_decode($raw_post_data, true));
         echo json_encode($this->model->getById($id));
     }

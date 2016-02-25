@@ -143,9 +143,25 @@ class App implements AppInterface {
 
     }
 
-    private function createController($method, $uri) {
+    protected function match($parameterized, $uri) {
+        $re = preg_replace('/\:\w*/', '(\w*)', $parameterized);
+        $re = '~'.$re.'~';
+        $count = preg_match_all($re, $uri, $matches);
+        if($count > 0) {
+            preg_match_all('/\:(\w*)/', $parameterized, $parms);
+            $out = [];
+            for($i=1; $i<sizeof($matches); $i++) {
+                $out[$parms[1][$i-1]] = $matches[$i][0];
+            }
+            return $out;
+        }
+        return false;
+    }
+
+    protected function createController($method, $uri) {
         foreach($this->_controllers as $regexp => $controller_class) {
-            if(preg_match($regexp, $uri, $matches)) {
+            $matches = $this->match($regexp, $uri);
+            if($matches !== false) {
                 $controller = new $controller_class();
                 $controller->params = $matches;
                 return $controller;
@@ -154,7 +170,7 @@ class App implements AppInterface {
         return null;
     }
 
-    private function createDomainController($uri) {
+    protected function createDomainController($uri) {
         foreach($this->_domains as $name => $controller_class) {
             if(strpos($uri, $name) === 0) {
                 return new $controller_class();
@@ -178,12 +194,14 @@ class App implements AppInterface {
         $this->put_handlers[$regexp] = $handler;
     }
 
-    public function rest($regexp, $controller) {
+    public function rest($endpoints, $controller) {
         $implements = class_implements($controller);
         if(!in_array('RestApi', $implements)) {
             throw new Exception("Controller must implement RestApi");
         }
-        $this->_controllers[$regexp] = $controller;
+        foreach($endpoints as $ep) {
+            $this->_controllers[$ep] = $controller;
+        }
     }
 
     public function domain($name, $controller) {

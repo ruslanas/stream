@@ -6,7 +6,7 @@ class Acl {
 
     // this method is a stub
     public function allow($method, $uri) {
-        if(!empty($_SESSION['uid']) && !in_array($method, ["DELETE"])) {
+        if(!empty($_SESSION['uid'])) {
             return true;
         }
 
