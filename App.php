@@ -34,6 +34,7 @@ class App implements AppInterface {
 
     public function __construct($config = [], CacheInterface $cache) {
         $this->_config = array_merge($this->_config, $config);
+
         $this->acl = new Acl();
         $this->cache = $cache;
         static::$instance = $this;
@@ -44,6 +45,15 @@ class App implements AppInterface {
             return $this->_config[$name];
         }
         return null;
+    }
+
+    public function connect() {
+        $dsn = "mysql:host={$this->_config['host']};dbname={$this->_config['database']};charset=utf8mb4";
+        $pdo = new PDO($dsn, $this->_config['user'], $this->_config['password']);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        $this->pdo = $pdo;
     }
 
     protected function authorize($method, $uri) {

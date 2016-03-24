@@ -1,12 +1,14 @@
 <?php
+
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
 class Stream {
 
     private $db;
 
-    public function __construct() {
-        $this->db = new PDO("sqlite:data/stream.sqlite");
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    public function __construct(PDO $pdo) {
+        $this->db = $pdo;
     }
 
     public function getList() {

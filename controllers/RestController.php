@@ -1,12 +1,17 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
 class RestController extends Controller implements RestApi {
 
     public $params = [];
 
     public function __construct() {
         parent::__construct();
-        $this->model = new Stream();
+        $this->app->connect();
+        $this->model = new Stream($this->app->pdo);
     }
 
     public function get() {

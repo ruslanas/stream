@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
 class User {
 
     private $db;
@@ -8,11 +12,9 @@ class User {
         'password' => ''
     ];
 
-    public function __construct($request) {
+    public function __construct(Request $request, PDO $pdo) {
         $this->request = $request;
-        $this->db = new PDO("sqlite:data/user.sqlite");
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $this->db = $pdo;
     }
 
     public function valid($data) {

@@ -9,11 +9,9 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
-$app = new App([
-    'template_path' => 'templates',
-    'title' => 'Stream',
-    'cache_ttl' => '600'
-], new Cache());
+require_once 'config.php';
+
+$app = new App($config, new Cache());
 
 $ctrl = new MainController();
 

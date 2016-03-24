@@ -10,7 +10,8 @@ class MainController extends Controller {
     public function __construct() {
         parent::__construct();
         $this->templates->addFolder('stream', 'templates/stream');
-        $this->model = new Stream();
+        $this->app->connect();
+        $this->model = new Stream($this->app->pdo);
     }
 
     public function home() {

@@ -1,0 +1,14 @@
+<?php 
+
+// rename to config.php and edit as needed
+
+$config = [
+    'host' => 'localhost',
+    'database' => 'stream',
+    'user' => '',
+    'password' => '',
+
+    'template_path' => 'templates',
+    'title' => 'Stream',
+    'cache_ttl' => '600'
+];

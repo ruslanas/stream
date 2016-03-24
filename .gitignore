@@ -1,2 +1,4 @@
 webroot/components
 vendor/*
+xdebug.log
+config.php

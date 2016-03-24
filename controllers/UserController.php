@@ -7,7 +7,9 @@ class UserController extends Controller implements DomainControllerInterface {
     public function __construct() {
         parent::__construct();
         $this->request = new Request();
-        $this->user = new User($this->request);
+
+        $this->app->connect();
+        $this->user = new User($this->request, $this->app->pdo);
         $this->templates->addFolder('user', 'templates/user');
     }
 
