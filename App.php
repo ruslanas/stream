@@ -32,10 +32,10 @@ class App implements AppInterface {
         return static::$instance;
     }
 
-    public function __construct($config = []) {
+    public function __construct($config = [], CacheInterface $cache) {
         $this->_config = array_merge($this->_config, $config);
         $this->acl = new Acl();
-        $this->cache = new Cache();
+        $this->cache = $cache;
         static::$instance = $this;
     }
 

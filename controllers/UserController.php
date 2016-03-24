@@ -3,6 +3,7 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 class UserController extends Controller implements DomainControllerInterface {
+
     public function __construct() {
         parent::__construct();
         $this->request = new Request();
@@ -16,7 +17,7 @@ class UserController extends Controller implements DomainControllerInterface {
             $this->login();
         }
         if(method_exists($this, $components[2])) {
-            $this->$components[2]();
+            $this->{$components[2]}();
         }
     }
 
