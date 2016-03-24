@@ -36,5 +36,6 @@ try {
     die($e->getMessage());
 } catch (Exception $e) {
     http_response_code(500);
+    syslog(LOG_CRIT, $e->getMessage()."\n".$e->getTraceAsString());
     die('Fatal error: '.$e->getMessage());
 }
