@@ -32,11 +32,15 @@ class App implements AppInterface {
         return static::$instance;
     }
 
-    public function __construct($config = [], CacheInterface $cache) {
+    public function __construct($config = [], CacheInterface $cache = NULL) {
         $this->_config = array_merge($this->_config, $config);
 
         $this->acl = new Acl();
-        $this->cache = $cache;
+        if($cache !== NULL) {
+            $this->cache = $cache;
+        } else {
+            $this->cache = new Cache();
+        }
         static::$instance = $this;
     }
 
@@ -47,9 +51,21 @@ class App implements AppInterface {
         return null;
     }
 
-    public function connect() {
-        $dsn = "mysql:host={$this->_config['host']};dbname={$this->_config['database']};charset=utf8mb4";
-        $pdo = new PDO($dsn, $this->_config['user'], $this->_config['password']);
+    public function connect($conf = NULL) {
+        if($conf === NULL) {
+            $dsn = "mysql:host={$this->_config['host']};dbname={$this->_config['database']};charset=utf8mb4";
+            $pdo = new PDO($dsn, $this->_config['user'], $this->_config['password']);
+        } else {
+            
+            if(!isset($this->_config[$conf]) || !is_array($this->_config[$conf])) {
+                throw new Exception("Configuration for `{$conf}` not found");
+            }
+
+            $data = $this->_config[$conf];
+            $dsn = "mysql:host={$data['host']};dbname={$data['database']};charset=utf8mb4";
+            $pdo = new PDO($dsn, $data['user'], $data['password']);
+        }
+
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
@@ -220,5 +236,10 @@ class App implements AppInterface {
 
     public function cache_status() {
         return $this->cache->status();
+    }
+
+    public function loadConfig() {
+        require 'config.php';
+        $this->_config = $config;
     }
 }

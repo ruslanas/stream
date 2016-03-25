@@ -21,5 +21,7 @@ $app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
 
 $app->rest(['/posts.json', '/posts/:id.json'], 'RestController');
 
+$app->rest(['/clients.json', '/clients/:id.json'], 'ClientsController');
+
 $app->domain('/user', 'UserController');
 $app->domain('/debug', 'DebugController');
