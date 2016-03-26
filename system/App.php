@@ -188,8 +188,7 @@ class App implements AppInterface {
         foreach($this->_controllers as $regexp => $controller_class) {
             $matches = $this->match($regexp, $uri);
             if($matches !== false) {
-                $controller = new $controller_class();
-                $controller->params = $matches;
+                $controller = new $controller_class($matches, new Request);
                 return $controller;
             }
         }

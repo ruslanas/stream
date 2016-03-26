@@ -1,6 +1,6 @@
 <?php
 spl_autoload_register(function($class_name) {
-    $search = ["./", "controllers/", "model/", "interfaces/", "exceptions/"];
+    $search = ["system/", "controllers/", "model/", "interfaces/", "lib/", "exceptions/"];
 
     foreach($search as $location) {
         $path = $location.$class_name.'.php';

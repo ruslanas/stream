@@ -7,4 +7,8 @@ class Request {
             return $_POST;
         }
     }
+    public function getPostData() {
+        $raw_post_data = file_get_contents('php://input');
+        return json_decode($raw_post_data, true);
+    }
 }

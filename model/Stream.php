@@ -44,6 +44,8 @@ class Stream {
         }
 
         $statement->execute();
+
+        return $this->db->lastInsertId();
     }
 
     public function getById($id) {

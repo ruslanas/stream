@@ -1,5 +1,5 @@
 <?php
-class Cache implements CacheInterface {
+class RedisCache implements CacheInterface {
     public function __construct() {
         $this->redis = new Predis\Client();
     }

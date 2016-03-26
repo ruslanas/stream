@@ -8,9 +8,10 @@ class RestController extends Controller implements RestApi {
 
     public $params = [];
 
-    public function __construct() {
+    public function __construct($params, $request) {
         parent::__construct();
-        $this->app->connect();
+        $this->params = $params;
+        $this->request = $request;
         $this->model = new Stream($this->app->pdo);
     }
 
@@ -38,9 +39,9 @@ class RestController extends Controller implements RestApi {
     }
 
     public function post() {
-        $raw_post_data = file_get_contents('php://input');
+        $data = $this->request->getPostData();
         $id = isset($this->params['id']) ? $this->params['id'] : null;
-        $this->model->save($id, json_decode($raw_post_data, true));
+        $id = $this->model->save($id, $data);
         echo json_encode($this->model->getById($id));
     }
 }

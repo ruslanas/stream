@@ -9,9 +9,9 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
-require_once 'config.php';
-
-$app = new App($config, new Cache());
+$app = new App();
+$app->loadConfig();
+$app->connect();
 
 $ctrl = new MainController();
 
