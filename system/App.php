@@ -5,6 +5,8 @@
  * @link http://github.com/ruslanas/stream/blob/master/App.php
  */
 
+use Stream\Request;
+
 class App implements AppInterface {
 
     private $_controllers = [];
@@ -91,7 +93,7 @@ class App implements AppInterface {
      */
     public function dispatch($uri) {
 
-        $method = $_SERVER['REQUEST_METHOD'];
+        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
 
         if(!$this->authorize($method, $uri)) {
             throw new ForbiddenException("Not allowed");
@@ -239,6 +241,8 @@ class App implements AppInterface {
 
     public function loadConfig() {
         require 'config.php';
-        $this->_config = $config;
+        $this->_config = array_merge($this->_config, $config);
+        return $this->_config;
     }
+
 }

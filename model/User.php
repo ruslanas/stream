@@ -1,11 +1,14 @@
 <?php
 
+use Stream\Request;
+
 /**
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 class User {
 
     private $db;
+    private $_errors = [];
 
     public $data = [
         'email' => '',
@@ -17,13 +20,28 @@ class User {
         $this->db = $pdo;
     }
 
-    public function valid($data) {
-        if($data !== null && isset($data['email'])
-            && isset($data['password']) && isset($data['password2'])
-            && $data['password'] === $data['password2']) {
-            return true;
+    public function valid(Array $data = NULL) {
+        $this->_errors = [];
+
+        if(!empty($data['email'])) {
+            if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->_errors['email'] = 'Email invalid';
+            }
+        } else {
+            $this->_errors['email'] = 'Can\'t be empty';
         }
-        return false;
+
+        if(!empty($data['password']) && !empty($data['password2'])) {
+            if($data['password'] != $data['password2']) {
+                $this->_errors['password2'] = 'Passwords do not match';
+            }
+        } else {
+            $this->_errors['password'] = 'Both fields must be filled';
+        }
+        if(count($this->_errors)) {
+            return false;
+        }
+        return true;
     }
 
     public function exists($data) {
@@ -80,5 +98,8 @@ class User {
         } else {
             return false;
         }
+    }
+    public function error() {
+        return $this->_errors;
     }
 }

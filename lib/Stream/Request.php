@@ -1,7 +1,9 @@
 <?php
+namespace Stream;
+
 class Request {
     public function post() {
-        if($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
             return null;
         } else {
             return $_POST;

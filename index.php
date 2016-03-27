@@ -19,9 +19,9 @@ $app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
     $ctrl->home();
 });
 
-$app->rest(['/posts.json', '/posts/:id.json'], 'RestController');
+$app->rest(['/posts.json', '/posts/:id.json'], RestController::class);
 
-$app->rest(['/clients.json', '/clients/:id.json'], 'ClientsController');
+$app->rest(['/clients.json', '/clients/:id.json'], ClientsController::class);
 
-$app->domain('/user', 'UserController');
-$app->domain('/debug', 'DebugController');
+$app->domain('/user', UserController::class);
+$app->domain('/debug', DebugController::class);

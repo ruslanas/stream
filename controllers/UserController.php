@@ -2,6 +2,9 @@
 /**
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
+
+use Stream\Request;
+
 class UserController extends Controller implements DomainControllerInterface {
 
     public function __construct() {
