@@ -3,10 +3,15 @@
 class AppTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 	}
+	
 	public function testApp() {
-		$app = new App();
+		App::deleteInstance();
+		$app = App::getInstance();
+		$this->assertInstanceOf(App::class, $app);
+		$app = new App([], new Cache);
 		$this->assertEquals(NULL, $app->non_existing_property);
 	}
+
 	public function testConnect() {
 		$this->expectException(Exception::class);
 		$this->app = App::getInstance();

@@ -6,9 +6,12 @@ class Request extends \Stream\Request {
 		'post' => ['email' => 'foo', 'password' => 'bar'],
 		'raw_post_data' => ['title' => 'test', 'body' => 'test_body']
 	];
-	public function __construct($data = NULL) {
+	public function __construct($data = NULL, $raw = NULL) {
 		if($data !== NULL) {
 			$this->_post['post'] = $data;
+		}
+		if($raw !== NULL) {
+			$this->_post['raw_post_data'] = $raw;
 		}
 	}
 	public function post() {

@@ -34,6 +34,10 @@ class App implements AppInterface {
         return static::$instance;
     }
 
+    public static function deleteInstance() {
+        static::$instance = NULL;
+    }
+
     public function __construct($config = [], CacheInterface $cache = NULL) {
         $this->_config = array_merge($this->_config, $config);
 

@@ -9,6 +9,9 @@
 			<directory suffix=".php">model</directory>
 			<directory suffix=".php">controllers</directory>
 			<directory suffix=".php">system</directory>
+			<exclude>
+				<file>system/RedisCache.php</file>
+			</exclude>
 		</whitelist>
 	</filter>
 </phpunit>

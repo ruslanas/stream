@@ -2,21 +2,22 @@
 /**
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
+
+// just pretend for now
 class Cache implements CacheInterface {
 
-    public function delete($uri) {
-        return false;
+    private $_data = [];
+
+    public function delete($key) {
+        unset($this->_data[$key]);
     }
 
-    public function store($key, $data, $ttl) {
-        return false;
+    public function store($key, $data, $ttl = 600) {
+        $this->_data[$key] = $data;
     }
 
-    public function fetch($uri) {
-        return false;
+    public function fetch($key) {
+        return isset($this->_data[$key]) ? $this->_data[$key] : FALSE;
     }
 
-    public function status() {
-        return false;
-    }
 }

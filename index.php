@@ -24,4 +24,3 @@ $app->rest(['/posts.json', '/posts/:id.json'], RestController::class);
 $app->rest(['/clients.json', '/clients/:id.json'], ClientsController::class);
 
 $app->domain('/user', UserController::class);
-$app->domain('/debug', DebugController::class);

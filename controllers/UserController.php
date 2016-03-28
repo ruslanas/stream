@@ -17,7 +17,7 @@ class UserController extends Controller implements DomainControllerInterface {
 
     public function dispatch($uri) {
         $components = explode('/', $uri);
-        if(sizeof($components) < 3) {
+        if(count($components) < 3) {
             return $this->login();
         }
         if(method_exists($this, $components[2])) {
@@ -29,19 +29,20 @@ class UserController extends Controller implements DomainControllerInterface {
 
     public function add() {
         if($this->user->authenticate()) {
-            $this->redirect('/');
+            return $this->redirect('/');
         }
 
         $data = $this->request->post();
 
         if($data && $this->user->exists($data)) {
-            $this->redirect('/user/add');
+            return $this->redirect('/user/add');
         }
 
         if($this->user->valid($data)) {
             $this->user->add($data);
-            $this->redirect('/user/login');
+            return $this->redirect('/user/login');
         }
+
         return $this->templates->render('user::add', []);
     }
 
