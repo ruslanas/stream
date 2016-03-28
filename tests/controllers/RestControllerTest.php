@@ -1,12 +1,17 @@
 <?php
 
-class RestControllerTest extends PHPUnit_Framework_TestCase {
-	public function setUp() {
-		$this->app = new App();
-		$this->app->loadConfig();
-		$this->app->connect('test_stream');
+class RestControllerTest extends PHPUnit_Extensions_Database_TestCase {
+    public function getConnection() {
+        $this->app = new App();
+        $this->app->loadConfig();
+        $this->app->connect('test_stream');
 		$this->controller = new RestController([], new Fake\Request);
-	}
+        return $this->createDefaultDBConnection($this->app->pdo);
+    }
+    public function getDataSet() {
+        return $this->createFlatXMLDataSet('data/stream.xml');
+    }
+
 	public function testApi() {
 
 		$out = $this->controller->get();
@@ -27,12 +32,24 @@ class RestControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertObjectHasAttribute('title', $data);
 		$this->assertEquals($data->title, 'test');
 		$this->assertEquals($data->body, 'test_body');
-		$controller->params['id'] = $data->id;
-		$controller->delete();
-
 	}
 	public function testPut() {
 		$this->expectException(UnknownMethodException::class);
 		$this->controller->put();
+	}
+
+	public function testDelete() {
+		$controller = new RestController(['id' => 1], new Fake\Request);
+		$controller->delete();
+
+		$controller = new RestController([], new Fake\Request);
+		$data = json_decode($controller->get());
+		$this->assertTrue(is_array($data));
+		$this->assertEquals(0, count($data));
+
+		$this->expectException(Exception::class);
+		$controller = new RestController([], new Fake\Request);
+		$controller->delete();
+
 	}
 }

@@ -16,4 +16,20 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
 		$controller->login();
 		$this->assertTrue($controller->redirect() !== FALSE);
 	}
+
+	public function testDispatch() {
+		$this->expectException(NotFoundException::class);
+		$controller = new UserController(new Fake\Request);
+		$out = $controller->dispatch('/user/not_found');
+		$this->assertContains('not found', $out);
+
+		$out = $controller->dispatch('/user/login');
+		$this->assertContains('Sign In', $out);
+	}
+
+	public function testLogout() {
+		$controller = new UserController();
+		$controller->logout();
+		$this->assertTrue($controller->redirect() !== FALSE);
+	}
 }

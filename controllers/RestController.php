@@ -6,7 +6,7 @@
 
 class RestController extends Controller implements RestApi {
 
-    public $params = [];
+    private $params = [];
 
     public function __construct($params, $request) {
         parent::__construct();

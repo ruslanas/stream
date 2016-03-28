@@ -1,15 +1,17 @@
 <?php
 
-class UserTest extends PHPUnit_Framework_TestCase {
-	public function setUp() {
+class UserTest extends PHPUnit_Extensions_Database_TestCase {
+	public function getConnection() {
 		$app = new App();
 		$app->loadConfig();
 		$app->connect('test_stream');
 		$this->user = new User(new Fake\Request, $app->pdo);
+		return $this->createDefaultDBConnection($app->pdo);
 	}
-	public function tearDown() {
-		// nothing
+	public function getDataSet() {
+		return $this->createFlatXMLDataSet('data/stream.xml');
 	}
+
 	public function testAuthenticate() {
 		$auth = $this->user->authenticate();
 		$this->assertFalse($auth);
@@ -20,6 +22,16 @@ class UserTest extends PHPUnit_Framework_TestCase {
 		$y = $this->user->exists(['email' => 'does_not_exist@example.com']);
 		$this->assertFalse($y);
 	}
+	
+	public function testAdd() {
+		$this->assertFalse($this->user->add([]));
+		$data = ['email' => 'xxx@example.com', 'password' => 'password'];
+		$this->assertFalse($this->user->exists($data));
+		$id = $this->user->add($data);
+		$this->assertTrue(is_numeric($id), 'Must return user Id');
+		$this->assertTrue($this->user->exists($data));
+	}
+
 	public function testValid() {
 		$isValid = $this->user->valid([]);
 		$this->assertFalse($isValid);

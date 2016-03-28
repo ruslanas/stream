@@ -68,6 +68,7 @@ class User {
         $statement->bindParam(':email', $data['email'], PDO::PARAM_STR);
         $statement->bindParam(':password', $encrypted, PDO::PARAM_STR);
         $statement->execute();
+        return $this->db->lastInsertId();
     }
 
     public function loggedIn() {
