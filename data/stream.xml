@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<dataset>
+	<user id="1" email="test@example.com" password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></user>
+	<user id="2" email="info@example.com" password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></user>
+	<posts id="1" title="Test" body="Message body" user_id="1"></posts>
+</dataset>
