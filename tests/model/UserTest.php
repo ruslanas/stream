@@ -15,7 +15,13 @@ class UserTest extends PHPUnit_Extensions_Database_TestCase {
 	public function testAuthenticate() {
 		$auth = $this->user->authenticate();
 		$this->assertFalse($auth);
+		$_SESSION['uid'] = 1;
+		$this->assertTrue($this->user->authenticate());
+		// user does not exist
+		$_SESSION['uid'] = 1000;
+		$this->assertFalse($this->user->authenticate());
 	}
+
 	public function testExists() {
 		$x = $this->user->exists(['email' => 'info@example.com']);
 		$this->assertTrue($x);
@@ -54,5 +60,15 @@ class UserTest extends PHPUnit_Extensions_Database_TestCase {
 		]);
 		$this->assertEquals(0, count($this->user->error()));
 		$this->assertTrue($isValid);
+	}
+
+	public function testGetById() {
+		$data = $this->user->getById(1);
+		$this->assertEquals('test@example.com', $data['email']);
+	}
+
+	public function testGetList() {
+		$data = $this->user->getList();
+		$this->assertEquals(2, count($data));
 	}
 }

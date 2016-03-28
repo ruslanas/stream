@@ -1,6 +1,29 @@
 <?xml version="1.0" ?>
 <dataset>
-	<user id="1" email="test@example.com" password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></user>
-	<user id="2" email="info@example.com" password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></user>
+	<users id="1"
+		username="Admin User"
+		email="test@example.com"
+		password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
+		group="admin"></users>
+	<users id="2"
+		username="Ordinary User"
+		email="info@example.com"
+		password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></users>
 	<posts id="1" title="Test" body="Message body" user_id="1"></posts>
+	<clients id="1"
+		name="Client Name"
+		address="Street 10"
+		email="client@example.com"
+		type="0"
+		user_id="1"
+		deleted="0"
+		phone="+370 00000"></clients>
+	<clients id="2"
+		name="Deleted Client"
+		address="Street 10 - 20"
+		email="deleted@example.com"
+		type="0"
+		user_id="1"
+		deleted="1"
+		phone="+370 00000"></clients>
 </dataset>

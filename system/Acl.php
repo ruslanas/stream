@@ -4,10 +4,32 @@
  */
 class Acl {
 
+    public function __construct() {
+    }
+
     // this method is a stub
     public function allow($method, $uri) {
         if(!empty($_SESSION['uid'])) {
-            return true;
+            $uid = $_SESSION['uid'];
+            $user = new User(new Stream\Request, App::getInstance()->pdo);
+            $data = $user->getById($uid);
+
+            if($method === 'DELETE') {
+                if($data['group'] == 'admin') {
+                    return true;
+                }
+                return false;
+            }
+            if($method === 'POST') {
+                if(preg_match('/posts(|\/[0-9]+).json/', $uri) !== 0 && $data['group'] != 'admin') {
+                    return false;
+                }
+                return true;
+            }
+            if($method == 'GET') {
+                return true;
+            }
+            return false;
         }
 
         $components = explode('/', ltrim($uri, '/'));
