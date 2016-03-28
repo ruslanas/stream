@@ -5,7 +5,10 @@ class UserTest extends PHPUnit_Framework_TestCase {
 		$app = new App();
 		$app->loadConfig();
 		$app->connect('test_stream');
-		$this->user = new User(new Stream\Request, $app->pdo);
+		$this->user = new User(new Fake\Request, $app->pdo);
+	}
+	public function tearDown() {
+		// nothing
 	}
 	public function testAuthenticate() {
 		$auth = $this->user->authenticate();

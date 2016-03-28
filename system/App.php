@@ -103,7 +103,11 @@ class App implements AppInterface {
         $controller = $this->createController($method, $uri);
 
         if($controller instanceof RestApi) {
-            $controller->$method();
+            $out = $controller->{$method}();
+            if($controller->redirect()) {
+                header('Location: '.$controller->redirect());
+            }
+            echo $out;
             return;
         }
 
@@ -129,7 +133,12 @@ class App implements AppInterface {
         });
 
         if($controller instanceof DomainControllerInterface) {
-            $controller->dispatch($uri);
+            $out = $controller->dispatch($uri);
+            if($controller->redirect()) {
+                header('Location: '.$controller->redirect());
+                return;
+            }
+            echo $out;
         } else {
 
             switch($method) {

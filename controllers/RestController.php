@@ -15,15 +15,18 @@ class RestController extends Controller implements RestApi {
         $this->model = new Stream($this->app->pdo);
     }
 
+    public function __call($method, $args) {
+        throw new UnknownMethodException(mb_strtoupper($method) . " not allowed");
+    }
+
     public function get() {
         if(isset($this->params['id'])) {
             $id = $this->params['id'];
             $data = $this->model->getById($id);
-            echo json_encode($data);
         } else {
             $data = $this->model->getList();
-            echo json_encode($data);
         }
+        return json_encode($data);
     }
 
     public function delete() {
@@ -35,13 +38,13 @@ class RestController extends Controller implements RestApi {
         $id = $this->params['id'];
         $item = $this->model->getById($id);
         $this->model->delete($id);
-        echo json_encode($item);
+        return json_encode($item);
     }
 
     public function post() {
         $data = $this->request->getPostData();
         $id = isset($this->params['id']) ? $this->params['id'] : null;
         $id = $this->model->save($id, $data);
-        echo json_encode($this->model->getById($id));
+        return json_encode($this->model->getById($id));
     }
 }

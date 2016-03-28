@@ -7,11 +7,10 @@ use Stream\Request;
 
 class UserController extends Controller implements DomainControllerInterface {
 
-    public function __construct() {
+    public function __construct(Request $request = NULL) {
         parent::__construct();
-        $this->request = new Request();
+        $this->request = $request !== NULL ? $request : new Request;
 
-        $this->app->connect();
         $this->user = new User($this->request, $this->app->pdo);
         $this->templates->addFolder('user', 'templates/user');
     }
@@ -19,11 +18,13 @@ class UserController extends Controller implements DomainControllerInterface {
     public function dispatch($uri) {
         $components = explode('/', $uri);
         if(sizeof($components) < 3) {
-            $this->login();
+            return $this->login();
         }
         if(method_exists($this, $components[2])) {
-            $this->{$components[2]}();
+            return $this->{$components[2]}();
         }
+        throw new NotFoundException("Page not found");
+        
     }
 
     public function add() {
@@ -41,7 +42,7 @@ class UserController extends Controller implements DomainControllerInterface {
             $this->user->add($data);
             $this->redirect('/user/login');
         }
-        echo $this->templates->render('user::add', []);
+        return $this->templates->render('user::add', []);
     }
 
     public function logout() {
@@ -53,7 +54,7 @@ class UserController extends Controller implements DomainControllerInterface {
         if($this->user->authenticate()) {
             $this->redirect('/');
         }
-        echo $this->templates->render('user::login', [
+        return $this->templates->render('user::login', [
             'data' => $this->user->data
         ]);
     }

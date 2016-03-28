@@ -8,6 +8,7 @@ class Controller {
 
     protected $templates;
     protected $app;
+    protected $_redirect = FALSE;
 
     public function __construct() {
         $this->app = App::getInstance();
@@ -18,9 +19,12 @@ class Controller {
         ]);
     }
 
-    protected function redirect($uri) {
-        header('Location: '.$uri);
-        exit;
+    public function redirect($uri = NULL) {
+        if($uri !== NULL) {
+            $this->_redirect = $uri;
+            return FALSE;
+        }
+        return $this->_redirect;
     }
 
 }
