@@ -1,5 +1,8 @@
 <?php
 
+use Stream\App;
+use Stream\Acl;
+
 class AclTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$app = new App();

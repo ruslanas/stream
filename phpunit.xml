@@ -9,13 +9,11 @@
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">model</directory>
-			<directory suffix=".php">controllers</directory>
-			<directory suffix=".php">system</directory>
+			<directory suffix=".php">lib/Stream</directory>
 			<directory suffix=".php">modules</directory>
 			<exclude>
 				<directory>modules/*/tests</directory>>
-				<file>system/RedisCache.php</file>
+				<file>lib/Stream/RedisCache.php</file>
 			</exclude>
 		</whitelist>
 	</filter>

@@ -5,15 +5,23 @@
  * @link http://github.com/ruslanas/stream/blob/master/App.php
  */
 
-use Stream\Request;
-use Stream\Exception\ForbiddenException;
-use Stream\Exception\NotFoundException;
-use Stream\Exception\UnknownMethodException;
+namespace Stream;
 
-use Stream\Interfaces\AppInterface;
-use Stream\Interfaces\CacheInterface;
-use Stream\Interfaces\RestApi;
-use Stream\Interfaces\DomainControllerInterface;
+use \PDO;
+use \Exception;
+
+use \Closure;
+
+use \Stream\Request;
+
+use \Stream\Exception\ForbiddenException;
+use \Stream\Exception\NotFoundException;
+use \Stream\Exception\UnknownMethodException;
+
+use \Stream\Interfaces\AppInterface;
+use \Stream\Interfaces\CacheInterface;
+use \Stream\Interfaces\RestApi;
+use \Stream\Interfaces\DomainControllerInterface;
 
 class App implements AppInterface {
 

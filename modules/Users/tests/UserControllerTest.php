@@ -1,5 +1,6 @@
 <?php
 
+use Stream\App;
 use Stream\Exception\NotFoundException;
 use modules\Users\UserController;
 

@@ -1,5 +1,6 @@
 <?php
 
+use Stream\App;
 use Stream\Exception\UnknownMethodException;
 
 use modules\Posts\Controller;

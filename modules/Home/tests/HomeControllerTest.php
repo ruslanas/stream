@@ -1,5 +1,6 @@
 <?php
 
+use Stream\App;
 use modules\Home\Controller;
 
 class HomeControllerTest extends PHPUnit_Framework_TestCase {

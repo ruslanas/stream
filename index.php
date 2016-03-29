@@ -9,7 +9,7 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
-$app = new App();
+$app = new Stream\App();
 $app->loadConfig();
 $app->connect();
 

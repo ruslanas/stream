@@ -4,6 +4,7 @@
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 
+use Stream\App;
 use modules\Users\model\User;
 
 class UserTest extends PHPUnit_Extensions_Database_TestCase {

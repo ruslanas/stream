@@ -3,14 +3,16 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
-use modules\Users\model\User;
+namespace Stream;
+
+use \modules\Users\model\User;
 
 class Acl {
 
     public function allow($method, $uri) {
         if(!empty($_SESSION['uid'])) {
             $uid = $_SESSION['uid'];
-            $user = new User(new Stream\Request, App::getInstance()->pdo);
+            $user = new User(new Request, App::getInstance()->pdo);
             $data = $user->getById($uid);
 
             if($method === 'DELETE') {

@@ -1,5 +1,6 @@
 <?php
 
+use Stream\App;
 use modules\Clients\Controller;
 
 class ClientsControllerTest extends PHPUnit_Extensions_Database_TestCase {

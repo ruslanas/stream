@@ -4,6 +4,8 @@
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 
+use Stream\App;
+
 use modules\Posts\model\Post;
 use modules\Users\model\User;
 

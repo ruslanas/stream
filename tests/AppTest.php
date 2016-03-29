@@ -1,6 +1,8 @@
 <?php
 
 use Stream\Exception\ForbiddenException;
+use Stream\App;
+use Stream\Cache;
 
 class AppTest extends PHPUnit_Framework_TestCase {
 	
@@ -22,11 +24,11 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->expectException(Exception::class);
 		$this->app = App::getInstance();
 		$this->app->loadConfig();
-		$this->assertInstanceOf('App', $this->app);
+		$this->assertInstanceOf(App::class, $this->app);
 		$this->app->connect();
-		$this->assertInstanceOf('PDO', $this->app->pdo);
+		$this->assertInstanceOf(PDO::class, $this->app->pdo);
 		$this->app->connect('test_database');
-		$this->assertInstanceOf('PDO', $this->app->pdo);
+		$this->assertInstanceOf(PDO::class, $this->app->pdo);
 		$this->app->connect('not_existing_database_configuration_key');
 	}
 	public function testLoadConfig() {
@@ -48,7 +50,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testMatch() {
-		$cls = new ReflectionClass('App');
+		$cls = new ReflectionClass(App::class);
 		$meth = $cls->getMethod('match');
 		$meth->setAccessible('true');
 

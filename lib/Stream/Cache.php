@@ -1,10 +1,12 @@
 <?php
+
 /**
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 
-// just pretend for now
-class Cache implements Stream\Interfaces\CacheInterface {
+namespace Stream;
+
+class Cache implements Interfaces\CacheInterface {
 
     private $_data = [];
 

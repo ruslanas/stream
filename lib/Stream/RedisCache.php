@@ -1,7 +1,10 @@
 <?php
-class RedisCache implements CacheInterface {
+
+namespace Stream;
+
+class RedisCache implements Interfaces\CacheInterface {
     public function __construct() {
-        $this->redis = new Predis\Client();
+        $this->redis = new \Predis\Client();
     }
 
     public function delete($uri) {

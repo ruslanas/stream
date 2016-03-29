@@ -1,5 +1,6 @@
 <?php
 
+use Stream\App;
 use modules\Clients\model\Client;
 
 class ClientTest extends PHPUnit_Extensions_Database_TestCase {
