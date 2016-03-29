@@ -22,7 +22,7 @@ try {
     die("Illegal access: ".$e->getMessage());
 } catch (UnknownMethodException $e) {
     http_response_code(405);
-    header("Allow: GET, POST, DELETE, PUT");
+    header($e->getAllow());
     die($e->getMessage());
 } catch (Exception $e) {
     http_response_code(500);

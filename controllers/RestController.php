@@ -16,10 +16,18 @@ class RestController extends Controller implements RestApi {
     }
 
     public function __call($method, $args) {
-        throw new UnknownMethodException(mb_strtoupper($method) . " not allowed");
+        $class = new ReflectionClass(get_class($this));
+        $methods = $class->getMethods(ReflectionMethod::IS_FINAL);
+        $allowed = [];
+        array_walk($methods, function($meth) use (&$allowed) {
+            $allowed[] = strtoupper($meth->name);
+        });
+        // expect sorted in alphabetical order
+        sort($allowed);
+        throw new UnknownMethodException('Allow: '.join(', ', $allowed));
     }
 
-    public function get() {
+    final public function get() {
         if(isset($this->params['id'])) {
             $id = $this->params['id'];
             $data = $this->model->getById($id);
@@ -29,7 +37,7 @@ class RestController extends Controller implements RestApi {
         return json_encode($data);
     }
 
-    public function delete() {
+    final public function delete() {
 
         if(!isset($this->params['id'])) {
             throw new Exception("Too few parameters");
@@ -41,7 +49,7 @@ class RestController extends Controller implements RestApi {
         return json_encode($item);
     }
 
-    public function post() {
+    final public function post() {
         $data = $this->request->getPostData();
         $id = isset($this->params['id']) ? $this->params['id'] : null;
         $id = $this->model->save($id, $data);

@@ -34,6 +34,14 @@ class RestControllerTest extends PHPUnit_Extensions_Database_TestCase {
 		$this->assertEquals($data->body, 'test_body');
 	}
 	public function testPut() {
+		$allow = '';
+		try {
+			$this->controller->put();
+		} catch (UnknownMethodException $e) {
+			$allow = $e->getAllow();
+		}
+		$this->assertEquals('Allow: DELETE, GET, POST', $allow);
+
 		$this->expectException(UnknownMethodException::class);
 		$this->controller->put();
 	}
