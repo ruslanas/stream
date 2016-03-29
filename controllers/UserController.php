@@ -7,7 +7,7 @@ use Stream\Request;
 use Stream\Exception\NotFoundException;
 use Stream\Interfaces\DomainControllerInterface;
 
-class UserController extends Controller implements DomainControllerInterface {
+class UserController extends Stream\Controller implements DomainControllerInterface {
 
     public function __construct(Request $request = NULL) {
         parent::__construct();

@@ -3,7 +3,10 @@
 /**
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
-class MainController extends Controller {
+
+use modules\Posts\model\Post;
+
+class MainController extends \Stream\Controller {
 
     private $model;
 
@@ -11,7 +14,7 @@ class MainController extends Controller {
         parent::__construct();
         $this->templates->addFolder('stream', 'templates/stream');
         $this->app->connect();
-        $this->model = new Stream($this->app->pdo);
+        $this->model = new Post($this->app->pdo);
     }
 
     public function home() {

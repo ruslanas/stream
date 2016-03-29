@@ -4,10 +4,16 @@
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 
-use Stream\Interfaces\RestApi;
-use Stream\Exception\UnknownMethodException;
+namespace modules\Posts;
 
-class RestController extends Stream\RestController implements RestApi {
+use \Exception;
+
+use \Stream\RestController;
+use \Stream\Exception\UnknownMethodException;
+
+use \modules\Posts\model\Post;
+
+class Controller extends RestController {
 
     private $params = [];
 
@@ -15,7 +21,7 @@ class RestController extends Stream\RestController implements RestApi {
         parent::__construct();
         $this->params = $params;
         $this->request = $request;
-        $this->model = new Stream($this->app->pdo);
+        $this->model = new Post($this->app->pdo);
     }
 
     final public function get() {

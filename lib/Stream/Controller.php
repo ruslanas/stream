@@ -4,6 +4,9 @@
  *
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
+
+namespace Stream;
+
 class Controller {
 
     protected $templates;
@@ -11,8 +14,8 @@ class Controller {
     protected $_redirect = FALSE;
 
     public function __construct() {
-        $this->app = App::getInstance();
-        $this->templates = new League\Plates\Engine($this->app->template_path);
+        $this->app = \App::getInstance();
+        $this->templates = new \League\Plates\Engine($this->app->template_path);
         $this->templates->addData([
             'authorized' => !empty($_SESSION['uid']),
             'title' => $this->app->title

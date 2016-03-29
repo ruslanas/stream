@@ -3,6 +3,12 @@
 // rename to config.php and edit as needed
 
 $config = [
+	'test_stream' => [
+	    'host' => 'localhost',
+	    'database' => 'test_stream',
+	    'user' => '',
+	    'password' => '',
+	],
     'host' => 'localhost',
     'database' => 'stream',
     'user' => '',

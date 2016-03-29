@@ -1,15 +1,18 @@
 <?php
 
-use Stream\Exception\NotFoundException;
-use Stream\Interfaces\RestApi;
+namespace modules\Clients;
 
-class ClientsController extends Stream\RestController {
+use \Stream\Exception\NotFoundException;
+use \Stream\Interfaces\RestApi;
+use \Stream\RestController;
+
+class Controller extends RestController {
 
 	public function __construct($params, $request) {
 		parent::__construct();
         $this->params = $params;
         $this->request = $request;
-		$this->model = new Client($this->app->pdo);
+		$this->model = new model\Client($this->app->pdo);
 	}
 
 	final public function get() {

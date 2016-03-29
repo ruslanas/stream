@@ -2,7 +2,7 @@
 
 namespace Stream;
 
-abstract class RestController extends \Controller implements Interfaces\RestApi {
+abstract class RestController extends Controller implements Interfaces\RestApi {
 
 	abstract public function get();
 	abstract public function post();

@@ -3,7 +3,12 @@
 /**
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
-class Stream {
+
+namespace modules\Posts\model;
+
+use \PDO;
+
+class Post {
 
     private $db;
 

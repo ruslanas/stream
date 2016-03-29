@@ -2,12 +2,14 @@
 
 use Stream\Exception\UnknownMethodException;
 
+use modules\Posts\Controller;
+
 class RestControllerTest extends PHPUnit_Extensions_Database_TestCase {
     public function getConnection() {
         $this->app = new App();
         $this->app->loadConfig();
         $this->app->connect('test_stream');
-		$this->controller = new RestController([], new Fake\Request);
+		$this->controller = new Controller([], new Fake\Request);
         return $this->createDefaultDBConnection($this->app->pdo);
     }
     public function getDataSet() {
@@ -22,12 +24,12 @@ class RestControllerTest extends PHPUnit_Extensions_Database_TestCase {
 		$this->assertEquals(count($data), 1);
 		$this->assertObjectHasAttribute('title', $data[0]);
 
-		$controller = new RestController(['id' => 1], new Fake\Request);
+		$controller = new Controller(['id' => 1], new Fake\Request);
 		$out = $controller->get();
 		$data = json_decode($out);
 		$this->assertObjectHasAttribute('title', $data);
 
-		$controller = new RestController([], new Fake\Request);
+		$controller = new Controller([], new Fake\Request);
 		$out = $controller->post();
 
 		$data = json_decode($out);
@@ -49,16 +51,16 @@ class RestControllerTest extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	public function testDelete() {
-		$controller = new RestController(['id' => 1], new Fake\Request);
+		$controller = new Controller(['id' => 1], new Fake\Request);
 		$controller->delete();
 
-		$controller = new RestController([], new Fake\Request);
+		$controller = new Controller([], new Fake\Request);
 		$data = json_decode($controller->get());
 		$this->assertTrue(is_array($data));
 		$this->assertEquals(0, count($data));
 
 		$this->expectException(Exception::class);
-		$controller = new RestController([], new Fake\Request);
+		$controller = new Controller([], new Fake\Request);
 		$controller->delete();
 
 	}

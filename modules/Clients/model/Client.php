@@ -1,4 +1,9 @@
 <?php
+
+namespace modules\Clients\model;
+
+use \PDO;
+
 class Client {
 
 	private $_default = [
