@@ -7,7 +7,7 @@
 use Stream\Interfaces\RestApi;
 use Stream\Exception\UnknownMethodException;
 
-class RestController extends Controller implements RestApi {
+class RestController extends Stream\RestController implements RestApi {
 
     private $params = [];
 
@@ -16,18 +16,6 @@ class RestController extends Controller implements RestApi {
         $this->params = $params;
         $this->request = $request;
         $this->model = new Stream($this->app->pdo);
-    }
-
-    public function __call($method, $args) {
-        $class = new ReflectionClass(get_class($this));
-        $methods = $class->getMethods(ReflectionMethod::IS_FINAL);
-        $allowed = [];
-        array_walk($methods, function($meth) use (&$allowed) {
-            $allowed[] = strtoupper($meth->name);
-        });
-        // expect sorted in alphabetical order
-        sort($allowed);
-        throw new UnknownMethodException('Allow: '.join(', ', $allowed));
     }
 
     final public function get() {

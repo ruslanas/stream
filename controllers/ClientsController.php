@@ -3,7 +3,7 @@
 use Stream\Exception\NotFoundException;
 use Stream\Interfaces\RestApi;
 
-class ClientsController extends Controller implements RestApi {
+class ClientsController extends Stream\RestController {
 
 	public function __construct($params, $request) {
 		parent::__construct();

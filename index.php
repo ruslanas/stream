@@ -23,4 +23,6 @@ $app->rest(['/posts.json', '/posts/:id.json'], RestController::class);
 
 $app->rest(['/clients.json', '/clients/:id.json'], ClientsController::class);
 
+$app->rest(['/events.json', '/events/:id.json'], modules\Events\Controller::class);
+
 $app->domain('/user', UserController::class);

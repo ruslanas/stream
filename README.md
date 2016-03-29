@@ -1,3 +1,11 @@
+**Install**
+
+```
+git clone https://github.com/ruslanas/stream
+composer install
+bower install
+```
+
 **Use PHP built-in server for development**
 
 ```
@@ -22,4 +30,11 @@ RewriteRule ^(.+) %{DOCUMENT_ROOT}/webroot/$1 [L]
 
 RewriteCond %{REQUEST_URI} !^/webroot*
 RewriteRule ^ router.php [L]
+```
+
+**Test**
+
+```
+cd stream
+php vendor/phpunit/phpunit/phpunit --testdox --coverage-html report
 ```

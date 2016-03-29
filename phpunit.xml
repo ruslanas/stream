@@ -2,6 +2,7 @@
 	<testsuites>
 		<testsuite name="framework">
 			<directory>tests</directory>
+			<directory>modules</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -9,6 +10,7 @@
 			<directory suffix=".php">model</directory>
 			<directory suffix=".php">controllers</directory>
 			<directory suffix=".php">system</directory>
+			<directory suffix=".php">modules</directory>
 			<exclude>
 				<file>system/RedisCache.php</file>
 			</exclude>
