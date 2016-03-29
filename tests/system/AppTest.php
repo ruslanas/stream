@@ -1,5 +1,7 @@
 <?php
 
+use Stream\Exception\ForbiddenException;
+
 class AppTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 	}

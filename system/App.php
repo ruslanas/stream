@@ -6,6 +6,14 @@
  */
 
 use Stream\Request;
+use Stream\Exception\ForbiddenException;
+use Stream\Exception\NotFoundException;
+use Stream\Exception\UnknownMethodException;
+
+use Stream\Interfaces\AppInterface;
+use Stream\Interfaces\CacheInterface;
+use Stream\Interfaces\RestApi;
+use Stream\Interfaces\DomainControllerInterface;
 
 class App implements AppInterface {
 
@@ -236,7 +244,7 @@ class App implements AppInterface {
 
     public function rest($endpoints, $controller) {
         $implements = class_implements($controller);
-        if(!in_array('RestApi', $implements)) {
+        if(!in_array(RestApi::class, $implements)) {
             throw new Exception("Controller must implement RestApi");
         }
         foreach($endpoints as $ep) {

@@ -25,7 +25,7 @@ class ClientsControllerTest extends PHPUnit_Extensions_Database_TestCase {
         $controller = new ClientsController(['id' => 1], new Fake\Request([]));
         $res = json_decode($controller->delete());
         $this->assertEquals($res->deleted, '1');
-        $this->expectException(NotFoundException::class);
+        $this->expectException(Stream\Exception\NotFoundException::class);
         $controller->get();
     }
 

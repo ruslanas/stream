@@ -4,6 +4,9 @@
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 
+use Stream\Interfaces\RestApi;
+use Stream\Exception\UnknownMethodException;
+
 class RestController extends Controller implements RestApi {
 
     private $params = [];

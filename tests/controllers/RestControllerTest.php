@@ -1,5 +1,7 @@
 <?php
 
+use Stream\Exception\UnknownMethodException;
+
 class RestControllerTest extends PHPUnit_Extensions_Database_TestCase {
     public function getConnection() {
         $this->app = new App();

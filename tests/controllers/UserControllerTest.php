@@ -1,4 +1,7 @@
 <?php
+
+use Stream\Exception\NotFoundException;
+
 class UserControllerTest extends PHPUnit_Framework_TestCase {
 	
 	public function setUp() {

@@ -4,6 +4,8 @@
  */
 
 use Stream\Request;
+use Stream\Exception\NotFoundException;
+use Stream\Interfaces\DomainControllerInterface;
 
 class UserController extends Controller implements DomainControllerInterface {
 

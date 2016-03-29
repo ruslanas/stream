@@ -14,13 +14,13 @@ try {
 
     App::getInstance()->dispatch($_SERVER['REQUEST_URI']);
 
-} catch (NotFoundException $e) {
+} catch (Stream\Exception\NotFoundException $e) {
     http_response_code(404);
     die($e->getMessage());
-} catch (ForbiddenException $e) {
+} catch (Stream\Exception\ForbiddenException $e) {
     http_response_code(401);
     die("Illegal access: ".$e->getMessage());
-} catch (UnknownMethodException $e) {
+} catch (Stream\Exception\UnknownMethodException $e) {
     http_response_code(405);
     header($e->getAllow());
     die($e->getMessage());

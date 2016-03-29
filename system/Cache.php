@@ -4,7 +4,7 @@
  */
 
 // just pretend for now
-class Cache implements CacheInterface {
+class Cache implements Stream\Interfaces\CacheInterface {
 
     private $_data = [];
 
