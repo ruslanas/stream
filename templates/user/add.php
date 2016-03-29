@@ -12,5 +12,5 @@
         <label>Repeat password:</label>
         <input name="password2" type="password" class="form-control"/>
     </div>
-    <button type="submit" class="btn btn-default">Register</button>
+    <button type="submit" class="btn btn-success">Register</button>
 </form>

@@ -13,18 +13,18 @@ class Controller extends \Stream\RestController {
 	}
 
 	final public function get() {
-		return json_encode($this->event->read());
+		return $this->event->read();
 	}
 	
 	final public function post() {
-		return json_encode($this->event->create());
+		return $this->event->create();
 	}
 	
 	final public function delete() {
-		return json_encode($this->event->delete());
+		return $this->event->delete();
 	}
 
 	final public function put() {
-		return json_encode($this->event->update());
+		return $this->event->update();
 	}
 }

@@ -22,7 +22,7 @@ class ClientTest extends PHPUnit_Extensions_Database_TestCase {
 	public function testClient() {
 		$this->assertTrue($this->client instanceof Client);
 		$item = $this->client->getById(1);
-		$this->assertTrue(!empty($item['name']));
+		$this->assertTrue(!empty($item->name));
 	}
 	
 	public function testGetList() {

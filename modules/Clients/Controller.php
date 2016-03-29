@@ -21,9 +21,9 @@ class Controller extends RestController {
             if($out === FALSE) {
                 throw new NotFoundException("Not found");
             }
-            return json_encode($out);
+            return $out;
         } else {
-            return json_encode($this->model->getList());
+            return $this->model->getList();
         }
     }
 
@@ -31,11 +31,11 @@ class Controller extends RestController {
         $id = isset($this->params['id']) ? $this->params['id'] : null;
         $data = $this->request->getPostData();
         $id = $this->model->save($id, $data);
-        return json_encode($this->model->getById($id));
+        return $this->model->getById($id);
     }
 
     final public function delete() {
         $this->model->delete($this->params['id']);
-        return json_encode($this->model->getById($this->params['id'], TRUE));
+        return $this->model->getById($this->params['id'], TRUE);
     }
 }

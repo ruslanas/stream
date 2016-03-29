@@ -27,7 +27,7 @@
                 <div>
                     <ul class="nav navbar-nav">
                         <?php if($authorized): ?>
-                            <li><a href="#clients">Clients</a></li>
+                            <li><a href="/#clients">Clients</a></li>
                             <li><a href="/user/logout">Sign Out</a></li>
                         <?php else: ?>
                             <li><a href="/user/add">Register</a></li>

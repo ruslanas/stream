@@ -1,6 +1,7 @@
 <?php
 
 use Stream\Exception\NotFoundException;
+use modules\Users\UserController;
 
 class UserControllerTest extends PHPUnit_Framework_TestCase {
 	

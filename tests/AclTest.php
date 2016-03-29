@@ -1,6 +1,11 @@
 <?php
 
 class AclTest extends PHPUnit_Framework_TestCase {
+	public function setUp() {
+		$app = new App();
+		$app->loadConfig();
+		$app->connect('test_stream');
+	}
 	public function testAllow() {
 		$acl = new Acl();
 		$this->assertTrue($acl->allow('GET', '/'));

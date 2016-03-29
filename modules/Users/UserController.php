@@ -3,11 +3,15 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
-use Stream\Request;
-use Stream\Exception\NotFoundException;
-use Stream\Interfaces\DomainControllerInterface;
+namespace modules\Users;
 
-class UserController extends Stream\Controller implements DomainControllerInterface {
+use \Stream\Request;
+use \Stream\Exception\NotFoundException;
+use \Stream\Interfaces\DomainControllerInterface;
+
+use \modules\Users\model\User;
+
+class UserController extends \Stream\Controller implements DomainControllerInterface {
 
     public function __construct(Request $request = NULL) {
         parent::__construct();

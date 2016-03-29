@@ -5,20 +5,20 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
 		$this->controller = new modules\Events\Controller;
 	}
 	public function testGet() {
-		$this->assertObjectHasAttribute('id', json_decode($this->controller->get()));
+		$this->assertObjectHasAttribute('id', $this->controller->get());
 	}
 	public function testDelete() {
 		$this->controller->delete();
-		$this->assertObjectHasAttribute('id', json_decode($this->controller->get()));
+		$this->assertObjectHasAttribute('id', $this->controller->get());
 	}
 	public function testPost() {
 		$this->controller->post();
-		$this->assertObjectHasAttribute('id', json_decode($this->controller->get()));
+		$this->assertObjectHasAttribute('id', $this->controller->get());
 	}
 	
 	public function testPut() {
 		$this->controller->put();
-		$this->assertObjectHasAttribute('id', json_decode($this->controller->get()));
+		$this->assertObjectHasAttribute('id', $this->controller->get());
 	}
 
 	public function testAllowHeaderField() {

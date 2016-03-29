@@ -81,7 +81,7 @@ class App implements AppInterface {
         }
 
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 
         $this->pdo = $pdo;
     }
@@ -119,7 +119,7 @@ class App implements AppInterface {
             if($controller->redirect()) {
                 header('Location: '.$controller->redirect());
             }
-            echo $out;
+            echo $this->serialize($out);
             return;
         }
 
@@ -264,6 +264,10 @@ class App implements AppInterface {
         require 'config.php';
         $this->_config = array_merge($this->_config, $config);
         return $this->_config;
+    }
+
+    public function serialize($data) {
+        return json_encode($data);
     }
 
 }

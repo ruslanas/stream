@@ -3,6 +3,7 @@
 use modules\Clients\Controller;
 
 class ClientsControllerTest extends PHPUnit_Extensions_Database_TestCase {
+    
     public function getConnection() {
         $this->app = new App();
         $this->app->loadConfig();
@@ -10,23 +11,25 @@ class ClientsControllerTest extends PHPUnit_Extensions_Database_TestCase {
         $this->controller = new Controller([], new Fake\Request([]));
         return $this->createDefaultDBConnection($this->app->pdo);
     }
+
     public function getDataSet() {
         return $this->createFlatXMLDataSet('data/stream.xml');
     }
 
     public function testGet() {
-        $res = json_decode($this->controller->get());
+        $res = $this->controller->get();
         $this->assertTrue(is_array($res));
         $this->assertEquals(1, count($res));
+        $this->assertObjectHasAttribute('name', $res[0]);
 
         $controller = new Controller(['id'=>1], new Fake\Request([]));
-        $res = json_decode($controller->get());
+        $res = $controller->get();
         $this->assertEquals('Client Name', $res->name);
     }
 
     public function testDelete() {
         $controller = new Controller(['id' => 1], new Fake\Request([]));
-        $res = json_decode($controller->delete());
+        $res = $controller->delete();
         $this->assertEquals($res->deleted, '1');
         $this->expectException(Stream\Exception\NotFoundException::class);
         $controller->get();
@@ -37,7 +40,7 @@ class ClientsControllerTest extends PHPUnit_Extensions_Database_TestCase {
             'name' => 'New Client'
         ]));
 
-        $out = json_decode($controller->post());
+        $out = $controller->post();
         $this->assertEquals($out->name, 'New Client');
     }
 }

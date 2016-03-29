@@ -1,6 +1,13 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
+use modules\Users\model\User;
+
 class UserTest extends PHPUnit_Extensions_Database_TestCase {
+	
 	public function getConnection() {
 		$app = new App();
 		$app->loadConfig();
@@ -48,6 +55,7 @@ class UserTest extends PHPUnit_Extensions_Database_TestCase {
 			'password2' => 'bar'
 		]);
 		$this->assertFalse($isValid);
+		
 		$err = $this->user->error();
 		$this->assertEquals(2, count($err));
 		$this->assertArrayHasKey('email', $err);
@@ -64,7 +72,7 @@ class UserTest extends PHPUnit_Extensions_Database_TestCase {
 
 	public function testGetById() {
 		$data = $this->user->getById(1);
-		$this->assertEquals('test@example.com', $data['email']);
+		$this->assertEquals('test@example.com', $data->email);
 	}
 
 	public function testGetList() {

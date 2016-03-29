@@ -3,15 +3,19 @@
 use Stream\Exception\ForbiddenException;
 
 class AppTest extends PHPUnit_Framework_TestCase {
-	public function setUp() {
-	}
 	
 	public function testApp() {
 		App::deleteInstance();
 		$app = App::getInstance();
 		$this->assertInstanceOf(App::class, $app);
-		$app = new App([], new Cache);
-		$this->assertEquals(NULL, $app->non_existing_property);
+		$this->app = new App([], new Cache);
+		$this->assertEquals(NULL, $this->app->non_existing_property);
+	}
+
+	public function testSerialize() {
+		$app = new App();
+		$res = $app->serialize((object)['id'=>1]);
+		$this->assertJsonStringEqualsJsonString('{"id":1}', $res);
 	}
 
 	public function testConnect() {
@@ -37,7 +41,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$app->rest('/endpoint', (object)[]);
 	}
 
-	public function testDispatch() {
+	public function testDispatchException() {
 		$this->expectException(ForbiddenException::class);
 		$app = new App();
 		$app->dispatch('/');

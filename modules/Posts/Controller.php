@@ -31,7 +31,7 @@ class Controller extends RestController {
         } else {
             $data = $this->model->getList();
         }
-        return json_encode($data);
+        return $data;
     }
 
     final public function delete() {
@@ -43,13 +43,13 @@ class Controller extends RestController {
         $id = $this->params['id'];
         $item = $this->model->getById($id);
         $this->model->delete($id);
-        return json_encode($item);
+        return $item;
     }
 
     final public function post() {
         $data = $this->request->getPostData();
         $id = isset($this->params['id']) ? $this->params['id'] : null;
         $id = $this->model->save($id, $data);
-        return json_encode($this->model->getById($id));
+        return $this->model->getById($id);
     }
 }

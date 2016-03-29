@@ -1,10 +1,14 @@
 <?php
 
-use Stream\Request;
-
 /**
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
+
+namespace modules\Users\model;
+
+use \Stream\Request;
+use \PDO;
+
 class User {
 
     private $db;
@@ -118,12 +122,15 @@ class User {
         }
 
         $sql = "SELECT * FROM `{$this->_table}` WHERE email = :email";
+        
         $statement = $this->db->prepare($sql);
         $statement->bindParam(":email", $this->data['email']);
         $statement->execute();
+        
         $row = $statement->fetch();
-        if($row && password_verify($this->data['password'], $row['password'])) {
-            $_SESSION['uid'] = $row['id'];
+
+        if($row && password_verify($this->data['password'], $row->password)) {
+            $_SESSION['uid'] = $row->id;
             return true;
         } else {
             return false;
