@@ -13,10 +13,10 @@ $app = new App();
 $app->loadConfig();
 $app->connect();
 
-$ctrl = new MainController();
 
-$app->get('/^\/(\?.*)*$/', function($req) use ($ctrl) {
-    $ctrl->home();
+$app->get('/^\/(\?.*)*$/', function($req) {
+	$controller = new modules\Home\Controller();
+    $controller->default();
 });
 
 $app->rest(['/posts.json', '/posts/:id.json'], modules\Posts\Controller::class);

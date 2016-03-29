@@ -7,7 +7,7 @@ class ClientsControllerTest extends PHPUnit_Extensions_Database_TestCase {
         $this->app = new App();
         $this->app->loadConfig();
         $this->app->connect('test_stream');
-		$this->controller = new Controller([], new Fake\Request([]));
+        $this->controller = new Controller([], new Fake\Request([]));
         return $this->createDefaultDBConnection($this->app->pdo);
     }
     public function getDataSet() {
