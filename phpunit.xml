@@ -1,20 +1,29 @@
 <phpunit bootstrap="bootstrap.php">
-	<testsuites>
-		<testsuite name="framework">
-			<directory>tests</directory>
-		</testsuite>
-		<testsuite name="modules">
-			<directory>modules</directory>
-		</testsuite>
-	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">lib/Stream</directory>
-			<directory suffix=".php">modules</directory>
-			<exclude>
-				<directory>modules/*/tests</directory>>
-				<file>lib/Stream/RedisCache.php</file>
-			</exclude>
-		</whitelist>
-	</filter>
+    <testsuites>
+
+        <testsuite name="Lib">
+            <directory>tests</directory>
+        </testsuite>
+
+        <testsuite name="modules">
+            <directory>modules</directory>
+        </testsuite>
+
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+
+            <directory suffix=".php">lib/Stream</directory>
+            <directory suffix=".php">modules</directory>
+
+            <exclude>
+            
+                <directory>modules/*/tests</directory>
+
+                <file>lib/Stream/Request.php</file>
+                <file>lib/Stream/RedisCache.php</file>
+            
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

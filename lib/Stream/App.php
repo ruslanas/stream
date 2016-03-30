@@ -23,7 +23,11 @@ use \Stream\Interfaces\CacheInterface;
 use \Stream\Interfaces\RestApi;
 use \Stream\Interfaces\DomainControllerInterface;
 
-class App implements AppInterface {
+use \Stream\Util\Injectable;
+
+class App extends Injectable implements AppInterface {
+
+    protected $_injectable = ['acl', 'req', 'cache'];
 
     private $_controllers = [];
     private $_domains = [];
@@ -57,12 +61,15 @@ class App implements AppInterface {
     public function __construct($config = [], CacheInterface $cache = NULL) {
         $this->_config = array_merge($this->_config, $config);
 
-        $this->acl = new Acl();
+        $this->acl = new Acl;
+        $this->req = new Request;
+
         if($cache !== NULL) {
             $this->cache = $cache;
         } else {
             $this->cache = new Cache();
         }
+        
         static::$instance = $this;
     }
 
@@ -113,7 +120,7 @@ class App implements AppInterface {
      */
     public function dispatch($uri) {
 
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
+        $method = $this->req->getMethod();
 
         if(!$this->authorize($method, $uri)) {
             throw new ForbiddenException("Not allowed");
@@ -123,19 +130,27 @@ class App implements AppInterface {
         $controller = $this->createController($method, $uri);
 
         if($controller instanceof RestApi) {
+            
             $out = $controller->{$method}();
+
             if($controller->redirect()) {
+
                 header('Location: '.$controller->redirect());
+            
             }
+            
             echo $this->serialize($out);
+            
             return;
+        
         }
 
-        $cached = $this->cache->fetch($uri);
-        $headers = getallheaders();
+        $headers = $this->req->getHeaders();
 
         $revalidate = (!empty($headers['Cache-Control'])
             && strpos($headers['Cache-Control'], 'max-age=0') !== FALSE) ? true : false;
+
+        $cached = $this->cache->fetch($uri);
 
         // cached and valid
         if(!$revalidate && $method === 'GET' && !empty($cached)) {
@@ -180,8 +195,12 @@ class App implements AppInterface {
             }
 
             $handler = null;
+
             foreach($handlers as $regexp => $func) {
-                if(preg_match($regexp, $uri, $matches)) {
+                
+                $params = $this->match($regexp, $uri);
+                
+                if(is_array($params)) {
                     $handler = $func;
                     break;
                 }
@@ -192,7 +211,7 @@ class App implements AppInterface {
                 throw new NotFoundException("Could not ".$method.' '.$uri);
             }
 
-            $handler($matches);
+            $handler($params);
 
         }
 
@@ -201,18 +220,34 @@ class App implements AppInterface {
     }
 
     protected function match($parameterized, $uri) {
+        
+        $components = explode('?', $uri);
+        $path = rtrim($components[0], '/');
+
+        if(empty($path) && $parameterized == '/') {
+            return [];
+        }
+
         $re = preg_replace('/\:\w*/', '(\w*)', $parameterized);
-        $re = '~'.$re.'~';
-        $count = preg_match_all($re, $uri, $matches);
+        
+        $re = '~^'.$re.'$~';
+        
+        $count = preg_match_all($re, $path, $matches);
+        
         if($count > 0) {
+
             preg_match_all('/\:(\w*)/', $parameterized, $parms);
+            
             $out = [];
-            for($i=1; $i<sizeof($matches); $i++) {
+
+            for($i=1; $i<count($matches); $i++) {
                 $out[$parms[1][$i-1]] = $matches[$i][0];
             }
+
             return $out;
         }
-        return false;
+        
+        return FALSE;
     }
 
     protected function createController($method, $uri) {

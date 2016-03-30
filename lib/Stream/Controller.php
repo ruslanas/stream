@@ -7,7 +7,9 @@
 
 namespace Stream;
 
-class Controller {
+use \Stream\Util\Injectable;
+
+class Controller extends Injectable {
 
     protected $templates;
     protected $app;

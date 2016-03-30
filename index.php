@@ -10,7 +10,7 @@ $app = new Stream\App();
 $app->loadConfig();
 $app->connect();
 
-$app->get('/^\/(\?.*)*$/', function($req) {
+$app->get('/', function($req) {
     $controller = new modules\Home\Controller();
     $controller->default();
 });
