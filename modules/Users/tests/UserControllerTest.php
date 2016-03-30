@@ -8,7 +8,7 @@ use Stream\App;
 use Stream\Exception\NotFoundException;
 use Stream\Test\DatabaseTestCase;
 
-use modules\Users\UserController;
+use modules\Users\Controller;
 
 class UserControllerTest extends DatabaseTestCase {
     
@@ -18,19 +18,19 @@ class UserControllerTest extends DatabaseTestCase {
 
     public function testLogin() {
         
-        $controller = new UserController($this->getRequestMock());
+        $controller = new Controller($this->getRequestMock());
         
         $out = $controller->login();
         $this->assertContains('<form', $out);
 
-        $controller = new UserController($this->getRequestMock(['email'=>'test@example.com', 'password' => 'foo']));
+        $controller = new Controller($this->getRequestMock(['email'=>'test@example.com', 'password' => 'foo']));
         
         $controller->login();
         $this->assertTrue($controller->redirect() !== FALSE);
     }
 
     public function testDispatch() {
-        $controller = new UserController($this->getRequestMock());
+        $controller = new Controller($this->getRequestMock());
 
         $out = $controller->dispatch('/user/login');
         $this->assertContains('Sign In', $out);
@@ -44,7 +44,7 @@ class UserControllerTest extends DatabaseTestCase {
     }
 
     public function testLogout() {
-        $controller = new UserController();
+        $controller = new Controller();
         $controller->logout();
         $this->assertTrue($controller->redirect() !== FALSE);
     }
@@ -52,11 +52,11 @@ class UserControllerTest extends DatabaseTestCase {
     public function testAdd() {
         unset($_SESSION['uid']);
 
-        $controller = new UserController();
+        $controller = new Controller();
         $out = $controller->add();
         $this->assertContains('<form', $out);
 
-        $controller = new UserController($this->getRequestMock([
+        $controller = new Controller($this->getRequestMock([
             'email' => 'new@example.com',
             'password' => 'bar',
             'password2' => 'bar'

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller base class
  *
@@ -7,21 +8,17 @@
 
 namespace Stream;
 
-use \Stream\Util\Injectable;
+use Stream\Util\Injectable;
 
 class Controller extends Injectable {
 
-    protected $templates;
     protected $app;
     protected $_redirect = FALSE;
 
     public function __construct() {
+
         $this->app = App::getInstance();
-        $this->templates = new \League\Plates\Engine($this->app->template_path);
-        $this->templates->addData([
-            'authorized' => !empty($_SESSION['uid']),
-            'title' => $this->app->title
-        ]);
+
     }
 
     public function redirect($uri = NULL) {

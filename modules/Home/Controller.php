@@ -7,13 +7,16 @@
 namespace modules\Home;
 
 use modules\Posts\model\Post;
+use Stream\PageController;
 
-class Controller extends \Stream\Controller {
+class Controller extends PageController {
 
     private $model;
 
     public function __construct() {
+
         parent::__construct();
+
         $this->templates->addFolder('stream', 'modules/Home/templates');
         $this->model = new Post($this->app->pdo);
     }

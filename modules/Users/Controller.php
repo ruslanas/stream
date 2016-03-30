@@ -1,17 +1,19 @@
 <?php
+
 /**
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
 namespace modules\Users;
 
+use Stream\PageController;
 use \Stream\Request;
 use \Stream\Exception\NotFoundException;
 use \Stream\Interfaces\DomainControllerInterface;
 
 use \modules\Users\model\User;
 
-class UserController extends \Stream\Controller implements DomainControllerInterface {
+class Controller extends PageController implements DomainControllerInterface {
 
     public function __construct(Request $request = NULL) {
         parent::__construct();
