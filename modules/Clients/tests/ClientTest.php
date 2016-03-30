@@ -33,14 +33,17 @@ class ClientTest extends DatabaseTestCase {
 	}
 	
 	public function testFilter() {
+
 		$res = $this->client->filter($this->_data);
 		$this->assertEquals(sizeof($res), 0);
-		$id = $this->client->save(NULL, $this->_data);
+
+		$data = $this->client->save(NULL, $this->_data);
 		$res = $this->client->filter($this->_data);
 		$this->assertEquals(sizeof($res), 1);
-		$newId = $this->client->save($id, $this->_data);
-		$this->assertEquals($id, $newId);
-		$this->client->delete($id);
+
+		$newData = $this->client->save($data->id, $this->_data);
+		$this->assertEquals($data->id, $newData->id);
+
 	}
 
 	public function tearDown() {

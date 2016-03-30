@@ -3,8 +3,9 @@
 namespace modules\Clients\model;
 
 use \PDO;
+use Stream\PersistentStorage;
 
-class Client {
+class Client extends PersistentStorage {
 
     private $_default = [
         'type' => 0,
@@ -13,15 +14,24 @@ class Client {
         'phone' => ''
     ];
 
-    public function __construct(PDO $pdo) {
-        $this->db = $pdo;
-    }
+    protected $table = 'clients';
+    protected $fields = [
+        'id',
+        'name',
+        'email',
+        'phone',
+        'type',
+        'address'
+    ];
+
     public function getList() {
 
         $data = [];
+
         $sql = "SELECT clients.*, users.username FROM clients LEFT JOIN users ON clients.user_id = users.id"
             ." WHERE NOT clients.deleted"
             ." ORDER BY clients.created DESC LIMIT 100";
+
         foreach($this->db->query($sql) as $row) {
             $data[] = $row;
         }
@@ -30,29 +40,13 @@ class Client {
     }
 
     public function save($id, $data) {
-        $data = array_merge($this->_default, $data);
+
         if($id !== NULL) {
-            $sql = "UPDATE clients"
-                ." SET name = :name, email = :email, phone = :phone, type = :type, address = :address"
-                ." WHERE id = :id";
+            return $this->update($id, $data);
         } else {
-            $sql = "INSERT INTO clients (name, email, phone, type, address)"
-                ." VALUES(:name, :email, :phone, :type, :address)";
+            return $this->create($data);
         }
 
-        $statement = $this->db->prepare($sql);
-        $statement->bindParam(':name', $data['name'], PDO::PARAM_STR);
-        $statement->bindParam(':email', $data['email'], PDO::PARAM_STR);
-        $statement->bindParam(':phone', $data['phone'], PDO::PARAM_STR);
-        $statement->bindParam(':type', $data['type'], PDO::PARAM_INT);
-        $statement->bindParam(':address', $data['address'], PDO::PARAM_STR);
-
-        if($id !== NULL) {
-            $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        }
-
-        $statement->execute();
-        return $id === NULL ? $this->db->lastInsertId() : $id;
     }
 
     public function getById($id, $showDeleted = FALSE) {

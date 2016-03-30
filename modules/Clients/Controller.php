@@ -29,8 +29,7 @@ class Controller extends RestController {
     final public function post() {
         $id = isset($this->params['id']) ? $this->params['id'] : null;
         $data = $this->request->getPostData();
-        $id = $this->model->save($id, $data);
-        return $this->model->getById($id);
+        return $this->model->save($id, $data);
     }
 
     final public function delete() {
