@@ -22,6 +22,7 @@ angular.module('messages', [
         var newPost = new Post(post);
 
         newPost.$save(function(res) {
+            self.posts.unshift(res);
             self.showForm = false;
         }, function(res) {
             alert(res.data);

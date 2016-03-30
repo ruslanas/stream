@@ -1,30 +1,42 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
 namespace modules\Events;
-use Stream\Interfaces\RestApi;
 
-class Controller extends \Stream\RestController {
-	
-	protected $event;
+use \Stream\RestController;
 
-	public function __construct() {
-		parent::__construct();
-		$this->event = new Model\Event;
-	}
+class Controller extends RestController {
+    
+    protected $event;
+    protected $_injectable = ['params', 'request', 'event'];
 
-	final public function get() {
-		return $this->event->read();
-	}
-	
-	final public function post() {
-		return $this->event->create();
-	}
-	
-	final public function delete() {
-		return $this->event->delete();
-	}
+    public function __construct($params, $request) {
+        
+        parent::__construct();
 
-	final public function put() {
-		return $this->event->update();
-	}
+        $this->params = $params;
+        $this->request = $request;
+
+        $this->event = new model\Event($this->app->pdo);
+    
+    }
+
+    final public function get() {
+        return $this->event->read();
+    }
+    
+    final public function post() {
+        return $this->event->create($this->request->getPostData());
+    }
+    
+    final public function delete() {
+        return $this->event->delete($this->params['id']);
+    }
+
+    final public function put() {
+        return $this->event->update($this->params['id'], $this->request->getPostData());
+    }
 }

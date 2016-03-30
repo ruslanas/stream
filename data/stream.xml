@@ -26,4 +26,14 @@
 		user_id="1"
 		deleted="1"
 		phone="+370 00000"></clients>
+
+
+	<events id="1"
+		type="meeting"
+		title="Business meeting"
+		when="2016-03-30 08:00:00"
+		description="Drink coffee."
+		user_id="1">
+	</events>
+
 </dataset>

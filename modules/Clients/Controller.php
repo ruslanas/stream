@@ -3,7 +3,6 @@
 namespace modules\Clients;
 
 use \Stream\Exception\NotFoundException;
-use \Stream\Interfaces\RestApi;
 use \Stream\RestController;
 
 class Controller extends RestController {
