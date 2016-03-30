@@ -16,11 +16,15 @@ use \modules\Posts\model\Post;
 class Controller extends RestController {
 
     private $params = [];
+    protected $_injectable = ['params', 'request', 'model'];
 
-    public function __construct($params, $request) {
+    public function __construct($selector, $request) {
+        
         parent::__construct();
-        $this->params = $params;
+
+        $this->params = $selector;
         $this->request = $request;
+        
         $this->model = new Post($this->app->pdo);
     }
 

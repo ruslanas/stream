@@ -2,9 +2,6 @@
 
 /**
  * Main program
- * Configure application and setup request handlers
- * Application logic is implemented in controllers
- * Controllers use models to manipulate data and templates to present it to user
  *
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
@@ -13,9 +10,8 @@ $app = new Stream\App();
 $app->loadConfig();
 $app->connect();
 
-
 $app->get('/^\/(\?.*)*$/', function($req) {
-	$controller = new modules\Home\Controller();
+    $controller = new modules\Home\Controller();
     $controller->default();
 });
 

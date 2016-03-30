@@ -11,6 +11,7 @@ use \PDO;
 class Post {
 
     private $db;
+    private $table = 'posts';
 
     public function __construct(PDO $pdo) {
         $this->db = $pdo;
@@ -19,7 +20,7 @@ class Post {
     public function getList() {
 
         $data = [];
-        $sql = "SELECT * FROM posts ORDER BY created DESC";
+        $sql = "SELECT * FROM `{$this->table}` ORDER BY created DESC";
         foreach($this->db->query($sql) as $row) {
             $data[] = $row;
         }
@@ -28,18 +29,22 @@ class Post {
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM posts WHERE id = :id";
+        
+        $sql = "DELETE FROM `{$this->table}` WHERE id = :id";
+
         $statement = $this->db->prepare($sql);
         $statement->bindParam(':id', $id);
         $statement->execute();
     }
 
     public function save($id, $data) {
+        
         if($id !== NULL) {
-            $sql = "UPDATE posts SET title = :title, body = :body WHERE id = :id";
+            $sql = "UPDATE `{$this->table}` SET title = :title, body = :body WHERE id = :id";
         } else {
-            $sql = "INSERT INTO posts (title, body) VALUES(:title, :body)";
+            $sql = "INSERT INTO `{$this->table}` (title, body) VALUES(:title, :body)";
         }
+
         $statement = $this->db->prepare($sql);
         $statement->bindParam(':title', $data['title'], PDO::PARAM_STR);
         $statement->bindParam(':body', $data['body'], PDO::PARAM_STR);
@@ -54,10 +59,14 @@ class Post {
     }
 
     public function getById($id) {
-        $statement = $this->db->prepare("SELECT * FROM posts WHERE id = :id");
+        
+        $query = "SELECT * FROM `{$this->table}` WHERE id = :id";
+
+        $statement = $this->db->prepare($query);
+        
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
         $statement->execute();
-        $row = $statement->fetch();
-        return $row;
+        
+        return $statement->fetch();
     }
 }

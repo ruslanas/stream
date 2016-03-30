@@ -5,27 +5,23 @@
  */
 
 use Stream\App;
+use Stream\Request;
+use Stream\Test\DatabaseTestCase;
 
 use modules\Posts\model\Post;
 use modules\Users\model\User;
 
-class PostTest extends PHPUnit_Extensions_Database_TestCase
-{
-    /**
-     * @var Stream
-     */
+class PostTest extends DatabaseTestCase {
+
     protected $stream;
 
-    public function getConnection() {
-        $this->app = new App();
-        $this->app->loadConfig();
-        $this->app->connect('test_stream');
+    public function setUp() {
+
+        parent::setUp();
+
         $this->stream = new Post($this->app->pdo);
-        $this->user = new User(new Fake\Request, $this->app->pdo);
-        return $this->createDefaultDBConnection($this->app->pdo);
-    }
-    public function getDataSet() {
-        return $this->createFlatXMLDataSet('data/stream.xml');
+        $this->user = new User($this->getRequestMock(), $this->app->pdo);
+
     }
 
     public function testStream() {

@@ -1,23 +1,24 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
 use Stream\App;
+use Stream\Test\DatabaseTestCase;
+
 use modules\Clients\model\Client;
 
-class ClientTest extends PHPUnit_Extensions_Database_TestCase {
+class ClientTest extends DatabaseTestCase {
 	
 	private $_data = [
 		'name' => '___TEST_CLIENT___'
 	];
 
-	public function getConnection() {
-		$app = new App();
-		$app->loadConfig();
-		$app->connect('test_stream');
-		$this->client = new Client($app->pdo);
-		return $this->createDefaultDBConnection($app->pdo);
-	}
-	public function getDataSet() {
-		return $this->createFlatXMLDataSet('data/stream.xml');
+	public function setUp() {
+		parent::setUp();
+
+		$this->client = new Client($this->app->pdo);
 	}
 
 	public function testClient() {
