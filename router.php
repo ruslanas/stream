@@ -13,7 +13,7 @@ try {
 
     require_once 'index.php'; // <-- application setup
 
-    Stream\App::getInstance()->dispatch($_SERVER['REQUEST_URI']);
+    echo Stream\App::getInstance()->dispatch($_SERVER['REQUEST_URI']);
 
 } catch (Stream\Exception\NotFoundException $e) {
 

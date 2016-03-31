@@ -139,9 +139,7 @@ class App extends Injectable implements AppInterface {
             
             }
             
-            echo $this->serialize($out);
-            
-            return;
+            return $this->serialize($out);
         
         }
 
@@ -254,7 +252,7 @@ class App extends Injectable implements AppInterface {
         foreach($this->_controllers as $regexp => $controller_class) {
             $matches = $this->match($regexp, $uri);
             if($matches !== false) {
-                $controller = new $controller_class($matches, new Request);
+                $controller = new $controller_class($matches, $this->req);
                 return $controller;
             }
         }

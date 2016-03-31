@@ -13,7 +13,15 @@ use Stream\Request;
 class AppTest extends PHPUnit_Framework_TestCase {
     
     public function setUp() {
+        
         $this->app = new App();
+
+        $this->acl = $this->getMockBuilder(Acl::class)->getMock();
+        $this->app->inject('acl', $this->acl);
+        
+        $this->req = $this->getMockBuilder(Request::class)->getMock();
+        $this->app->inject('req', $this->req);
+        
     }
 
     public function testApp() {
@@ -24,12 +32,14 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(App::class, $app);
         $this->app = new App([], new Cache);
         $this->assertEquals(NULL, $this->app->non_existing_property);
+    
     }
 
     public function testSerialize() {
-        $app = new App();
-        $res = $app->serialize((object)['id'=>1]);
+    
+        $res = $this->app->serialize((object)['id'=>1]);
         $this->assertJsonStringEqualsJsonString('{"id":1}', $res);
+    
     }
 
     public function testConnect() {
@@ -42,7 +52,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $this->app->connect();
         $this->assertInstanceOf(PDO::class, $this->app->pdo);
 
-        $this->app->connect('test_database');
+        $this->app->connect('test_stream');
         $this->assertInstanceOf(PDO::class, $this->app->pdo);
 
         $this->expectException(Exception::class);
@@ -50,12 +60,16 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
     }
     
+    /**
+     * Test if config options merge correctly
+     */
     public function testLoadConfig() {
-        // should be merged with default config options
+
         $app = new App(['test_conf' => true]);
         $conf = $app->loadConfig();
         $this->assertArrayHasKey('test_conf', $conf);
         $this->assertArrayHasKey('template_path', $conf);
+    
     }
 
     public function testRest() {
@@ -70,6 +84,29 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $app->dispatch('/');
     }
 
+    public function testDispatchPostMethod() {
+        
+        $uri = '/controller/action/books/7';
+        $data = ['key' => 'value'];
+
+        $this->req->method('getMethod')->willReturn('POST');
+        $this->req->method('getPostData')->willReturn($data);
+        $this->acl->method('allow')
+            ->with('POST', $uri)
+            ->willReturn(TRUE);
+        
+        $this->app->rest(['/controller/action/:category/:id'], \Stream\Test\DummyController::class);
+
+        $output = $this->app->dispatch($uri);
+
+        $decoded = json_decode($output);
+
+        $this->assertEquals('value', $decoded->key);
+        $this->assertEquals('books', $decoded->params->category);
+        $this->assertEquals('7', $decoded->params->id);
+
+    }
+
     public function testMatch() {
         
         $cls = new ReflectionClass(App::class);
@@ -77,9 +114,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $meth = $cls->getMethod('match');
         $meth->setAccessible('true');
 
-        $app = new App();
-        
-        $params = $meth->invokeArgs($app, ['/foo/:foo/bar/:bar/baz/:baz', '/foo/10/bar/20/baz/baz?boo=boo']);
+        $params = $meth->invokeArgs($this->app, ['/foo/:foo/bar/:bar/baz/:baz', '/foo/10/bar/20/baz/baz?boo=boo']);
         
         $this->assertTrue(is_array($params), 'Should return associative array of URL parameters');
 
@@ -87,13 +122,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($params['bar'], 20);
         $this->assertEquals($params['baz'], 'baz');
 
-        $params = $meth->invokeArgs($app, ['/foo/:foo/bar/:bar/baz/:baz', '/foo/10/bar/20/baz/baz/']);
+        $params = $meth->invokeArgs($this->app, ['/foo/:foo/bar/:bar/baz/:baz', '/foo/10/bar/20/baz/baz/']);
         $this->assertTrue(is_array($params));
 
-        $params = $meth->invokeArgs($app, ['/foo/:foo/bar/', '/foo/10/bar/20/baz/baz?boo=boo']);
+        $params = $meth->invokeArgs($this->app, ['/foo/:foo/bar/', '/foo/10/bar/20/baz/baz?boo=boo']);
         $this->assertEquals(FALSE, $params);
 
-        $params = $meth->invokeArgs($app, ['/', '?boo=boo']);
+        $params = $meth->invokeArgs($this->app, ['/', '?boo=boo']);
         $this->assertTrue(is_array($params));
 
     }
@@ -102,17 +137,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
         $ret = [];
         
-        $acl = $this->getMockBuilder(Acl::class)
-            ->getMock();
-        $acl->method('allow')->willReturn(TRUE);
-        $this->app->inject('acl', $acl);
+        $this->acl->method('allow')->willReturn(TRUE);
 
-        $req = $this->getMockBuilder(Request::class)
-            ->getMock();
-        $req->method('getHeaders')->willReturn([]);
-        $req->method('getMethod')->willReturn('GET');
-
-        $this->app->inject('req', $req);
+        $this->req->method('getHeaders')->willReturn([]);
+        $this->req->method('getMethod')->willReturn('GET');
 
         $this->app->get('/client/:name', function($params) use (&$ret) {
             $ret = $params;

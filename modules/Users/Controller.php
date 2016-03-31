@@ -29,7 +29,7 @@ class Controller extends PageController implements DomainControllerInterface {
 
         $this->user = new User($this->request, $this->app->pdo);
         
-        $this->templates->addFolder('user', 'templates/user');
+        $this->templates->addFolder('user', 'modules/Users/templates');
     
     }
 

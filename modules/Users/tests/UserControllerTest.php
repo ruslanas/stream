@@ -68,7 +68,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         unset($_SESSION['uid']);
 
         $out = $this->controller->add();
-        $this->assertContains('<form', $out);
+        $this->assertContains('action="/user/add"', $out);
 
     }
 
