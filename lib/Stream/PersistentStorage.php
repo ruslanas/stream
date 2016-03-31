@@ -12,7 +12,7 @@ use \stdClass;
 use \Stream\Util\Injectable;
 
 /**
- * CRUD
+ * SCRUD
  */
 
 class PersistentStorage extends Injectable {
@@ -222,4 +222,35 @@ class PersistentStorage extends Injectable {
 
         return $statement;
     }
+
+    public function search($options) {
+
+        $tableName = $this->_get_table_name();
+
+        $sql = "SELECT * FROM `{$tableName}` WHERE ";
+        
+        $filter = [];
+        
+        foreach($options as $col => $value) {
+            $filter[] = "$col = :$col";
+        }
+        
+        $sql .= join(',', $filter);
+        $statement = $this->db->prepare($sql);
+        
+        foreach($options as $col => $value) {
+            $statement->bindParam(":$col", $value, PDO::PARAM_STR);
+        }
+
+        $statement->execute();
+        $data = [];
+        
+        while($row = $statement->fetch()) {
+            $data[] = $row;
+        }
+        
+        return $data;
+
+    }
+
 }

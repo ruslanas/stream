@@ -16,6 +16,7 @@ class Client extends PersistentStorage {
 
     protected $table = [
         'clients' => ['id',
+        
             'name',
             'email',
             'phone',
@@ -47,30 +48,15 @@ class Client extends PersistentStorage {
 
     }
 
-    public function getById($id, $showDeleted = FALSE) {
+    public function getById($id) {
         
         return $this->read($id);
 
     }
 
     public function filter($options) {
-        $sql = "SELECT * FROM clients WHERE ";
-        $filter = [];
-        foreach($options as $col => $value) {
-            $filter[] = "$col = :$col";
-        }
-        $sql .= join(',', $filter);
-        $statement = $this->db->prepare($sql);
-        
-        foreach($options as $col => $value) {
-            $statement->bindParam(":$col", $value, PDO::PARAM_STR);
-        }
 
-        $statement->execute();
-        $data = [];
-        while($row = $statement->fetch()) {
-            $data[] = $row;
-        }
-        return $data;
+        return $this->search($options);
+
     }
 }
