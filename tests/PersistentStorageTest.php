@@ -16,26 +16,31 @@ class PersistentStorageTest extends DatabaseTestCase {
         $this->app->connect('test_stream');
 
         $this->storage = new PersistentStorage($this->app->pdo);
-    
-    }
-
-    public function testRead() {
-        
         $this->storage->inject('table', [
             'posts' => [
+                'id',
                 'title',
                 'body',
                 'deleted',
                 'users' => [
+                    'id',
                     'username',
                     'email',
                     'deleted'
                 ]
             ]
         ]);
+    }
 
+    public function testRead() {
+        
         $data = $this->storage->read(1);
         $this->assertObjectHasAttribute('title', $data);
 
+    }
+
+    public function testDeleteReturnsDeletedRecord(){
+        $deleted = $this->storage->delete(1);
+        $this->assertEquals(1, $deleted->id);
     }
 }

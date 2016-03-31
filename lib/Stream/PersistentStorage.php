@@ -18,10 +18,8 @@ use \Stream\Util\Injectable;
 class PersistentStorage extends Injectable {
 
     protected $table = NULL;
-    protected $fields = [];
-    protected $join = [];
 
-    protected $_injectable = ['table', 'fields', 'join'];
+    protected $_injectable = ['table'];
 
     /**
      * @param PDO $pdo
@@ -134,7 +132,7 @@ class PersistentStorage extends Injectable {
 
         $tableName = $this->_get_table_name();
 
-        if(in_array('deleted', $this->fields)) {
+        if(in_array('deleted', $this->table[$tableName])) {
             $query = "UPDATE `{$tableName}` SET deleted = 1 WHERE id = :id";
         } else {
             $query = "DELETE FROM `{$tableName}` WHERE id = :id";

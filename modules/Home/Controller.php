@@ -23,7 +23,7 @@ class Controller extends PageController {
 
     public function default() {
         $data = $this->model->getList();
-        echo $this->templates->render('stream::index', [
+        return $this->templates->render('stream::index', [
             'data' => $data
         ]);
     }

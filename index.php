@@ -12,7 +12,7 @@ $app->connect();
 
 $app->get('/', function($req) {
     $controller = new modules\Home\Controller();
-    $controller->default();
+    echo $controller->default();
 });
 
 $app->rest(['/posts.json', '/posts/:id.json'], modules\Posts\Controller::class);

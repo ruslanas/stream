@@ -36,35 +36,30 @@ class PostTest extends DatabaseTestCase {
     }
 
     public function testDelete() {
-        $id = $this->stream->save(NULL, [
-            'title' => 'Foo',
-            'body' => 'Bar',
-            'ignore_this_column' => 'Ignored' 
-        ]);
+      
+        $this->stream->delete(1);
         $res = $this->stream->getList();
-        $this->assertEquals(sizeof($res), 2);
-        $this->stream->delete($id);
-        $res = $this->stream->getList();
-        $this->assertEquals(sizeof($res), 1);
+        $this->assertEquals(0, count($res));
+    
     }
 
     public function testSave() {
+        
         $data = [
             'title' => 'Foo',
             'body' => 'Bar'
         ];
-        $id = $this->stream->save(NULL, $data);
-        $res = $this->stream->getById($id);
-        $this->assertEquals($res->title, 'Foo');
-        $this->assertEquals($res->body, 'Bar');
+
+        $record = $this->stream->save(NULL, $data);
+        
+        $this->assertEquals($record->title, 'Foo');
+        $this->assertEquals($record->body, 'Bar');
         
         $data['title'] = 'baz';
-        $newId = $this->stream->save($id, $data);
-        $this->assertEquals($id, $newId);
+        $updatedRec = $this->stream->save($record->id, $data);
+        $this->assertEquals($record->id, $updatedRec->id);
+        $this->assertEquals($updatedRec->title,'baz');
 
-        $res = $this->stream->getById($id);
-        $this->assertEquals($res->title,'baz');
-        $this->stream->delete($id);
     }
 
     public function testGetById() {

@@ -53,7 +53,6 @@ class Controller extends RestController {
     final public function post() {
         $data = $this->request->getPostData();
         $id = isset($this->params['id']) ? $this->params['id'] : null;
-        $id = $this->model->save($id, $data);
-        return $this->model->getById($id);
+        return $this->model->save($id, $data);
     }
 }
