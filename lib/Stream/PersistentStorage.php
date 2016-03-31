@@ -9,14 +9,19 @@ namespace Stream;
 use \PDO;
 use \stdClass;
 
+use \Stream\Util\Injectable;
+
 /**
  * CRUD
  */
-abstract class PersistentStorage {
+
+class PersistentStorage extends Injectable {
 
     protected $table = NULL;
     protected $fields = [];
     protected $join = [];
+
+    protected $_injectable = ['table', 'fields', 'join'];
 
     /**
      * @param PDO $pdo
@@ -32,31 +37,46 @@ abstract class PersistentStorage {
      */
     public function read($id = NULL) {
 
+        reset($this->table);
+        $tableName = key($this->table);
 
-        $fieldList = "`{$this->table}`.*";
+        $fieldList = "`{$tableName}`.*";
+
         $joins = '';
 
-        foreach($this->join as $tbl => $cols) {
+        foreach($this->table[$tableName] as $tbl => $cols) {
+
+            if(!is_array($cols)) {
+                continue;
+            }
 
             $rel = rtrim($tbl, 's')."_id";
-            $joins .= " LEFT JOIN `{$tbl}` ON `{$tbl}`.id = `{$this->table}`.`$rel`";
+            $joins .= " LEFT JOIN `{$tbl}` ON `{$tbl}`.id = `{$tableName}`.`$rel`";
+            
             foreach($cols as $col) {
                 $fieldList .= ", `$tbl`.`$col` AS `{$tbl}_{$col}`";
             }
 
         }
 
-        $query = "SELECT $fieldList FROM `{$this->table}`".$joins;
+        $query = "SELECT $fieldList FROM `{$tableName}`".$joins;
         
         if ($id !== NULL) {
-            $query .= " WHERE `{$this->table}`.id = :id";
-            if(in_array('deleted', $this->fields)) {
-                $query .= " AND NOT `{$this->table}`.deleted";
+            
+            $query .= " WHERE `{$tableName}`.id = :id";
+            if(in_array('deleted', $this->table[$tableName])
+                && !is_array($this->table[$tableName])) {
+
+                $query .= " AND NOT `{$tableName}`.deleted";
+            
             }
+
         } else {
-            if(in_array('deleted', $this->fields)) {
-                $query .= " WHERE NOT `{$this->table}`.deleted";
+            
+            if(in_array('deleted', $this->table[$tableName])) {
+                $query .= " WHERE NOT `{$tableName}`.deleted";
             }
+        
         }
 
         $statement = $this->db->prepare($query);
@@ -84,8 +104,14 @@ abstract class PersistentStorage {
 
     protected function reshape($row) {
 
-        foreach($this->join as $tbl => $cols) {
+        $tableName = $this->_get_table_name();
+
+        foreach($this->table[$tableName] as $tbl => $cols) {
             
+            if(!is_array($cols)) {
+                continue;
+            }
+
             $rel = new stdClass();
 
             foreach($cols as $col) {
@@ -106,19 +132,17 @@ abstract class PersistentStorage {
 
         $ret = $this->read($id);
 
+        $tableName = $this->_get_table_name();
+
         if(in_array('deleted', $this->fields)) {
-            $query = "UPDATE `{$this->table}` SET deleted = 1 WHERE id = :id";
+            $query = "UPDATE `{$tableName}` SET deleted = 1 WHERE id = :id";
         } else {
-            $query = "DELETE FROM `{$this->table}` WHERE id = :id";
+            $query = "DELETE FROM `{$tableName}` WHERE id = :id";
         }
 
         $statement = $this->db->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
         $statement->execute();
-
-        // if(in_array('deleted', $this->fields)) {
-        //     $ret = $this->read($id);
-        // }
 
         return $ret;
     }
@@ -141,23 +165,35 @@ abstract class PersistentStorage {
         return $this->read($id);
     }
 
+    private function _get_table_name() {
+        reset($this->table);
+        return key($this->table);
+    }
+
     private function prepareStatement($data, $id = NULL) {
 
+        $tableName = $this->_get_table_name();
+
         if ($id === NULL) {
-            $query = "INSERT INTO `{$this->table}` SET ";
+            $query = "INSERT INTO `{$tableName}` SET ";
         } else {
-            $query = "UPDATE `{$this->table}` SET ";
+            $query = "UPDATE `{$tableName}` SET ";
         }
 
         $q = [];
 
-        foreach ($this->fields as $field) {
-
+        foreach ($this->table[$tableName] as $idx => $field) {
+            
+            if(is_array($field)) {
+                continue;
+            }
+            
             if (empty($data[$field])) {
                 continue;
             }
 
             $q[] = $field . "=:" . $field;
+        
         }
 
         $query .= join(',', $q);
@@ -168,13 +204,18 @@ abstract class PersistentStorage {
 
         $statement = $this->db->prepare($query);
 
-        foreach ($this->fields as $field) {
+        foreach ($this->table[$tableName] as $idx => $field) {
+
+            if(is_array($field)) {
+                continue;
+            }
 
             if (empty($data[$field])) {
                 continue;
             }
 
             $statement->bindParam(":" . $field, $data[$field]);
+
         }
 
         if ($id !== NULL) {

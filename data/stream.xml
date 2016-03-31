@@ -5,13 +5,16 @@
         username="Admin User"
         email="admin@example.com"
         password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
-        group="admin"></users>
+        group="admin"
+        deleted="0"></users>
     <users id="2"
         username="Ordinary User"
         email="info@example.com"
-        password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></users>
+        password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
+        deleted="0"
+        group="manager"></users>
 
-    <posts id="1" title="Test" body="Message body" user_id="1"></posts>
+    <posts id="1" title="Test" body="Message body" user_id="1" deleted="0"></posts>
     
     <clients id="1"
         name="Client Name"

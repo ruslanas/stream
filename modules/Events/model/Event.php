@@ -10,24 +10,26 @@ use Stream\PersistentStorage;
 
 class Event extends PersistentStorage {
     
-    protected $table = 'events';
-    protected $join = [
-        'users' => [
-            'username',
-            'email'
-        ],
-        'clients' => [
-            'name',
-            'deleted'
+    protected $table = [
+        'events' => [
+            
+            'id',
+            'title',
+            'description',
+            'type',
+            'when',
+            'user_id',
+
+            'users' => [
+                'username',
+                'email'
+            ],
+
+            'clients' => [
+                'name',
+                'deleted'
+            ]
         ]
-    ];
-    protected $fields = [
-        'id',
-        'title',
-        'description',
-        'type',
-        'when',
-        'user_id'
     ];
 
 }

@@ -7,6 +7,8 @@ use \Stream\RestController;
 
 class Controller extends RestController {
 
+    protected $_injectable = ['params'];
+    
     public function __construct($params, $request) {
         parent::__construct();
         $this->params = $params;

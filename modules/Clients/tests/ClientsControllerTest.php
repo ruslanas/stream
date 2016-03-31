@@ -3,6 +3,7 @@
 use Stream\App;
 use Stream\Request;
 use Stream\Test\DatabaseTestCase;
+use Stream\Exception\NotFoundException;
 
 use modules\Clients\Controller;
 
@@ -26,6 +27,12 @@ class ClientsControllerTest extends DatabaseTestCase {
         $this->assertEquals('Client Name', $res->name);
     }
 
+    public function testGetThrowsExeption() {
+        $this->expectException(NotFoundException::class);
+        $this->controller->inject('params', ['id' => 1000]);
+        $this->controller->get();
+    }
+
     public function testDelete() {
 
         $controller = new Controller(['id' => 1], $this->getRequestMock());
@@ -34,17 +41,19 @@ class ClientsControllerTest extends DatabaseTestCase {
         
         $this->assertEquals($res->id, '1');
         
-        $this->expectException(Stream\Exception\NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         
         $controller->get();
     }
 
     public function testPost() {
+
         $controller = new Controller([], $this->getRequestMock(NULL, [
             'name' => 'New Client'
         ]));
 
         $out = $controller->post();
         $this->assertEquals($out->name, 'New Client');
+        
     }
 }

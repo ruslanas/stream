@@ -14,24 +14,21 @@ use Stream\PersistentStorage;
  */
 class Client extends PersistentStorage {
 
-    protected $table = 'clients';
-    
-    protected $join = [
-        'users' => [
-            'username',
-            'email'
+    protected $table = [
+        'clients' => ['id',
+            'name',
+            'email',
+            'phone',
+            'type',
+            'address',
+            'user_id',
+            'deleted',
+            
+            'users' => [
+                'username',
+                'email'
+            ]
         ]
-    ];
-
-    protected $fields = [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'type',
-        'address',
-        'user_id',
-        'deleted'
     ];
 
     public function getList() {
