@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
     <head>
+        
         <meta charset="utf-8">
+        
         <title><?php echo $this->e($title);?></title>
-        <link rel="stylesheet" type="text/css" href="/css/basic.css"/>
-        <script src="/components/angular/angular.min.js"></script>
-        <script src="/components/angular-resource/angular-resource.min.js"></script>
-        <script src="/components/angular-route/angular-route.min.js"></script>
-        <script src="/components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-
-        <script src="/js/app.js"></script>
+        
+        <?php foreach($stylesheets as $sheet): ?>
+        <link type="text/css" rel="stylesheet" href="<?php echo $sheet; ?>">
+        <?php endforeach; ?>
         <!-- modules -->
-        <script src="/js/stream.js"></script>
-        <script src="/js/client.js"></script>
-        <script src="/js/directives/data-grid.js"></script>
+        <?php foreach($scripts as $script): ?>
+        <script src="<?php echo $script; ?>"></script>
+        <?php endforeach; ?>
+        <!-- end modules -->
 
-        <link type="text/css" rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
     </head>
     <body data-ng-app="stream" data-ng-controller="MainController as app">
 

@@ -27,8 +27,16 @@ class PageController extends Controller {
         $this->templates = new Engine($this->app->template_path);
         
         $this->templates->addData([
+            
             'authorized' => !empty($_SESSION['uid']),
-            'title' => $this->app->title
+            
+            'title' => $this->app->title,
+            
+            'scripts' => [],
+            
+            'stylesheets' => [
+                "/components/bootstrap/dist/css/bootstrap.min.css"
+            ]
         ]);
     
     }
