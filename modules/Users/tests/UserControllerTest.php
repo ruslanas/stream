@@ -63,7 +63,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->controller->redirect() !== FALSE);
     }
 
-    public function testAdd() {
+    public function testAddForm() {
         
         unset($_SESSION['uid']);
 
@@ -104,5 +104,16 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->controller->add();
         $this->assertEquals('/', $this->controller->redirect());
 
+    }
+
+    public function testAddNotAuthenticatedNotExistingValid() {
+        
+        $this->user->method('authenticate')->willReturn(FALSE);
+        $this->req->method('post')->willReturn(['email'=>'valid@example.ccom']);
+        $this->user->method('valid')->willReturn(TRUE);
+
+        $this->controller->add();
+        $this->assertEquals('/user/login', $this->controller->redirect());
+    
     }
 }
