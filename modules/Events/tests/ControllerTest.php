@@ -12,62 +12,81 @@ use modules\Events\Controller;
 use modules\Events\model\Event;
 
 class ControllerTest extends PHPUnit_Framework_TestCase {
-	
-	public function setUp() {
+    
+    public function setUp() {
 
-		$this->app = new App();
-		$this->app->loadConfig();
-		$this->app->connect('test_stream');
+        $this->app = new App();
 
-		$model = $this->getMockBuilder(Event::class)
-		->disableOriginalConstructor()
-		->getMock();
+        $this->app->loadConfig();
+        $this->app->connect('test_stream');
 
-		$model->method('create')->willReturn((object)['id'=>1]);
-		$model->method('read')->willReturn((object)['id'=>1]);
-		$model->method('update')->willReturn((object)['id'=>1]);
-		$model->method('delete')->willReturn((object)['id'=>1]);
+        $this->model = $this->getMockBuilder(Event::class)
+        ->disableOriginalConstructor()
+        ->getMock();
 
-		$request = $this->getMockBuilder(Request::class)
-		->disableOriginalConstructor()
-		->getMock();
+        $request = $this->getMockBuilder(Request::class)
+        ->disableOriginalConstructor()
+        ->getMock();
 
-		$request->method('getPostData')->willReturn([
-			'type' => 'call'
-		]);
+        $request->method('getPostData')->willReturn([
+            'type' => 'call'
+        ]);
 
-		$this->controller = new Controller([], $request);
+        $this->controller = new Controller([], $request);
+        $this->controller->inject('event', $this->model);
 
-		$this->controller->inject('event', $model);
+    }
+    
+    public function testGetList() {
+        
+        $this->model->method('read')->with(NULL)->willReturn([(object)['id'=>1]]);
+        
+        $this->assertTrue(is_array($this->controller->get()), 'Array expected');
+    }
 
-	}
-	
-	public function testGet() {
-		$this->assertObjectHasAttribute('id', $this->controller->get());
-	}
+    public function testGetOne() {
 
-	public function testDelete() {
-		$this->controller->inject('params', ['id' => 1]);
-		$this->assertObjectHasAttribute('id', $this->controller->delete());
-	}
+        $this->model->method('read')->with(1)->willReturn((object)['id'=>1]);
 
-	public function testPost() {
-		$this->assertObjectHasAttribute('id', $this->controller->post());
-	}
-	
-	public function testPut() {
-		$this->controller->inject('params', ['id' => 1]);
-		$this->assertObjectHasAttribute('id', $this->controller->put());
-	}
+        $this->controller->inject('params', ['id' => 1]);
+        $this->assertObjectHasAttribute('id', $this->controller->get());
+    }
 
-	public function testAllowHeaderField() {
-		$allow = '';
-		try {
-			$this->controller->head();
-		} catch (UnknownMethodException $e) {
-			$allow = $e->getAllow();
-		}
-		$this->assertEquals('Allow: DELETE, GET, POST, PUT', $allow);
-	}
+    public function testDelete() {
+        
+        $this->model->method('delete')->willReturn((object)['id'=>1]);
+
+        $this->controller->inject('params', ['id' => 1]);
+        $this->assertObjectHasAttribute('id', $this->controller->delete());
+    }
+
+    public function testPost() {
+        
+        $this->model->method('create')->willReturn((object)['id'=>1]);
+        
+        $this->assertObjectHasAttribute('id', $this->controller->post());
+    }
+    
+    public function testPut() {
+        
+        $this->model->method('update')->willReturn((object)['id'=>1]);
+        
+        $this->controller->inject('params', ['id' => 1]);
+        $this->assertObjectHasAttribute('id', $this->controller->put());
+
+    }
+
+    public function testAllowHeaderField() {
+        
+        $allow = '';
+        
+        try {
+            $this->controller->head();
+        } catch (UnknownMethodException $e) {
+            $allow = $e->getAllow();
+        }
+
+        $this->assertEquals('Allow: DELETE, GET, POST, PUT', $allow);
+    }
 
 }

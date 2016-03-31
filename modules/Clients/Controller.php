@@ -33,7 +33,6 @@ class Controller extends RestController {
     }
 
     final public function delete() {
-        $this->model->delete($this->params['id']);
-        return $this->model->getById($this->params['id'], TRUE);
+        return $this->model->delete($this->params['id']);
     }
 }

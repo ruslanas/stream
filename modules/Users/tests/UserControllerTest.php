@@ -23,7 +23,7 @@ class UserControllerTest extends DatabaseTestCase {
         $out = $controller->login();
         $this->assertContains('<form', $out);
 
-        $controller = new Controller($this->getRequestMock(['email'=>'test@example.com', 'password' => 'foo']));
+        $controller = new Controller($this->getRequestMock(['email'=>'admin@example.com', 'password' => 'foo']));
         
         $controller->login();
         $this->assertTrue($controller->redirect() !== FALSE);

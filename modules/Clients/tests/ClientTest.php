@@ -28,8 +28,13 @@ class ClientTest extends DatabaseTestCase {
 	}
 	
 	public function testGetList() {
+	
 		$res = $this->client->getList();
 		$this->assertEquals(1, sizeof($res));
+
+		$this->assertEquals('Client Name', $res[0]->name);
+		$this->assertEquals('admin@example.com', $res[0]->user->email);
+
 	}
 	
 	public function testFilter() {

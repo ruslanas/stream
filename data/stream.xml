@@ -1,39 +1,43 @@
 <?xml version="1.0" ?>
 <dataset>
-	<users id="1"
-		username="Admin User"
-		email="test@example.com"
-		password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
-		group="admin"></users>
-	<users id="2"
-		username="Ordinary User"
-		email="info@example.com"
-		password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></users>
-	<posts id="1" title="Test" body="Message body" user_id="1"></posts>
-	<clients id="1"
-		name="Client Name"
-		address="Street 10"
-		email="client@example.com"
-		type="0"
-		user_id="1"
-		deleted="0"
-		phone="+370 00000"></clients>
-	<clients id="2"
-		name="Deleted Client"
-		address="Street 10 - 20"
-		email="deleted@example.com"
-		type="0"
-		user_id="1"
-		deleted="1"
-		phone="+370 00000"></clients>
+
+    <users id="1"
+        username="Admin User"
+        email="admin@example.com"
+        password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
+        group="admin"></users>
+    <users id="2"
+        username="Ordinary User"
+        email="info@example.com"
+        password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"></users>
+
+    <posts id="1" title="Test" body="Message body" user_id="1"></posts>
+    
+    <clients id="1"
+        name="Client Name"
+        address="Street 10"
+        email="client@example.com"
+        type="0"
+        user_id="1"
+        deleted="0"
+        phone="+370 00000"></clients>
+    <clients id="2"
+        name="Deleted Client"
+        address="Street 10 - 20"
+        email="deleted@example.com"
+        type="0"
+        user_id="1"
+        deleted="1"
+        phone="+370 00000"></clients>
 
 
-	<events id="1"
-		type="meeting"
-		title="Business meeting"
-		when="2016-03-30 08:00:00"
-		description="Drink coffee."
-		user_id="1">
-	</events>
+    <events id="1"
+        type="meeting"
+        title="Business meeting"
+        when="2016-03-30 08:00:00"
+        description="Drink coffee."
+        client_id="2"
+        user_id="1">
+    </events>
 
 </dataset>

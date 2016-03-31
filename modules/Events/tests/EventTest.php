@@ -17,8 +17,12 @@ class EventTest extends DatabaseTestCase {
     }
 
     public function testRead() {
+        
         $r = $this->event->read(1);
+
         $this->assertEquals('meeting', $r->type);
+        $this->assertEquals(1, $r->client->deleted);
+
         $r = $this->event->read();
         $this->assertTrue(is_array($r));
     }

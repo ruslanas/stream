@@ -69,7 +69,7 @@ class UserTest extends DatabaseTestCase {
 
     public function testGetById() {
         $data = $this->user->getById(1);
-        $this->assertEquals('test@example.com', $data->email);
+        $this->assertEquals('admin@example.com', $data->email);
     }
 
     public function testGetList() {

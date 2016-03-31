@@ -1,42 +1,43 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
 namespace modules\Clients\model;
 
 use \PDO;
 use Stream\PersistentStorage;
 
+/**
+ * Class represents clients database
+ */
 class Client extends PersistentStorage {
 
-    private $_default = [
-        'type' => 0,
-        'address' => '',
-        'email' => '',
-        'phone' => ''
+    protected $table = 'clients';
+    
+    protected $join = [
+        'users' => [
+            'username',
+            'email'
+        ]
     ];
 
-    protected $table = 'clients';
     protected $fields = [
         'id',
         'name',
         'email',
         'phone',
         'type',
-        'address'
+        'address',
+        'user_id',
+        'deleted'
     ];
 
     public function getList() {
 
-        $data = [];
+        return $this->read();
 
-        $sql = "SELECT clients.*, users.username FROM clients LEFT JOIN users ON clients.user_id = users.id"
-            ." WHERE NOT clients.deleted"
-            ." ORDER BY clients.created DESC LIMIT 100";
-
-        foreach($this->db->query($sql) as $row) {
-            $data[] = $row;
-        }
-
-        return $data;
     }
 
     public function save($id, $data) {
@@ -58,16 +59,11 @@ class Client extends PersistentStorage {
 
         $statement = $this->db->prepare($sql);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        $statement->bindParam(':deleted', $showDeleted);
+        $statement->bindParam(':deleted', $showDeleted, PDO::PARAM_BOOL);
         $statement->execute();
-        return $statement->fetch();
-    }
 
-    public function delete($id) {
-        $sql = "UPDATE clients SET deleted = 1 WHERE id = :id";
-        $statement = $this->db->prepare($sql);
-        $statement->bindParam(':id', $id);
-        $statement->execute();
+        return $statement->fetch();
+
     }
 
     public function filter($options) {

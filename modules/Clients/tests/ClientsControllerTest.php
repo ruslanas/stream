@@ -27,11 +27,12 @@ class ClientsControllerTest extends DatabaseTestCase {
     }
 
     public function testDelete() {
+
         $controller = new Controller(['id' => 1], $this->getRequestMock());
         
         $res = $controller->delete();
         
-        $this->assertEquals($res->deleted, '1');
+        $this->assertEquals($res->id, '1');
         
         $this->expectException(Stream\Exception\NotFoundException::class);
         

@@ -25,7 +25,7 @@ class Controller extends RestController {
     }
 
     final public function get() {
-        return $this->event->read();
+        return $this->event->read(isset($this->params['id']) ? $this->params['id'] : NULL);
     }
     
     final public function post() {
