@@ -1,59 +1,82 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com>
+ */
+
 use Stream\App;
 use Stream\Request;
 use Stream\Test\DatabaseTestCase;
 use Stream\Exception\NotFoundException;
 
 use modules\Clients\Controller;
+use modules\Clients\model\Client;
 
-class ClientsControllerTest extends DatabaseTestCase {
+class ClientsControllerTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
-        parent::setUp();
-        $this->controller = new Controller([], $this->getRequestMock());
+
+        $this->controller = new Controller();
+
+        $this->req = $this->getMockBuilder(Request::class)
+            ->getMock();
+
+        $this->model = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->controller->inject('request', $this->req);
+        $this->controller->inject('model', $this->model);
+
     }
 
     public function testGet() {
 
+        $this->model->method('getList')->willReturn([
+            (object)['name' => 'foo']
+        ]);
+
         $res = $this->controller->get();
         
-        $this->assertTrue(is_array($res));
+        $this->assertTrue(is_array($res), 'Array of objects expected');
         $this->assertEquals(1, count($res));
         $this->assertObjectHasAttribute('name', $res[0]);
 
-        $controller = new Controller(['id'=>1], $this->getRequestMock());
-        $res = $controller->get();
+        $this->controller->inject('params', ['id' => 1]);
+
+        $this->model->method('getById')->willReturn((object)['name' => 'Client Name']);
+        
+        $res = $this->controller->get();
         $this->assertEquals('Client Name', $res->name);
+
     }
 
     public function testGetThrowsExeption() {
         $this->expectException(NotFoundException::class);
         $this->controller->inject('params', ['id' => 1000]);
+        $this->model->method('getById')->willReturn(FALSE);
         $this->controller->get();
     }
 
     public function testDelete() {
 
-        $controller = new Controller(['id' => 1], $this->getRequestMock());
-        
-        $res = $controller->delete();
-        
+        $this->controller->inject('params', ['id' => 1]);
+        $this->model->method('delete')->willReturn((object)['id'=>1, 'name' => 'test']);
+        $res = $this->controller->delete();
         $this->assertEquals($res->id, '1');
         
-        $this->expectException(NotFoundException::class);
-        
-        $controller->get();
     }
 
     public function testPost() {
 
-        $controller = new Controller([], $this->getRequestMock(NULL, [
+        $this->req->method('getPostData')->willReturn([
             'name' => 'New Client'
-        ]));
+        ]);
 
-        $out = $controller->post();
-        $this->assertEquals($out->name, 'New Client');
-        
+        $this->model->method('create')->willReturn((object)['name' => 'New Client']);
+
+        $record = $this->controller->post();
+        $this->assertEquals($record->name, 'New Client');
+
     }
 }

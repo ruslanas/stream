@@ -23,7 +23,7 @@ class Client extends PersistentStorage {
             'address',
             'user_id',
             'deleted',
-            
+
             'users' => [
                 'username',
                 'email'
@@ -49,17 +49,7 @@ class Client extends PersistentStorage {
 
     public function getById($id, $showDeleted = FALSE) {
         
-        $sql = "SELECT clients.*, users.username FROM clients"
-            ." LEFT JOIN users ON clients.user_id = users.id"
-            ." WHERE clients.id = :id AND clients.deleted = :deleted"
-            ." ORDER BY clients.created DESC LIMIT 100";
-
-        $statement = $this->db->prepare($sql);
-        $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        $statement->bindParam(':deleted', $showDeleted, PDO::PARAM_BOOL);
-        $statement->execute();
-
-        return $statement->fetch();
+        return $this->read($id);
 
     }
 
