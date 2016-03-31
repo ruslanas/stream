@@ -11,11 +11,8 @@ use modules\Clients\model\Client;
 
 class ClientTest extends DatabaseTestCase {
 	
-	private $_data = [
-		'name' => '___TEST_CLIENT___'
-	];
-
 	public function setUp() {
+
 		parent::setUp();
 
 		$this->client = new Client($this->app->pdo);
@@ -39,15 +36,16 @@ class ClientTest extends DatabaseTestCase {
 	
 	public function testFilter() {
 
-		$res = $this->client->filter($this->_data);
-		$this->assertEquals(sizeof($res), 0);
+		$filter = ['name' => 'test'];
+		
+		$res = $this->client->filter($filter);
+		$this->assertEquals(count($res), 0);
 
-		$data = $this->client->save(NULL, $this->_data);
-		$res = $this->client->filter($this->_data);
-		$this->assertEquals(sizeof($res), 1);
+		$data = $this->client->save(NULL, ['name' => 'test', 'email' => 'test@example.com']);
 
-		$newData = $this->client->save($data->id, $this->_data);
-		$this->assertEquals($data->id, $newData->id);
+		$res = $this->client->filter($filter);
+		$this->assertEquals(count($res), 1);
+		$this->assertEquals('test@example.com', $res[0]->email);
 
 	}
 

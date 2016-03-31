@@ -22,7 +22,7 @@ class Controller extends RestController {
         if(isset($this->params['id'])) {
             $out = $this->model->getById($this->params['id']);
             if($out === FALSE) {
-                throw new NotFoundException("Not found");
+                throw new NotFoundException("Client record not found");
             }
             return $out;
         } else {
@@ -32,13 +32,9 @@ class Controller extends RestController {
 
     final public function post() {
 
-        $data = $this->request->getPostData();
-        
-        if(!isset($this->params['id'])) {
-            return $this->model->create($data);
-        } else {
-            return $this->model->update($id, $data);
-        }
+        $id = isset($this->params['id']) ? $this->params['id'] : NULL;
+        return $this->model->save($id, $this->request->getPostData());
+
     }
 
     final public function delete() {

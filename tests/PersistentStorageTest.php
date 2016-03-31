@@ -39,8 +39,13 @@ class PersistentStorageTest extends DatabaseTestCase {
 
     }
 
-    public function testDeleteReturnsDeletedRecord(){
+    public function testDeleteReturnsDeletedRecord() {
         $deleted = $this->storage->delete(1);
         $this->assertEquals(1, $deleted->id);
+    }
+
+    public function testDeleteReturnsFalse(){
+        $deleted = $this->storage->delete(1000);
+        $this->assertFalse($deleted, 'Expected FALSE if record does not exist');
     }
 }

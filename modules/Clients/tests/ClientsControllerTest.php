@@ -27,7 +27,7 @@ class ClientsControllerTest extends PHPUnit_Framework_TestCase {
 
         $this->controller->inject('request', $this->req);
         $this->controller->inject('model', $this->model);
-
+        $this->controller->inject('params', []);
     }
 
     public function testGet() {
@@ -67,16 +67,28 @@ class ClientsControllerTest extends PHPUnit_Framework_TestCase {
         
     }
 
-    public function testPost() {
+    public function testPostNew() {
 
         $this->req->method('getPostData')->willReturn([
             'name' => 'New Client'
         ]);
 
-        $this->model->method('create')->willReturn((object)['name' => 'New Client']);
+        $this->model->method('save')->willReturn((object)['name' => 'New Client']);
 
+        $this->controller->inject('params', []);
         $record = $this->controller->post();
         $this->assertEquals($record->name, 'New Client');
+
+    }
+
+    public function testPostExisting() {
+
+        $this->controller->inject('params', ['id' => 1]);
+        
+        $this->model->method('save')->willReturn((object)['name' => 'Updated Client']);
+        
+        $record = $this->controller->post();
+        $this->assertEquals($record->name, 'Updated Client');
 
     }
 }

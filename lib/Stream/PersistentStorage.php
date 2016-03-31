@@ -102,6 +102,10 @@ class PersistentStorage extends Injectable {
 
     protected function reshape($row) {
 
+        if($row === FALSE) {
+            return FALSE;
+        }
+
         $tableName = $this->_get_table_name();
 
         foreach($this->table[$tableName] as $tbl => $cols) {
@@ -126,6 +130,11 @@ class PersistentStorage extends Injectable {
 
     }
 
+    /**
+     * Returns deleted record of FALSE
+     * @param int $id
+     * @return stdClass|FALSE
+     */
     public function delete($id) {
 
         $ret = $this->read($id);
