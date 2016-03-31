@@ -15,10 +15,10 @@ use \modules\Posts\model\Post;
 
 class Controller extends RestController {
 
-    private $params = [];
+    protected $params = [];
     protected $_injectable = ['params', 'request', 'model'];
 
-    public function __construct($selector, $request) {
+    public function __construct($selector = NULL, $request = NULL) {
         
         parent::__construct();
 

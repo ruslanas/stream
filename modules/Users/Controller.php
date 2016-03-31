@@ -6,7 +6,9 @@
 
 namespace modules\Users;
 
-use Stream\PageController;
+use \stdClass;
+
+use \Stream\PageController;
 use \Stream\Request;
 use \Stream\Exception\NotFoundException;
 use \Stream\Interfaces\DomainControllerInterface;
@@ -15,12 +17,20 @@ use \modules\Users\model\User;
 
 class Controller extends PageController implements DomainControllerInterface {
 
-    public function __construct(Request $request = NULL) {
+    protected $_injectable = ['request', 'user'];
+    
+    protected $user;
+
+    public function __construct(Request $request = NULL, stdClass $user = NULL) {
+
         parent::__construct();
+        
         $this->request = $request !== NULL ? $request : new Request;
 
         $this->user = new User($this->request, $this->app->pdo);
+        
         $this->templates->addFolder('user', 'templates/user');
+    
     }
 
     public function dispatch($uri) {
@@ -60,9 +70,11 @@ class Controller extends PageController implements DomainControllerInterface {
     }
 
     public function login() {
+        
         if($this->user->authenticate()) {
             $this->redirect('/');
         }
+
         return $this->templates->render('user::login', [
             'data' => $this->user->data
         ]);

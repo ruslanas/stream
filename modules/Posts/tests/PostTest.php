@@ -20,8 +20,12 @@ class PostTest extends DatabaseTestCase {
         parent::setUp();
 
         $this->stream = new Post($this->app->pdo);
-        $this->user = new User($this->getRequestMock(), $this->app->pdo);
 
+        // $this->user = new User(NULL, $this->app->pdo);
+
+        // $this->req = $this->getMockBuilder(Request::class);
+        // $this->user->inject('request', $this->req);
+    
     }
 
     public function testStream() {

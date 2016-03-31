@@ -6,22 +6,43 @@
 
 use Stream\App;
 use Stream\Test\DatabaseTestCase;
+use Stream\Request;
 
 use modules\Users\model\User;
 
 class UserTest extends DatabaseTestCase {
     
     public function setUp() {
+        
         parent::setUp();
-        $this->user = new User($this->getRequestMock(), App::getInstance()->pdo);
+
+        $this->req = $this->getMockBuilder(Request::class)->getMock();
+
+        $this->user = new User(NULL, App::getInstance()->pdo);
+
+        $this->user->inject('request', $this->req);
+
     }
 
-    public function testAuthenticate() {
+    // something wrong here
+    public function testAuthenticateFail() {
+
+        $this->req->method('post')->willReturn([
+            'email' => 'foo',
+            'password' => 'bar',
+            'password2' => 'baz'
+        ]);
+
         $auth = $this->user->authenticate();
         $this->assertFalse($auth);
+    }
+
+    public function testAuthenticateSuccess() {
         $_SESSION['uid'] = 1;
         $this->assertTrue($this->user->authenticate());
-        // user does not exist
+    }
+
+    public function testAuthenticateUserNotFound() {
         $_SESSION['uid'] = 1000;
         $this->assertFalse($this->user->authenticate());
     }
@@ -29,6 +50,9 @@ class UserTest extends DatabaseTestCase {
     public function testExists() {
         $x = $this->user->exists(['email' => 'info@example.com']);
         $this->assertTrue($x);
+    }
+
+    public function testExistsNot() {
         $y = $this->user->exists(['email' => 'does_not_exist@example.com']);
         $this->assertFalse($y);
     }
@@ -51,6 +75,7 @@ class UserTest extends DatabaseTestCase {
             'password' => 'foo',
             'password2' => 'bar'
         ]);
+        
         $this->assertFalse($isValid);
         
         $err = $this->user->error();

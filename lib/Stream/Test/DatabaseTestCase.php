@@ -24,18 +24,4 @@ class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase {
         return $this->createFlatXMLDataSet('data/stream.xml');
     }
 
-    protected function getRequestMock($post = NULL, $raw = NULL) {
-        
-        $postData = ($post === NULL) ? ['email' => 'foo', 'password' => 'bar'] : $post;
-        $rawPostData = ($raw === NULL) ? ['title' => 'test', 'body' => 'test_body'] : $raw;
-
-        $req = $this->getMockBuilder(Request::class)
-        ->getMock();
-
-        $req->method('post')->willReturn($postData);
-        $req->method('getPostData')->willReturn($rawPostData);
-
-        return $req;
-    }
-
 }

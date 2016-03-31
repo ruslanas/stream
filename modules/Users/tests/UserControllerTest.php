@@ -7,71 +7,102 @@
 use Stream\App;
 use Stream\Exception\NotFoundException;
 use Stream\Test\DatabaseTestCase;
+use Stream\Request;
 
-use modules\Users\Controller;
+use modules\Users;
+use modules\Users\model;
 
-class UserControllerTest extends DatabaseTestCase {
+class UserControllerTest extends PHPUnit_Framework_TestCase {
     
     public function setUp() {
-        parent::setUp();
+        
+        $this->req = $this->getMockBuilder(Request::class)->getMock();
+        $this->user = $this->getMockBuilder(model\User::class)->getMock();
+
+        $this->controller = new Users\Controller();
+        
+        $this->controller->inject('request', $this->req);
+        $this->controller->inject('user', $this->user);
+    
     }
 
-    public function testLogin() {
+    public function testLoginDisplayForm() {
         
-        $controller = new Controller($this->getRequestMock());
-        
-        $out = $controller->login();
+        $this->user->method('authenticate')->willReturn(FALSE);
+
+        $out = $this->controller->login();
         $this->assertContains('<form', $out);
 
-        $controller = new Controller($this->getRequestMock(['email'=>'admin@example.com', 'password' => 'foo']));
-        
-        $controller->login();
-        $this->assertTrue($controller->redirect() !== FALSE);
+    }
+
+    public function testLoginRedirect() {
+    
+        $this->user->method('authenticate')->willReturn(TRUE);
+    
+        $this->controller->login();
+        $this->assertTrue($this->controller->redirect() !== FALSE);
+    
     }
 
     public function testDispatch() {
-        $controller = new Controller($this->getRequestMock());
 
-        $out = $controller->dispatch('/user/login');
+        $out = $this->controller->dispatch('/user/login');
         $this->assertContains('Sign In', $out);
 
-        $out = $controller->dispatch('/user');
+        $out = $this->controller->dispatch('/user');
         $this->assertContains('Sign In', $out);
 
         $this->expectException(NotFoundException::class);
-        $out = $controller->dispatch('/user/not_found');
+        $out = $this->controller->dispatch('/user/not_found');
         $this->assertContains('not found', $out);
+    
     }
 
     public function testLogout() {
-        $controller = new Controller();
-        $controller->logout();
-        $this->assertTrue($controller->redirect() !== FALSE);
+        $this->controller->logout();
+        $this->assertTrue($this->controller->redirect() !== FALSE);
     }
 
     public function testAdd() {
+        
         unset($_SESSION['uid']);
 
-        $controller = new Controller();
-        $out = $controller->add();
+        $out = $this->controller->add();
         $this->assertContains('<form', $out);
 
-        $controller = new Controller($this->getRequestMock([
+    }
+
+    public function tesAddSuccess() {
+        $this->req->method('post')->willReturn([
             'email' => 'new@example.com',
             'password' => 'bar',
             'password2' => 'bar'
-        ]));
+        ]);
 
-        $controller->add();
-        $this->assertEquals('/user/login', $controller->redirect());
+        $this->controller->add();
+        $this->assertEquals('/user/login', $this->controller->redirect());
 
-        $controller->add();
-        // user already exists
-        $this->assertEquals('/user/add', $controller->redirect());
+    }
+
+    public function testAddExitingUserRedirect() {
         
-        $_SESSION['uid'] = 1;
-        $controller->add();
-        // user can add only himself
-        $this->assertEquals('/', $controller->redirect());
+        $this->user->method('exists')->willReturn(TRUE);
+
+        $this->req->method('post')->willReturn([
+            'email'=>'email@example.com'
+        ]);
+        
+        $this->controller->add();
+        $this->assertEquals('/user/add', $this->controller->redirect());
+
+    }
+
+    public function testAddLoggedInRedirect() {        
+
+        $this->user->method('authenticate')->willReturn(TRUE);
+
+        $this->controller->add();
+        $this->assertEquals('/', $this->controller->redirect());
+
     }
 }

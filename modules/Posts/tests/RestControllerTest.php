@@ -11,35 +11,46 @@ use Stream\Test\DatabaseTestCase;
 
 use modules\Posts\Controller;
 
-class RestControllerTest extends DatabaseTestCase {
+class RestControllerTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         
-        parent::setUp();
+        $this->controller = new Controller();
 
-        $this->controller = new Controller([], $this->getRequestMock());
+        $this->req = $this->getMockBuilder(Request::class)->getMock();
+        $this->controller->inject('request', $this->req);
     }
 
     public function testApi() {
 
+        $this->controller->inject('params', []);
         $data = $this->controller->get();
 
         $this->assertTrue(is_array($data));
         $this->assertEquals(count($data), 1);
         $this->assertObjectHasAttribute('title', $data[0]);
 
-        $controller = new Controller(['id' => 1], $this->getRequestMock());
-        $data = $controller->get();
+        $this->controller->inject('params', ['id' => 1]);
+        $data = $this->controller->get();
 
         $this->assertObjectHasAttribute('title', $data);
 
-        $controller = new Controller([], $this->getRequestMock());
+    }
+
+    public function testPostCreatesNewPost() {
         
-        $data = $controller->post();
+        $this->controller->inject('params', []);
+
+        $this->req->method('getPostData')->willReturn([
+            'title' => 'Title',
+            'body' => 'Post body'
+        ]);
+
+        $data = $this->controller->post();
 
         $this->assertObjectHasAttribute('title', $data);
-        $this->assertEquals($data->title, 'test');
-        $this->assertEquals($data->body, 'test_body');
+        $this->assertEquals($data->title, 'Title');
+        $this->assertEquals($data->body, 'Post body');
 
     }
 
@@ -58,19 +69,16 @@ class RestControllerTest extends DatabaseTestCase {
 
     public function testDelete() {
 
-        $controller = new Controller(['id' => 1], $this->getRequestMock());
-        
-        $controller->delete();
+        $this->controller->inject('params', ['id' => 1]);
+        $this->controller->delete();
 
-        $controller = new Controller([], $this->getRequestMock());
-        
-        $data = $controller->get();
+        $this->controller->inject('params', []);
+        $data = $this->controller->get();
         $this->assertTrue(is_array($data));
         $this->assertEquals(0, count($data));
 
         $this->expectException(Exception::class);
-        $controller = new Controller([], $this->getRequestMock());
-        $controller->delete();
+        $this->controller->delete();
 
     }
 }

@@ -6,21 +6,26 @@
 
 namespace modules\Users\model;
 
-use \Stream\Request;
 use \PDO;
 
-class User {
+use \Stream\Request;
+use \Stream\Util\Injectable;
+
+class User extends Injectable {
 
     private $db;
     private $_errors = [];
     private $_table = 'users';
+
+    protected $_injectable = ['request'];
+    protected $request;
 
     public $data = [
         'email' => '',
         'password' => ''
     ];
 
-    public function __construct(Request $request, PDO $pdo) {
+    public function __construct(Request $request = NULL, PDO $pdo = NULL) {
         $this->request = $request;
         $this->db = $pdo;
     }
