@@ -165,12 +165,22 @@ class App extends Injectable implements AppInterface {
         });
 
         if($controller instanceof DomainControllerInterface) {
+            
             $out = $controller->dispatch($uri);
+            
             if($controller->redirect()) {
+                
                 header('Location: '.$controller->redirect());
+                ob_end_clean();
+
                 return;
+            
             }
-            echo $out;
+            
+            ob_end_flush();
+
+            return $out;
+
         } else {
 
             switch($method) {
@@ -260,8 +270,9 @@ class App extends Injectable implements AppInterface {
 
     protected function createDomainController($uri) {
         foreach($this->_domains as $name => $controller_class) {
-            if(strpos($uri, $name) === 0) {
-                return new $controller_class();
+            $matches = $this->match($name, $uri);
+            if($matches !== false) {
+                return new $controller_class($matches, $this->req);
             }
         }
     }

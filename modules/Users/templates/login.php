@@ -1,4 +1,5 @@
 <?php $this->layout('basic'); ?>
+
 <form method="POST" action="/user/login">
     <div class="form-group">
         <label>Email:</label>

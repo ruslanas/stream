@@ -8,7 +8,6 @@ namespace modules\Users\model;
 
 use \PDO;
 
-use \Stream\Request;
 use \Stream\Util\Injectable;
 
 class User extends Injectable {
@@ -18,15 +17,10 @@ class User extends Injectable {
     private $_table = 'users';
 
     protected $_injectable = ['request'];
-    protected $request;
 
-    public $data = [
-        'email' => '',
-        'password' => ''
-    ];
+    public $data = [];
 
-    public function __construct(Request $request = NULL, PDO $pdo = NULL) {
-        $this->request = $request;
+    public function __construct(PDO $pdo = NULL) {
         $this->db = $pdo;
     }
 
@@ -67,7 +61,9 @@ class User extends Injectable {
     }
 
     public function getById($id) {
+        
         $statement = $this->db->prepare("SELECT * FROM `{$this->_table}` WHERE id = :id");
+
         $statement->bindParam(":id", $id, PDO::PARAM_INT);
         $statement->execute();
         return $statement->fetch();
@@ -86,44 +82,62 @@ class User extends Injectable {
     public function add($data) {
 
         if(!isset($data['email']) || !isset($data['password'])) {
+
             return false;
+
         }
 
         $encrypted = password_hash($data['password'], PASSWORD_BCRYPT);
+
         $sql = "INSERT INTO `{$this->_table}` (email, password) VALUES (:email, :password)";
+
         $statement = $this->db->prepare($sql);
         $statement->bindParam(':email', $data['email'], PDO::PARAM_STR);
         $statement->bindParam(':password', $encrypted, PDO::PARAM_STR);
         $statement->execute();
+        
         return $this->db->lastInsertId();
+    
     }
 
     /**
      * Check if user exists
      */
     public function loggedIn() {
+        
         if(!empty($_SESSION['uid'])) {
+            
             $data = $this->getById($_SESSION['uid']);
+            
             if(!empty($data)) {
+
                 return true;
+            
             }
         }
+        
         return false;
     }
 
     /**
      * Check if session started
      */
-    public function authenticate() {
+    public function authenticate($req) {
         
         if($this->loggedIn()) {
+        
             return true;
+        
         }
 
-        $this->data = $this->request->post();
+        $this->data = $req->post();
+
+        $this->data = is_array($this->data) ? $this->data : [];
 
         if(!isset($this->data['email']) || !isset($this->data['password']) || isset($this->data['password2'])) {
+            
             return false;
+        
         }
 
         $sql = "SELECT * FROM `{$this->_table}` WHERE email = :email";

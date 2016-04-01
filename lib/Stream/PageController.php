@@ -7,8 +7,10 @@
 namespace Stream;
 
 use \League\Plates\Engine;
+use \Stream\Interfaces\DomainControllerInterface;
+use \Stream\Exception\NotFoundException;
 
-class PageController extends Controller {
+class PageController extends Controller implements DomainControllerInterface {
 
     protected $templates;
 
@@ -20,6 +22,18 @@ class PageController extends Controller {
     
         $this->setupTemplate();
     
+    }
+
+    public function dispatch($uri = NULL) {
+
+        $action = !empty($this->params['action']) ? $this->params['action'] : 'index';
+
+        if(method_exists($this, $action)) {
+            return $this->{$action}();
+        }
+
+        throw new NotFoundException("Page `$uri` not found");
+        
     }
 
     public function setupTemplate() {

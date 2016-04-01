@@ -16,7 +16,8 @@ class Acl {
 
             $uid = $_SESSION['uid'];
 
-            $user = new User(new Request, App::getInstance()->pdo);
+            $user = new User(App::getInstance()->pdo);
+            
             $data = $user->getById($uid);
 
             if($method === 'DELETE') {

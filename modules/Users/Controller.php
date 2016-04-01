@@ -17,66 +17,79 @@ use \modules\Users\model\User;
 
 class Controller extends PageController implements DomainControllerInterface {
 
-    protected $_injectable = ['request', 'user'];
+    protected $_injectable = ['params', 'request', 'user'];
     
     protected $user;
 
-    public function __construct(Request $request = NULL, stdClass $user = NULL) {
+    public function __construct($params = NULL, Request $request = NULL, stdClass $user = NULL) {
 
         parent::__construct();
+
+        $this->params = $params;
         
         $this->request = $request !== NULL ? $request : new Request;
 
-        $this->user = new User($this->request, $this->app->pdo);
+        $this->user = new User($this->app->pdo);
         
         $this->templates->addFolder('user', 'modules/Users/templates');
     
     }
 
-    public function dispatch($uri) {
-        $components = explode('/', $uri);
-        if(count($components) < 3) {
-            return $this->login();
-        }
-        if(method_exists($this, $components[2])) {
-            return $this->{$components[2]}();
-        }
-        throw new NotFoundException("Page not found");
-        
+    public function index() {
+        return $this->login();
     }
 
     public function add() {
-        if($this->user->authenticate()) {
+
+        if($this->user->authenticate($this->request)) {
+            
             return $this->redirect('/');
+        
         }
 
         $data = $this->request->post();
 
         if($data && $this->user->exists($data)) {
+        
             return $this->redirect('/user/add');
+        
         }
 
         if($this->user->valid($data)) {
+        
             $this->user->add($data);
+        
             return $this->redirect('/user/login');
+        
         }
 
         return $this->templates->render('user::add', []);
+    
     }
 
     public function logout() {
+        
         unset($_SESSION['uid']);
+
         $this->redirect('/user/login');
+    
     }
 
     public function login() {
         
-        if($this->user->authenticate()) {
+        if($this->user->authenticate($this->request)) {
+            
             return $this->redirect('/');
+        
         }
 
+        // required by template
+        $data = array_merge(['email' => ''], $this->user->data);
+
         return $this->templates->render('user::login', [
-            'data' => $this->user->data
+            'data' => $data
         ]);
+    
     }
+
 }

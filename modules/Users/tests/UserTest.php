@@ -18,7 +18,7 @@ class UserTest extends DatabaseTestCase {
 
         $this->req = $this->getMockBuilder(Request::class)->getMock();
 
-        $this->user = new User(NULL, App::getInstance()->pdo);
+        $this->user = new User(App::getInstance()->pdo);
 
         $this->user->inject('request', $this->req);
 
@@ -33,18 +33,23 @@ class UserTest extends DatabaseTestCase {
             'password2' => 'baz'
         ]);
 
-        $auth = $this->user->authenticate();
+        $auth = $this->user->authenticate($this->req);
+
         $this->assertFalse($auth);
     }
 
     public function testAuthenticateSuccess() {
+    
         $_SESSION['uid'] = 1;
-        $this->assertTrue($this->user->authenticate());
+        $this->assertTrue($this->user->authenticate($this->req));
+    
     }
 
     public function testAuthenticateUserNotFound() {
+    
         $_SESSION['uid'] = 1000;
-        $this->assertFalse($this->user->authenticate());
+        $this->assertFalse($this->user->authenticate($this->req));
+    
     }
 
     public function testExists() {

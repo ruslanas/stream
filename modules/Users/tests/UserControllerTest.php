@@ -19,8 +19,9 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->req = $this->getMockBuilder(Request::class)->getMock();
         $this->user = $this->getMockBuilder(model\User::class)->getMock();
 
-        $this->controller = new Users\Controller();
+        $this->controller = new Users\Controller;
         
+        $this->controller->inject('params', []);
         $this->controller->inject('request', $this->req);
         $this->controller->inject('user', $this->user);
     
@@ -31,7 +32,8 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->user->method('authenticate')->willReturn(FALSE);
 
         $out = $this->controller->login();
-        $this->assertContains('<form', $out);
+        $this->assertContains('action="/user/login"', $out);
+        $this->assertStringStartsWith('<!DOCTYPE html>', $out);
 
     }
 
@@ -40,27 +42,41 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->user->method('authenticate')->willReturn(TRUE);
     
         $this->controller->login();
-        $this->assertTrue($this->controller->redirect() !== FALSE);
+        $this->assertEquals('/', $this->controller->redirect());
     
     }
 
     public function testDispatch() {
 
-        $out = $this->controller->dispatch('/user/login');
-        $this->assertContains('Sign In', $out);
+        $this->controller->inject('params', ['action' => 'login']);
+        $out = $this->controller->dispatch();
+        
+        $this->assertStringStartsWith('<!DOCTYPE html>', $out);
+        $this->assertContains('action="/user/login"', $out);
+    }
 
-        $out = $this->controller->dispatch('/user');
+    public function testDispatchDefaultAction() {
+    
+        $this->controller->inject('params', ['action' => '']);
+        $out = $this->controller->dispatch();
         $this->assertContains('Sign In', $out);
+    
+    }
 
+    public function testDispatchNotFound() {
+
+        $this->controller->inject('params', ['action' => 'not_found']);
         $this->expectException(NotFoundException::class);
-        $out = $this->controller->dispatch('/user/not_found');
-        $this->assertContains('not found', $out);
+        $out = $this->controller->dispatch();
+        $this->assertContains('`not_found`', $out);
     
     }
 
     public function testLogout() {
+
         $this->controller->logout();
         $this->assertTrue($this->controller->redirect() !== FALSE);
+
     }
 
     public function testAddForm() {
@@ -73,6 +89,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     public function tesAddSuccess() {
+
         $this->req->method('post')->willReturn([
             'email' => 'new@example.com',
             'password' => 'bar',

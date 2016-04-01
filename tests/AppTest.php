@@ -103,6 +103,17 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    public function testDispatchPageController() {
+
+        $this->acl->method('allow')->with('GET', '/module/index.html')->willReturn(TRUE);
+        $this->req->method('getMethod')->willReturn('GET');
+
+        $this->app->domain('/module/:action.html', \Stream\Test\DummyController::class);
+        $output = $this->app->dispatch('/module/index.html');
+        $this->assertContains('<!DOCTYPE html>', $output);
+    
+    }
+
     /**
      * Uses ReflectionClass to invoke protected method Stream\App::match
      */

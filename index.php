@@ -19,6 +19,6 @@ $app->rest(['/posts.json', '/posts/:id.json'], modules\Posts\Controller::class);
 $app->rest(['/clients.json', '/clients/:id.json'], modules\Clients\Controller::class);
 $app->rest(['/events.json', '/events/:id.json'], modules\Events\Controller::class);
 
-$app->domain('/user', modules\Users\Controller::class);
+$app->domain('/user/:action', modules\Users\Controller::class);
 
-$app->domain('/dev/dump', modules\Homegrown\Dev\Controller::class);
+$app->domain('/dev/:action', modules\Homegrown\Dev\Controller::class);
