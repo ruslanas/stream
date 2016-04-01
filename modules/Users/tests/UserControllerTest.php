@@ -50,7 +50,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
 
         $this->controller->inject('params', ['action' => 'login']);
         $out = $this->controller->dispatch();
-        
+
         $this->assertStringStartsWith('<!DOCTYPE html>', $out);
         $this->assertContains('action="/user/login"', $out);
     }
@@ -68,7 +68,6 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->controller->inject('params', ['action' => 'not_found']);
         $this->expectException(NotFoundException::class);
         $out = $this->controller->dispatch();
-        $this->assertContains('`not_found`', $out);
     
     }
 

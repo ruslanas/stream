@@ -6,6 +6,8 @@
 
 namespace Stream;
 
+use \ReflectionMethod;
+
 use \League\Plates\Engine;
 use \Stream\Interfaces\DomainControllerInterface;
 use \Stream\Exception\NotFoundException;
@@ -24,19 +26,32 @@ class PageController extends Controller implements DomainControllerInterface {
     
     }
 
+    /**
+     * @param string $uri
+     * @throws \Stream\Exception\NotFoundException
+     */
     public function dispatch($uri = NULL) {
 
         $action = !empty($this->params['action']) ? $this->params['action'] : 'index';
 
-        if(method_exists($this, $action)) {
-            return $this->{$action}();
+        //////////////////////////////////////////////////////////////////////////////
+        // [Fatal error] Maximum function nesting level of '256' reached, aborting! //
+        //////////////////////////////////////////////////////////////////////////////
+
+        if(method_exists($this, $action) && $action != 'dispatch') {
+
+            $reflection = new ReflectionMethod($this, $action);
+            if($reflection->isPublic() && !$reflection->isConstructor()) {
+                return $this->{$action}();
+            }
+        
         }
 
         throw new NotFoundException("Page `$uri` not found");
         
     }
 
-    public function setupTemplate() {
+    protected function setupTemplate() {
         
         $this->templates = new Engine($this->app->template_path);
         

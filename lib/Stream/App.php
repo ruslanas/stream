@@ -166,11 +166,17 @@ class App extends Injectable implements AppInterface {
 
         if($controller instanceof DomainControllerInterface) {
             
-            $out = $controller->dispatch($uri);
-            
+            try {
+                $out = $controller->dispatch($uri);
+            } catch(NotFoundException $e) {
+                ob_end_clean();
+                throw $e;
+            }
+
             if($controller->redirect()) {
                 
                 header('Location: '.$controller->redirect());
+            
                 ob_end_clean();
 
                 return;

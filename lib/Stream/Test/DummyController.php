@@ -2,8 +2,11 @@
 
 namespace Stream\Test;
 
+use \ReflectionMethod;
+
 use \Stream\RestController;
 use \Stream\Interfaces\DomainControllerInterface;
+use \Stream\Exception\NotFoundException;
 
 class DummyController extends RestController implements DomainControllerInterface {
     
@@ -15,11 +18,27 @@ class DummyController extends RestController implements DomainControllerInterfac
         $this->data = $req->getPostData();
     }
 
-    public function dispatch($uri) {
-        return $this->{$this->params['action']}();
+    public function dispatch($uri = NULL) {
+
+        $action = !empty($this->params['action']) ? $this->params['action'] : 'index';
+
+        $meth = 'action'.ucfirst($action);
+
+        if(method_exists($this, $meth)) {
+
+            return $this->{$meth}();
+        
+        }
+
+        throw new NotFoundException("Page `$uri` not found");
+        
     }
 
-    final public function index() {
+    protected function actionXxx() {
+        return 'I am protected';
+    }
+
+    public function actionIndex() {
         return '<!DOCTYPE html>';
     }
 

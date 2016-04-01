@@ -5,6 +5,8 @@
  */
 
 use Stream\Exception\ForbiddenException;
+use Stream\Exception\NotFoundException;
+
 use Stream\App;
 use Stream\Cache;
 use Stream\Acl;
@@ -112,6 +114,36 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $output = $this->app->dispatch('/module/index.html');
         $this->assertContains('<!DOCTYPE html>', $output);
     
+    }
+
+    public function testDispatchThrowsNotFoundException() {
+        
+        $this->acl->method('allow')->with('GET', '/module/__construct')->willReturn(TRUE);
+        $this->req->method('getMethod')->willReturn('GET');
+
+        $this->app->domain('/module/:action', \Stream\Test\DummyController::class);
+
+        $this->expectException(NotFoundException::class);
+        $out = $this->app->dispatch('/module/__construct');
+        
+    }
+
+    public function testDispatchExceptionMessageContainsPath() {
+
+        $this->acl->method('allow')->with('GET', '/module/dispatch')->willReturn(TRUE);
+        $this->req->method('getMethod')->willReturn('GET');
+
+        $this->app->domain('/module/:action', \Stream\Test\DummyController::class);
+
+        try {
+
+            $out = $this->app->dispatch('/module/dispatch');
+        
+        } catch (NotFoundException $e) {
+            $msg = $e->getMessage();
+        }
+
+        $this->assertContains('`/module/dispatch`', $msg);
     }
 
     /**
