@@ -144,8 +144,6 @@ class App extends Injectable implements AppInterface {
                 throw new NotFoundException('Page `$uri` not found');
             }
 
-            $out = $controller->{$method}();
-
             if($controller->redirect()) {
 
                 header('Location: '.$controller->redirect());
