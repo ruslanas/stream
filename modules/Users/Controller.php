@@ -72,7 +72,7 @@ class Controller extends PageController implements DomainControllerInterface {
     public function login() {
         
         if($this->user->authenticate()) {
-            $this->redirect('/');
+            return $this->redirect('/');
         }
 
         return $this->templates->render('user::login', [

@@ -103,6 +103,9 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    /**
+     * Uses ReflectionClass to invoke protected method Stream\App::match
+     */
     public function testMatch() {
         
         $cls = new ReflectionClass(App::class);
@@ -125,7 +128,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(FALSE, $params);
 
         $params = $meth->invokeArgs($this->app, ['/', '?boo=boo']);
-        $this->assertTrue(is_array($params));
+        $this->assertTrue(is_array($params), 'Array expected');
+
+        $params = $meth->invokeArgs($this->app, ['~:user', '~Tom']);
+        $this->assertEquals('Tom', $params['user']);
 
     }
 

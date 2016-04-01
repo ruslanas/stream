@@ -227,7 +227,7 @@ class App extends Injectable implements AppInterface {
 
         $re = preg_replace('/\:\w*/', '(\w*)', $parameterized);
         
-        $re = '~^'.$re.'$~';
+        $re = '[^'.$re.'$]';
         
         $count = preg_match_all($re, $path, $matches);
         

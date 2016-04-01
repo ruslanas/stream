@@ -131,7 +131,7 @@ class PersistentStorage extends Injectable {
     }
 
     /**
-     * Returns deleted record of FALSE
+     * Returns deleted record or FALSE
      * @param int $id
      * @return stdClass|FALSE
      */

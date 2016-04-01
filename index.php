@@ -20,3 +20,5 @@ $app->rest(['/clients.json', '/clients/:id.json'], modules\Clients\Controller::c
 $app->rest(['/events.json', '/events/:id.json'], modules\Events\Controller::class);
 
 $app->domain('/user', modules\Users\Controller::class);
+
+$app->domain('/dev/dump', modules\Homegrown\Dev\Controller::class);
