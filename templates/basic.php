@@ -9,11 +9,10 @@
         <?php foreach($stylesheets as $sheet): ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $sheet; ?>">
         <?php endforeach; ?>
-        <!-- modules -->
+
         <?php foreach($scripts as $script): ?>
         <script src="<?php echo $script; ?>"></script>
         <?php endforeach; ?>
-        <!-- end modules -->
 
     </head>
     <body data-ng-app="stream" data-ng-controller="MainController as app">

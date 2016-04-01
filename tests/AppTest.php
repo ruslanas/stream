@@ -30,7 +30,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
         $app = App::getInstance();
         $this->assertInstanceOf(App::class, $app);
-        $this->app = new App([], new Cache);
+        $this->app = new App(new Cache);
         $this->assertEquals(NULL, $this->app->non_existing_property);
     
     }
@@ -60,14 +60,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
     }
     
-    /**
-     * Test if config options merge correctly
-     */
     public function testLoadConfig() {
 
-        $app = new App(['test_conf' => true]);
+        $app = new App();
         $conf = $app->loadConfig();
-        $this->assertArrayHasKey('test_conf', $conf);
         $this->assertArrayHasKey('template_path', $conf);
     
     }

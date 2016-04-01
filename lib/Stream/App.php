@@ -27,7 +27,7 @@ use \Stream\Util\Injectable;
 
 class App extends Injectable implements AppInterface {
 
-    protected $_injectable = ['acl', 'req', 'cache'];
+    protected $_injectable = ['acl', 'req', 'cache', '_config'];
 
     private $_controllers = [];
     private $_domains = [];
@@ -37,11 +37,11 @@ class App extends Injectable implements AppInterface {
     private $delete_handlers = [];
     private $put_handlers = [];
 
-    private $cache;
+    protected $cache;
 
-    private static $instance = null; // shared instance
+    protected static $instance = null; // shared instance
 
-    private $_config = [
+    protected $_config = [
         'cache_ttl' => 60,
         'template_path' => 'templates',
         'title' => 'App'
@@ -58,8 +58,7 @@ class App extends Injectable implements AppInterface {
         static::$instance = NULL;
     }
 
-    public function __construct($config = [], CacheInterface $cache = NULL) {
-        $this->_config = array_merge($this->_config, $config);
+    public function __construct(CacheInterface $cache = NULL) {
 
         $this->acl = new Acl;
         $this->req = new Request;
@@ -302,7 +301,9 @@ class App extends Injectable implements AppInterface {
     }
 
     public function loadConfig() {
+        
         require 'config.php';
+        
         $this->_config = array_merge($this->_config, $config);
         return $this->_config;
     }
