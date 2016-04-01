@@ -41,7 +41,7 @@ class Controller extends PageController {
         ]);
     }
 
-    public function default() {
+    public function index() {
         
         // $data = $this->model->getList();
         

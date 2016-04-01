@@ -13,7 +13,7 @@ class HomeControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testHome() {
-		$res = $this->controller->default();
+		$res = $this->controller->index();
 
 		$this->assertContains('<!DOCTYPE html>', $res);
 	}
