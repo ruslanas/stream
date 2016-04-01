@@ -125,7 +125,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
         $this->expectException(NotFoundException::class);
         $out = $this->app->dispatch('/module/__construct');
-        
+
     }
 
     public function testDispatchExceptionMessageContainsPath() {
@@ -144,6 +144,23 @@ class AppTest extends PHPUnit_Framework_TestCase {
         }
 
         $this->assertContains('`/module/dispatch`', $msg);
+    }
+
+    public function testRestSecurity() {
+
+        $this->acl->method('allow')
+            ->with('notStandardRequestMethod', '/pi/31415926')
+            ->willReturn(TRUE);
+
+        $this->req->method('getMethod')->willReturn('notStandardRequestMethod');
+
+        $this->app->rest('/pi/:number', \Stream\Test\DummyController::class);
+        
+        $this->expectException(\Stream\Exception\UnknownMethodException::class);
+        $this->app->dispatch('/pi/31415926');
+
+        $this->markTestIncomplete("REST security not checked");
+
     }
 
     /**

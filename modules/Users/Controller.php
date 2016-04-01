@@ -35,11 +35,11 @@ class Controller extends PageController implements DomainControllerInterface {
     
     }
 
-    public function index() {
+    final public function index() {
         return $this->login();
     }
 
-    public function add() {
+    final public function add() {
 
         if($this->user->authenticate($this->request)) {
             
@@ -67,7 +67,7 @@ class Controller extends PageController implements DomainControllerInterface {
     
     }
 
-    public function logout() {
+    final public function logout() {
         
         unset($_SESSION['uid']);
 
@@ -75,7 +75,7 @@ class Controller extends PageController implements DomainControllerInterface {
     
     }
 
-    public function login() {
+    final public function login() {
         
         if($this->user->authenticate($this->request)) {
             

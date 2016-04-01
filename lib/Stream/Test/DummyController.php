@@ -34,6 +34,10 @@ class DummyController extends RestController implements DomainControllerInterfac
         
     }
 
+    public function notStandardRequestMethod() {
+        throw new \Exception('Do not call me');
+    }
+
     protected function actionXxx() {
         return 'I am protected';
     }

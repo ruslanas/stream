@@ -41,11 +41,10 @@ class Controller extends PageController {
         ]);
     }
 
-    public function index() {
-        
-        // $data = $this->model->getList();
+    final public function index() {
         
         return $this->templates->render('stream::index');
+
     }
 
 }

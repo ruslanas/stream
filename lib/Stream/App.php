@@ -130,6 +130,20 @@ class App extends Injectable implements AppInterface {
 
         if($controller instanceof RestApi) {
             
+            if(method_exists($controller, $method)) {
+
+                $reflection = new \ReflectionMethod($controller, $method);
+                
+                if($reflection->isFinal()) {
+                    $out = $controller->{$method}();
+                } else {
+                    throw new \Stream\Exception\UnknownMethodException("Hacker?");
+                }
+            
+            } else {
+                throw new NotFoundException('Page `$uri` not found');
+            }
+
             $out = $controller->{$method}();
 
             if($controller->redirect()) {
@@ -300,13 +314,21 @@ class App extends Injectable implements AppInterface {
     }
 
     public function rest($endpoints, $controller) {
+    
         $implements = class_implements($controller);
+    
         if(!in_array(RestApi::class, $implements)) {
             throw new Exception("Controller must implement RestApi");
         }
+
+        if(!is_array($endpoints)) {
+            $endpoints = [$endpoints];
+        }
+
         foreach($endpoints as $ep) {
             $this->_controllers[$ep] = $controller;
         }
+    
     }
 
     public function domain($name, $controller) {

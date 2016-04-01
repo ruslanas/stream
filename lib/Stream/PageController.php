@@ -34,20 +34,16 @@ class PageController extends Controller implements DomainControllerInterface {
 
         $action = !empty($this->params['action']) ? $this->params['action'] : 'index';
 
-        //////////////////////////////////////////////////////////////////////////////
-        // [Fatal error] Maximum function nesting level of '256' reached, aborting! //
-        //////////////////////////////////////////////////////////////////////////////
-
-        if(method_exists($this, $action) && $action != 'dispatch') {
+        if(method_exists($this, $action)) {
 
             $reflection = new ReflectionMethod($this, $action);
-            if($reflection->isPublic() && !$reflection->isConstructor()) {
+            if($reflection->isFinal()) {
                 return $this->{$action}();
             }
         
         }
 
-        throw new NotFoundException("Page `$uri` not found");
+        throw new NotFoundException("Page `$uri` not found [$action]");
         
     }
 
