@@ -54,6 +54,22 @@ class App extends Injectable implements AppInterface {
         return static::$instance;
     }
 
+    /**
+     * Load database configuration from /config.php and create PDO
+     * @param string $conf
+     * @return \PDO
+     */
+    static public function getConnection($conf = NULL) {
+        
+        $app = self::getInstance();
+
+        $app->loadConfig();
+        $app->connect($conf);
+
+        return $app->pdo;
+    
+    }
+
     public static function deleteInstance() {
         static::$instance = NULL;
     }

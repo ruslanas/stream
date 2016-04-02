@@ -18,10 +18,16 @@ class PageController extends Controller implements DomainControllerInterface {
 
     protected $_injectable = [];
 
-    public function __construct() {
+    protected $params = [];
+    protected $request;
+
+    public function __construct($params = [], $req = NULL) {
     
         parent::__construct();
     
+        $this->params = $params;
+        $this->request = $req;
+
         $this->setupTemplate();
     
     }

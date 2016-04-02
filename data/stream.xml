@@ -43,4 +43,9 @@
         user_id="1">
     </events>
 
+    <tasks id="1"
+        title="Implement new feature"
+        description="Write feature description and create tests"
+        deleted="0"/>
+
 </dataset>

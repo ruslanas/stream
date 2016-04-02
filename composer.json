@@ -8,6 +8,8 @@
         "phpunit/phpunit-skeleton-generator": "*",
         "phpunit/php-code-coverage": "^3",
         "phpunit/dbunit": ">=1.2",
-        "phpdocumentor/phpdocumentor": "2.*"
+        "phpdocumentor/phpdocumentor": "2.*",
+        "behat/behat": "^3.1",
+        "mockery/mockery": "^0.9.4"
     }
 }

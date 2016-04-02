@@ -21,4 +21,6 @@ $app->rest(['/events.json', '/events/:id.json'], modules\Events\Controller::clas
 
 $app->domain('/user/:action', modules\Users\Controller::class);
 
+$app->domain('/tasks/:action', modules\Tasks\Controller::class);
+
 $app->domain('/dev/:action', modules\Homegrown\Dev\Controller::class);
