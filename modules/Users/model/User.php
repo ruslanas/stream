@@ -36,15 +36,17 @@ class User extends Injectable {
         }
 
         if(!empty($data['password']) && !empty($data['password2'])) {
-            if($data['password'] != $data['password2']) {
+            if($data['password'] !== $data['password2']) {
                 $this->_errors['password2'] = 'Passwords do not match';
             }
         } else {
             $this->_errors['password'] = 'Both fields must be filled';
         }
+
         if(count($this->_errors)) {
             return false;
         }
+        
         return true;
     }
 

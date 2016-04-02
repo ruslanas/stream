@@ -24,6 +24,20 @@ class UserTest extends DatabaseTestCase {
 
     }
 
+    // contributor suggested test
+    public function testValidPasswordsIdentical() {
+
+        $isValid = $this->user->valid([
+            'email' => 'test@example.com',
+            'password' => '123foo',
+            'password2' => 123
+        ]);
+
+        $this->assertCount(1, $this->user->error());
+        $this->assertFalse($isValid);
+    
+    }
+    
     // something wrong here
     public function testAuthenticateFail() {
 
