@@ -9,7 +9,6 @@ use Stream\Request;
 use Stream\Test\DatabaseTestCase;
 
 use modules\Posts\model\Post;
-use modules\Users\model\User;
 
 class PostTest extends DatabaseTestCase {
 
@@ -19,18 +18,12 @@ class PostTest extends DatabaseTestCase {
 
         parent::setUp();
 
-        $this->stream = new Post($this->app->pdo);
-
-        // $this->user = new User(NULL, $this->app->pdo);
-
-        // $this->req = $this->getMockBuilder(Request::class);
-        // $this->user->inject('request', $this->req);
+        $this->stream = new Post($this->pdo);
     
     }
 
     public function testStream() {
-        $stream = new Post($this->app->pdo);
-        $this->assertInstanceOf(Post::class, $stream);
+        $this->assertInstanceOf(Post::class, $this->stream);
     }
 
     public function testGetList() {

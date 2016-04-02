@@ -12,8 +12,11 @@ use modules\Events\model\Event;
 class EventTest extends DatabaseTestCase {
     
     public function setUp() {
+    
         parent::setUp();
-        $this->event = new Event($this->app->pdo);
+    
+        $this->event = new Event($this->pdo);
+    
     }
 
     public function testRead() {
@@ -25,6 +28,7 @@ class EventTest extends DatabaseTestCase {
 
         $r = $this->event->read();
         $this->assertTrue(is_array($r));
+    
     }
 
     public function testCreate() {

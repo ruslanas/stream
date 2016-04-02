@@ -10,7 +10,7 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
         parent::setUp();
 
-        $this->task = new Task(\Stream\App::getConnection('test_stream'));
+        $this->task = new Task($this->pdo);
     
     }
 

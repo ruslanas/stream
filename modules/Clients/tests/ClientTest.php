@@ -15,7 +15,8 @@ class ClientTest extends DatabaseTestCase {
 
 		parent::setUp();
 
-		$this->client = new Client($this->app->pdo);
+		$this->client = new Client($this->pdo);
+	
 	}
 
 	public function testClient() {

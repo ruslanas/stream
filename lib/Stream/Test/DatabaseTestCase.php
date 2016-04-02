@@ -6,22 +6,20 @@
 
 namespace Stream\Test;
 
-use \Stream\Request;
-use \Stream\App;
-
 class DatabaseTestCase extends \PHPUnit_Extensions_Database_TestCase {
 
     public function getConnection() {
         
-        $this->app = new App();
-        $this->app->loadConfig();
-        $this->app->connect('test_stream');
+        $this->pdo = \Stream\App::getConnection('test_stream');
 
-        return $this->createDefaultDBConnection($this->app->pdo);
+        return $this->createDefaultDBConnection($this->pdo);
+
     }
     
     public function getDataSet() {
+
         return $this->createFlatXMLDataSet('data/stream.xml');
+    
     }
 
 }
