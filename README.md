@@ -52,5 +52,5 @@ RewriteRule ^ router.php [L]
 **Notes**
 
 ```
-cp hooks/pre-commit .git
+cp hooks/pre-commit .git/hooks
 ```
