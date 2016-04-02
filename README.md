@@ -48,3 +48,9 @@ RewriteRule ^(.+) %{DOCUMENT_ROOT}/webroot/$1 [L]
 RewriteCond %{REQUEST_URI} !^/webroot*
 RewriteRule ^ router.php [L]
 ```
+
+**Notes**
+
+```
+cp hooks/pre-commit .git
+```

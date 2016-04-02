@@ -25,6 +25,7 @@ use \Stream\Interfaces\DomainControllerInterface;
 
 use \Stream\Util\Injectable;
 
+/** Application dispatches requests to controllers and manages database connection */
 class App extends Injectable implements AppInterface {
 
     protected $_injectable = ['acl', 'req', 'cache', '_config'];

@@ -8,6 +8,9 @@ namespace Stream;
 
 use \modules\Users\model\User;
 
+/** Manages Acess Control List. Application checks if HTTP method
+ * is allowed on particular URL for in session.
+ */
 class Acl {
 
     public function allow($method, $uri) {

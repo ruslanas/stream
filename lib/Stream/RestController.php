@@ -6,6 +6,7 @@ use \Exception;
 use \ReflectionClass;
 use \ReflectionMethod;
 
+/** Provides handlers for HTTP requests by request method */
 abstract class RestController extends Controller implements Interfaces\RestApi {
 
 	abstract public function get();

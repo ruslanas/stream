@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if php vendor/phpunit/phpunit/phpunit --coverage-html report ; then
+	cat <<\EOF
+------------------------------
+
+All tests passed. Code coverage report generated.
+
+------------------------------
+EOF
+else
+	cat <<\EOF
+-----------------------------------------------------------------------
+
+Some tests failed. Not committed. Write code to pass test and try again.
+ 
+-----------------------------------------------------------------------
+EOF
+	exit 1
+fi
