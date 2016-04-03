@@ -293,14 +293,21 @@ class App extends Injectable implements AppInterface {
     }
 
     protected function createController($method, $uri) {
+        
         foreach($this->_controllers as $regexp => $controller_class) {
+            
             $matches = $this->match($regexp, $uri);
-            if($matches !== false) {
-                $controller = new $controller_class($matches, $this);
-                return $controller;
+            
+            if($matches !== FALSE) {
+                if(class_exists($controller_class)) {
+                    return new $controller_class($matches, $this);
+                } else {
+                    throw new NotFoundException;
+                }
             }
         }
-        return null;
+
+        return NULL;
     }
 
     protected function createDomainController($uri) {
@@ -311,7 +318,20 @@ class App extends Injectable implements AppInterface {
             
             if($matches !== false) {
         
-                return new $controller_class($matches, $this);
+                if(class_exists($controller_class)) {
+
+                    $implements = class_implements($controller_class);
+                
+                    if(!in_array(RestApi::class, $implements)) {
+
+                        throw new Exception("Controller `{$controller_class}` must implement RestApi");
+                    
+                    }
+
+                    return new $controller_class($matches, $this);
+                } else {
+                    throw new \Stream\Exception\NotFoundException("Page controller not found");
+                }
         
             }
         
@@ -334,14 +354,18 @@ class App extends Injectable implements AppInterface {
         $this->put_handlers[$regexp] = $handler;
     }
 
+    /**
+     * Map parameterized URI(s) to controller
+     * @param string|array $endpoints
+     * @param string $controller
+     * @throws \Exception if $controller is not a string
+     */
     public function rest($endpoints, $controller) {
-    
-        $implements = class_implements($controller);
-    
-        if(!in_array(RestApi::class, $implements)) {
-            throw new Exception("Controller must implement RestApi");
-        }
 
+        if(!is_string($controller)) {
+            throw new \Exception('App configuration error');
+        }
+    
         if(!is_array($endpoints)) {
             $endpoints = [$endpoints];
         }
@@ -354,10 +378,6 @@ class App extends Injectable implements AppInterface {
 
     public function domain($name, $controller) {
         $this->_domains[$name] = $controller;
-    }
-
-    public function cache_status() {
-        return $this->cache->status();
     }
 
     public function loadConfig() {

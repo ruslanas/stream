@@ -8,7 +8,6 @@
 
 $app = new Stream\App();
 $app->loadConfig();
-$app->connect();
 
 $app->get('/', function($req) use ($app) {
 

@@ -1,4 +1,4 @@
 *
 !.gitignore
 !*.xml
-!*.sql
+!dump.sql

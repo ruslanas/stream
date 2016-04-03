@@ -1,6 +1,5 @@
 webroot/components
 vendor/*
-xdebug.log
+*.log
 config.php
-*.sql
 .idea/*

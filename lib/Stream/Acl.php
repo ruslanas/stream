@@ -19,7 +19,7 @@ class Acl {
 
             $uid = $_SESSION['uid'];
 
-            $user = new User(App::getInstance()->pdo);
+            $user = new User(App::getConnection());
             
             $data = $user->getById($uid);
 

@@ -64,16 +64,14 @@ class AppTest extends PHPUnit_Framework_TestCase {
     
     public function testLoadConfig() {
 
-        $app = new App();
-        $conf = $app->loadConfig();
+        $conf = $this->app->loadConfig();
         $this->assertArrayHasKey('template_path', $conf);
     
     }
 
     public function testRest() {
-        $app = new App();
         $this->expectException(Exception::class);
-        $app->rest('/endpoint', (object)[]);
+        $this->app->rest('/endpoint', (object)[]);
     }
 
     public function testDispatchException() {
@@ -164,6 +162,29 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
         $this->markTestIncomplete("REST security not checked");
 
+    }
+
+    public function testCreateDomainControllerThrowsNotFoundException() {
+
+        $this->expectException(\Stream\Exception\NotFoundException::class);
+
+        $this->app->domain('/foo/bar', NotExisting::class);
+
+        $this->acl->method('allow')->willReturn(TRUE);
+
+        $this->app->dispatch('/foo/bar');
+    
+    }
+
+    public function testCreateController() {
+        
+        $this->expectException(\Stream\Exception\NotFoundException::class);
+        
+        $this->acl->method('allow')->willReturn(TRUE);
+        $this->req->expects($this->once())->method('getMethod')->willReturn('GET');
+
+        $this->app->rest('/magic/:number.xml', NotExisting::class);
+        $this->app->dispatch('/magic/126.xml');
     }
 
     /**
