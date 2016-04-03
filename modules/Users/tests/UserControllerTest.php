@@ -15,6 +15,9 @@ use modules\Users\model;
 class UserControllerTest extends PHPUnit_Framework_TestCase {
     
     public function setUp() {
+
+        // model will use be initialized with last successful connection
+        App::getConnection('test_stream');
         
         $this->req = $this->getMockBuilder(Request::class)->getMock();
         $this->user = $this->getMockBuilder(model\User::class)->getMock();

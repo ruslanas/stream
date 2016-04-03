@@ -66,6 +66,12 @@ class App extends Injectable implements AppInterface {
         $app = self::getInstance();
 
         $app->loadConfig();
+
+        // use last connection
+        if(($app->pdo instanceof \PDO) && $conf === NULL) {
+            return $app->pdo;
+        }
+
         return $app->connect($conf);
     
     }

@@ -51,7 +51,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
         $this->assertInstanceOf(App::class, $this->app);
 
-        $this->app->connect();
+        // expects correct default database setup
+        try {
+            $this->app->connect();
+        } catch(\PDOException $e) {
+            $this->markTestIncomplete($e->getMessage());
+        }
+
         $this->assertInstanceOf(PDO::class, $this->app->pdo);
 
         $this->app->connect('test_stream');
