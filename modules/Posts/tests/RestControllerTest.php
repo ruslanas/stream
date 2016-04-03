@@ -4,26 +4,37 @@
  * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
  */
 
-use Stream\App;
-use Stream\Exception\UnknownMethodException;
-use Stream\Request;
-use Stream\Test\DatabaseTestCase;
+namespace modules\Posts;
 
-use modules\Posts\Controller;
+use \Stream\App;
+use \Stream\Exception\UnknownMethodException;
+use \Stream\Request;
+use \Stream\Test\DatabaseTestCase;
 
-class RestControllerTest extends PHPUnit_Framework_TestCase {
+use \modules\Posts\Controller;
+
+class RestControllerTest extends \PHPUnit_Framework_TestCase {
 
     public function setUp() {
         
-        $this->controller = new Controller();
+        $this->controller = new Controller;
 
         $this->req = $this->getMockBuilder(Request::class)->getMock();
+        
+        $this->model = $this->getMockBuilder(model\Post::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->controller->inject('request', $this->req);
+        $this->controller->inject('model', $this->model);
+    
     }
 
     public function testApi() {
 
         $this->controller->inject('params', []);
+        $this->model->method('getList')->willReturn([(object)['title' => 'Title']]);
+        
         $data = $this->controller->get();
 
         $this->assertTrue(is_array($data));
@@ -31,6 +42,8 @@ class RestControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertObjectHasAttribute('title', $data[0]);
 
         $this->controller->inject('params', ['id' => 1]);
+        $this->model->method('getById')->with(1)->willReturn((object)['title' => 'Title']);
+
         $data = $this->controller->get();
 
         $this->assertObjectHasAttribute('title', $data);
@@ -41,10 +54,14 @@ class RestControllerTest extends PHPUnit_Framework_TestCase {
         
         $this->controller->inject('params', []);
 
-        $this->req->method('getPostData')->willReturn([
+        $data = [
             'title' => 'Title',
             'body' => 'Post body'
-        ]);
+        ];
+
+        $this->req->method('getPostData')->willReturn($data);
+
+        $this->model->method('save')->with(NULL, $data)->willReturn((object)$data);
 
         $data = $this->controller->post();
 
@@ -69,15 +86,15 @@ class RestControllerTest extends PHPUnit_Framework_TestCase {
 
     public function testDelete() {
 
+        $this->model->method('delete')->with(1)->willReturn((object)['id'=>1]);
         $this->controller->inject('params', ['id' => 1]);
-        $this->controller->delete();
+        
+        $res = $this->controller->delete();
+
+        $this->assertEquals(1, $res->id);
 
         $this->controller->inject('params', []);
-        $data = $this->controller->get();
-        $this->assertTrue(is_array($data));
-        $this->assertEquals(0, count($data));
-
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->controller->delete();
 
     }

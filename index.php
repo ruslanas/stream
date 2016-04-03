@@ -10,9 +10,12 @@ $app = new Stream\App();
 $app->loadConfig();
 $app->connect();
 
-$app->get('/', function($req) {
-    $controller = new modules\Home\Controller();
+$app->get('/', function($req) use ($app) {
+
+    $controller = new modules\Home\Controller($req, $app);
+
     echo $controller->index();
+
 });
 
 $app->rest(['/posts.json', '/posts/:id.json'], modules\Posts\Controller::class);

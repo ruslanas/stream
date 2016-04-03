@@ -18,14 +18,12 @@ class Controller extends RestController {
     protected $params = [];
     protected $_injectable = ['params', 'request', 'model'];
 
-    public function __construct($selector = NULL, $request = NULL) {
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
         
-        parent::__construct();
+        parent::__construct($params, $app);
 
-        $this->params = $selector;
-        $this->request = $request;
-        
-        $this->model = new Post($this->app->pdo);
+        $this->model = new Post(\Stream\App::getConnection());
+
     }
 
     final public function get() {
@@ -45,9 +43,9 @@ class Controller extends RestController {
         }
 
         $id = $this->params['id'];
-        $item = $this->model->getById($id);
-        $this->model->delete($id);
-        return $item;
+
+        return $this->model->delete($id);
+    
     }
 
     final public function post() {

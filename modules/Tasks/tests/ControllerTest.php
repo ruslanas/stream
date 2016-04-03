@@ -11,8 +11,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->tasks = new Controller([], $this->req);
+        $this->tasks = new Controller([]);
+
         $this->tasks->inject('task', $this->model);
+        $this->tasks->inject('request', $this->req);
+    
     }
 
     public function testOpen() {

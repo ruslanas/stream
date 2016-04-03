@@ -21,17 +21,13 @@ class Controller extends PageController implements DomainControllerInterface {
     
     protected $user;
 
-    public function __construct($params = NULL, Request $request = NULL, stdClass $user = NULL) {
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
 
-        parent::__construct();
+        parent::__construct($params, $app);
 
-        $this->params = $params;
+        $this->user = new User(\Stream\App::getConnection());
         
-        $this->request = $request !== NULL ? $request : new Request;
-
-        $this->user = new User($this->app->pdo);
-        
-        $this->templates->addFolder('user', 'modules/Users/templates');
+        $this->templates->addFolder('user', __DIR__.DIRECTORY_SEPARATOR.'templates');
     
     }
 

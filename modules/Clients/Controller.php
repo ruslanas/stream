@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
 namespace modules\Clients;
 
 use \Stream\Exception\NotFoundException;
@@ -9,13 +13,12 @@ class Controller extends RestController {
 
     protected $_injectable = ['params', 'request','model'];
 
-    public function __construct($params = NULL, $request = NULL) {
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
         
-        parent::__construct();
+        parent::__construct($params, $app);
         
-        $this->params = $params;
-        $this->request = $request;
-        $this->model = new model\Client($this->app->pdo);
+        $this->model = new model\Client(\Stream\App::getConnection());
+
     }
 
     final public function get() {

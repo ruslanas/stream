@@ -13,20 +13,33 @@ use Stream\Util\Injectable;
 class Controller extends Injectable {
 
     protected $app;
+    protected $request;
+    
     protected $_redirect = FALSE;
+    protected $_injectable = ['request', 'params'];
 
-    public function __construct() {
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
 
-        $this->app = App::getInstance();
+        $this->params = $params;
+        $this->app = $app;
 
+        // can be injected later
+        $this->request = isset($app->request) ? $app->request : NULL;
+    
     }
 
     public function redirect($uri = NULL) {
+        
         if($uri !== NULL) {
+        
             $this->_redirect = $uri;
+    
             return FALSE;
+        
         }
+        
         return $this->_redirect;
+    
     }
 
 }

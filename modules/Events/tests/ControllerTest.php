@@ -15,25 +15,23 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     
     public function setUp() {
 
-        $this->app = new App();
-
-        $this->app->loadConfig();
-        $this->app->connect('test_stream');
-
         $this->model = $this->getMockBuilder(Event::class)
-        ->disableOriginalConstructor()
-        ->getMock();
 
-        $request = $this->getMockBuilder(Request::class)
-        ->disableOriginalConstructor()
-        ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $request->method('getPostData')->willReturn([
+        $this->req = $this->getMockBuilder(Request::class)
+
+            ->getMock();
+
+        $this->req->method('getPostData')->willReturn([
             'type' => 'call'
         ]);
 
-        $this->controller = new Controller([], $request);
+        $this->controller = new Controller;
+
         $this->controller->inject('event', $this->model);
+        $this->controller->inject('request', $this->req);
 
     }
     

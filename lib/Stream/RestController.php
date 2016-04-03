@@ -13,7 +13,11 @@ abstract class RestController extends Controller implements Interfaces\RestApi {
 	abstract public function post();
 	abstract public function delete();
 
-    protected $_injectable = [];
+    public function __construct($params = NULL, $app = NULL) {
+        
+        parent::__construct($params, $app);
+    
+    }
 
     public function __call($method, $args) {
 

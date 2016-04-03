@@ -22,7 +22,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $this->app->inject('acl', $this->acl);
         
         $this->req = $this->getMockBuilder(Request::class)->getMock();
-        $this->app->inject('req', $this->req);
+        $this->app->inject('request', $this->req);
         
     }
 
@@ -77,9 +77,11 @@ class AppTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testDispatchException() {
+
         $this->expectException(ForbiddenException::class);
-        $app = new App();
-        $app->dispatch('/');
+
+        $this->app->dispatch('/');
+
     }
 
     public function testDispatchPostMethod() {
@@ -89,6 +91,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
         $this->req->method('getMethod')->willReturn('POST');
         $this->req->method('getPostData')->willReturn($data);
+
         $this->acl->method('allow')
             ->with('POST', $uri)
             ->willReturn(TRUE);

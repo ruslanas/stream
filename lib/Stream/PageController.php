@@ -15,19 +15,12 @@ use \Stream\Exception\NotFoundException;
 class PageController extends Controller implements DomainControllerInterface {
 
     protected $templates;
-
-    protected $_injectable = [];
-
     protected $params = [];
-    protected $request;
 
-    public function __construct($params = [], $req = NULL) {
+    public function __construct($params = [], $app = NULL) {
     
-        parent::__construct();
+        parent::__construct($params, $app);
     
-        $this->params = $params;
-        $this->request = $req;
-
         $this->setupTemplate();
     
     }
@@ -55,13 +48,13 @@ class PageController extends Controller implements DomainControllerInterface {
 
     protected function setupTemplate() {
         
-        $this->templates = new Engine($this->app->template_path);
+        $this->templates = new Engine(isset($this->app->template_path) ? $this->app->template_path : 'templates');
         
         $this->templates->addData([
             
             'authorized' => !empty($_SESSION['uid']),
             
-            'title' => $this->app->title,
+            'title' => isset($this->app->title) ? $this->app->title : 'Stream',
             
             'scripts' => [],
             

@@ -13,9 +13,12 @@ class DummyController extends RestController implements DomainControllerInterfac
     private $data;
     protected $params;
 
-    public function __construct($params, $req) {
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
+
+        parent::__construct($params, $app);
+
         $this->params = $params;
-        $this->data = $req->getPostData();
+    
     }
 
     public function dispatch($uri = NULL) {
@@ -51,7 +54,11 @@ class DummyController extends RestController implements DomainControllerInterfac
     }
 
     final public function post() {
+        
+        $this->data = $this->request->getPostData();
+
         $this->data['params'] = $this->params;
+        
         return $this->data;
     }
 

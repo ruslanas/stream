@@ -13,14 +13,11 @@ class Controller extends RestController {
     protected $event;
     protected $_injectable = ['params', 'request', 'event'];
 
-    public function __construct($params, $request) {
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
         
-        parent::__construct();
+        parent::__construct($params, $app);
 
-        $this->params = $params;
-        $this->request = $request;
-
-        $this->event = new model\Event($this->app->pdo);
+        $this->event = new model\Event(\Stream\App::getConnection());
     
     }
 

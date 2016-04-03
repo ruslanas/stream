@@ -1,21 +1,21 @@
 <?php
 
+/**
+ * @author Ruslanas Balčiūnas <ruslanas.com@gmail.com>
+ */
+
 use Stream\Test\DatabaseTestCase;
 
-use Stream\App;
 use Stream\PersistentStorage;
 
 class PersistentStorageTest extends DatabaseTestCase {
     
     public function setUp() {
         
-        parent::__construct();
+        parent::setUp();
 
-        $this->app = new App();
-        $this->app->loadConfig();
-        $this->app->connect('test_stream');
+        $this->storage = new PersistentStorage($this->pdo);
 
-        $this->storage = new PersistentStorage($this->app->pdo);
         $this->storage->inject('table', [
             'posts' => [
                 'id',
@@ -47,5 +47,11 @@ class PersistentStorageTest extends DatabaseTestCase {
     public function testDeleteReturnsFalse(){
         $deleted = $this->storage->delete(1000);
         $this->assertFalse($deleted, 'Expected FALSE if record does not exist');
+    }
+
+    public function testRemove() {
+
+        $this->assertEquals(1, $this->storage->remove(1)->id);
+    
     }
 }

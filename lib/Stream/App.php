@@ -28,7 +28,7 @@ use \Stream\Util\Injectable;
 /** Application dispatches requests to controllers and manages database connection */
 class App extends Injectable implements AppInterface {
 
-    protected $_injectable = ['acl', 'req', 'cache', '_config'];
+    protected $_injectable = ['acl', 'request', 'cache', '_config'];
 
     private $_controllers = [];
     private $_domains = [];
@@ -78,7 +78,7 @@ class App extends Injectable implements AppInterface {
     public function __construct(CacheInterface $cache = NULL) {
 
         $this->acl = new Acl;
-        $this->req = new Request;
+        $this->request = new Request;
 
         if($cache !== NULL) {
             $this->cache = $cache;
@@ -136,7 +136,7 @@ class App extends Injectable implements AppInterface {
      */
     public function dispatch($uri) {
 
-        $method = $this->req->getMethod();
+        $method = $this->request->getMethod();
 
         if(!$this->authorize($method, $uri)) {
             throw new ForbiddenException("Not allowed");
@@ -171,7 +171,7 @@ class App extends Injectable implements AppInterface {
         
         }
 
-        $headers = $this->req->getHeaders();
+        $headers = $this->request->getHeaders();
 
         $revalidate = (!empty($headers['Cache-Control'])
             && strpos($headers['Cache-Control'], 'max-age=0') !== FALSE) ? true : false;
@@ -296,7 +296,7 @@ class App extends Injectable implements AppInterface {
         foreach($this->_controllers as $regexp => $controller_class) {
             $matches = $this->match($regexp, $uri);
             if($matches !== false) {
-                $controller = new $controller_class($matches, $this->req);
+                $controller = new $controller_class($matches, $this);
                 return $controller;
             }
         }
@@ -304,11 +304,17 @@ class App extends Injectable implements AppInterface {
     }
 
     protected function createDomainController($uri) {
+        
         foreach($this->_domains as $name => $controller_class) {
+            
             $matches = $this->match($name, $uri);
+            
             if($matches !== false) {
-                return new $controller_class($matches, $this->req);
+        
+                return new $controller_class($matches, $this);
+        
             }
+        
         }
     }
 

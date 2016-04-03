@@ -17,6 +17,7 @@ use \Stream\Util\Injectable;
 
 class PersistentStorage extends Injectable {
 
+    /** @var array Holds data structure definition. Subject to change. */
     protected $table = NULL;
 
     protected $_injectable = ['table'];
@@ -49,10 +50,13 @@ class PersistentStorage extends Injectable {
             }
 
             $rel = rtrim($tbl, 's')."_id";
+
             $joins .= " LEFT JOIN `{$tbl}` ON `{$tbl}`.id = `{$tableName}`.`$rel`";
             
             foreach($cols as $col) {
+            
                 $fieldList .= ", `$tbl`.`$col` AS `{$tbl}_{$col}`";
+            
             }
 
         }
@@ -154,6 +158,17 @@ class PersistentStorage extends Injectable {
         return $ret;
     }
 
+    /**
+     * Alias for `delete`. Play nice with Angular.
+     * @param int $id
+     * @return \stdClass
+     */
+    public function remove($id) {
+        
+        return $this->delete($id);
+    
+    }
+
     public function create($data) {
 
         $statement = $this->prepareStatement($data);
@@ -173,8 +188,11 @@ class PersistentStorage extends Injectable {
     }
 
     private function _get_table_name() {
+    
         reset($this->table);
+    
         return key($this->table);
+    
     }
 
     private function prepareStatement($data, $id = NULL) {

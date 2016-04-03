@@ -1,5 +1,7 @@
 angular.module('messages', [
+
     'ngResource'
+
 ]).controller('MainController', ['Post', function(Post) {
 
     this.title = 'Stream';
@@ -8,6 +10,7 @@ angular.module('messages', [
     this.showForm = false;
 
     var self = this;
+
     this.save = function(post) {
         this.loading = true;
         post.$save(function(res) {
@@ -31,18 +34,21 @@ angular.module('messages', [
     };
 
     this.delete = function(post) {
-        post.$delete(function(res) {
+        
+        post.$remove(function(res) {
+
             self.posts = self.posts.filter(function(el) {
                 return el.id !== res.id;
             });
+            
         }, function(res) {
             alert(res.data);
         });
+    
     };
+
 }]).factory('Post', ['$resource', function($resource) {
-    return $resource('/posts/:id.json', {id: "@id"}, {
-        delete: {
-            method: 'DELETE'
-        }
-    });
+
+    return $resource('/posts/:id.json', {id: "@id"});
+
 }]);

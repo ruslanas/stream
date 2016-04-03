@@ -6,9 +6,9 @@ class Controller extends \Stream\PageController {
 
     protected $_injectable = ['task', 'request'];
 
-    public function __construct($params = NULL, $req = NULL) {
+    public function __construct($params = NULL, $app = NULL) {
 
-        parent::__construct($params, $req);
+        parent::__construct($params, $app);
 
         $this->task = new model\Task(\Stream\App::getConnection());
 

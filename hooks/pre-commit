@@ -1,20 +1,31 @@
 #!/bin/sh
 
-if php vendor/phpunit/phpunit/phpunit --coverage-html report ; then
+if sh vendor/bin/behat ; then
+    cat <<\EOF
+--------------------------------------------------------------------------------
+Behat scenarios passed
+--------------------------------------------------------------------------------
+EOF
+else
+    cat <<\EOF
+--------------------------------------------------------------------------------
+One or more Behat scenarios failed. ABORTING!
+--------------------------------------------------------------------------------
+EOF
+    exit 1
+fi
+
+if sh vendor/bin/phpunit --coverage-html report ; then
 	cat <<\EOF
-------------------------------
-
-All tests passed. Code coverage report generated.
-
-------------------------------
+--------------------------------------------------------------------------------
+All unit tests passed. Code coverage report generated.
+--------------------------------------------------------------------------------
 EOF
 else
 	cat <<\EOF
------------------------------------------------------------------------
-
-Some tests failed. Not committed. Write code to pass test and try again.
- 
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Some unit tests failed. ABORTING!
+--------------------------------------------------------------------------------
 EOF
 	exit 1
 fi
