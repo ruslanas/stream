@@ -129,6 +129,17 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    public function testDispatchThrowsIfNotRestController() {
+        $this->acl->method('allow')->with('GET', '/api/books/2')->willReturn(TRUE);
+        $this->req->method('getMethod')->willReturn('GET');
+
+        // Passing any existing not RestApi class
+        $this->app->rest('/api/books/:id', \Stream\App::class);
+
+        $this->expectException(\Exception::class);
+        $this->app->dispatch('/api/books/2');
+    }
+
     public function testDispatchExceptionMessageContainsPath() {
 
         $this->acl->method('allow')->with('GET', '/module/dispatch')->willReturn(TRUE);

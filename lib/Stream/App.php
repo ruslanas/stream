@@ -300,7 +300,17 @@ class App extends Injectable implements AppInterface {
             
             if($matches !== FALSE) {
                 if(class_exists($controller_class)) {
+        
+                    $implements = class_implements($controller_class);
+                
+                    if(!in_array(RestApi::class, $implements)) {
+
+                        throw new Exception("Controller `{$controller_class}` must implement RestApi");
+                    
+                    }
+        
                     return new $controller_class($matches, $this);
+        
                 } else {
                     throw new NotFoundException;
                 }
@@ -319,15 +329,6 @@ class App extends Injectable implements AppInterface {
             if($matches !== false) {
         
                 if(class_exists($controller_class)) {
-
-                    $implements = class_implements($controller_class);
-                
-                    if(!in_array(RestApi::class, $implements)) {
-
-                        throw new Exception("Controller `{$controller_class}` must implement RestApi");
-                    
-                    }
-
                     return new $controller_class($matches, $this);
                 } else {
                     throw new \Stream\Exception\NotFoundException("Page controller not found");
