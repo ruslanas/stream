@@ -18,7 +18,7 @@ class UserTest extends DatabaseTestCase {
 
         $this->req = $this->getMockBuilder(Request::class)->getMock();
 
-        $this->user = new User(App::getInstance()->pdo);
+        $this->user = new User($this->pdo);
 
         $this->user->inject('request', $this->req);
 

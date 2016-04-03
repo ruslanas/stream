@@ -32,6 +32,7 @@ class App extends Injectable implements AppInterface {
 
     private $_controllers = [];
     private $_domains = [];
+    private $_connections = [];
 
     private $get_handlers = [];
     private $post_handlers = [];
@@ -65,9 +66,7 @@ class App extends Injectable implements AppInterface {
         $app = self::getInstance();
 
         $app->loadConfig();
-        $app->connect($conf);
-
-        return $app->pdo;
+        return $app->connect($conf);
     
     }
 
@@ -80,11 +79,7 @@ class App extends Injectable implements AppInterface {
         $this->acl = new Acl;
         $this->request = new Request;
 
-        if($cache !== NULL) {
-            $this->cache = $cache;
-        } else {
-            $this->cache = new Cache();
-        }
+        $this->cache = ($cache !== NULL) ? $cache : new Cache;
         
         static::$instance = $this;
     }
@@ -97,7 +92,14 @@ class App extends Injectable implements AppInterface {
     }
 
     public function connect($conf = NULL) {
-        if($conf === NULL) {
+
+        $conf = ($conf === NULL) ? 'default' : $conf;
+
+        if(!empty($this->_connections[$conf])) {
+            return $this->_connections[$conf];
+        }
+
+        if($conf === 'default') {
             $dsn = "mysql:host={$this->_config['host']};dbname={$this->_config['database']};charset=utf8mb4";
             $pdo = new PDO($dsn, $this->_config['user'], $this->_config['password']);
         } else {
@@ -114,7 +116,12 @@ class App extends Injectable implements AppInterface {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 
+        $this->_connections[$conf] = $pdo;
+        
         $this->pdo = $pdo;
+
+        return $pdo;
+    
     }
 
     protected function authorize($method, $uri) {
@@ -145,7 +152,7 @@ class App extends Injectable implements AppInterface {
         // try to match ReST controller first
         $controller = $this->createController($method, $uri);
 
-        if($controller instanceof RestApi) {
+        if($controller !== NULL) {
             
             if(method_exists($controller, $method)) {
 
@@ -154,7 +161,11 @@ class App extends Injectable implements AppInterface {
                 if($reflection->isFinal()) {
                     $out = $controller->{$method}();
                 } else {
+
+                    // unsupported HTTP request method or corresponding controller
+                    // method is not declared final
                     throw new \Stream\Exception\UnknownMethodException("Hacker?");
+                
                 }
             
             } else {
