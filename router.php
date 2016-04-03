@@ -7,7 +7,6 @@
 session_start();
 
 require 'vendor/autoload.php';
-require 'autoload.php';
 
 try {
 

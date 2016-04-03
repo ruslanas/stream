@@ -1,12 +1,16 @@
+# features/tasks.feature
+
 Feature: Todo List
     In order to progress on project
     As a developer
     I need to track my tasks
 
-Scenario: Adding tasks
+Scenario: Adding task
 
-    Given "Tasks" tab is open
-    Then I start typing new task into textbox
-    And save
-    Then I enter description
-    And save
+    Given tab "Tasks" is open
+    When I create new task memo
+    Then I fill in "Smile" into textbox
+    And hit "Save"
+    When edit form opens
+    Then I fill in "Often" into textarea
+    And hit "Done"

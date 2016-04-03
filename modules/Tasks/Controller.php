@@ -22,9 +22,10 @@ class Controller extends \Stream\PageController {
 
     final public function save() {
         
-        $this->task->create($this->request->post());
+        $data = $this->request->post();
+        $res = $this->task->create($data);
 
-        return $this->redirect('/tasks/edit');
+        return $this->redirect('/tasks/edit/'.$res->id);
     
     }
 

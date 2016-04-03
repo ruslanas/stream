@@ -27,10 +27,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
         
         $this->model->method('create')
             ->with($this->arrayHasKey('title'))
-            ->willReturn(['id'=>1, 'title' => 'todo', 'description' => 'implement feature']);
+            ->willReturn((object)['id'=>1, 'title' => 'todo', 'description' => 'implement feature']);
 
         $this->tasks->save();
-        $this->assertEquals('/tasks/edit', $this->tasks->redirect());
+        $this->assertEquals('/tasks/edit/1', $this->tasks->redirect());
     }
 
     public function testEdit() {

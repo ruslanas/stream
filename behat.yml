@@ -1,1 +1,5 @@
 # behat.yml
+default:
+  suites:
+    modules:
+      contexts: [ ModuleContext ]
