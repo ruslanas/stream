@@ -1,6 +1,6 @@
-<section ng-controller="TasksController as tasks">
+<section>
 
-    <div class="panel panel-info" ng-repeat="task in tasks.tasks">
+    <div class="panel panel-info" ng-repeat="task in section.tasks">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-8"><strong><a href="/tasks/edit/{{task.id}}">{{task.title}}</a></strong></div>

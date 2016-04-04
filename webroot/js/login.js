@@ -1,11 +1,19 @@
 angular.module('users', [
     'ngResource',
     'ngRoute',
-]).controller('LoginController', ['User', function(User) {
+]).controller('LoginController',
+    
+    ['User', '$rootScope', '$location', function(User, $rootScope, $location) {
 
-    this.user;
+    this.user = {};
     
     var self = this;
+
+    if($rootScope.authorized) {
+        User.logout(function() {
+            $rootScope.authorized = false;
+        });
+    }
 
     this.login = function($event) {
 
@@ -14,9 +22,13 @@ angular.module('users', [
         var user = new User(self.user);
         
         user.$login(function(res) {
-            console.log(res);
+            
+            $rootScope.authorized = true;
+            $rootScope.user = res;
+            $location.url('/tasks');
+
         }, function(res) {
-            console.log(res);
+            alert(res.data);
         });
 
         return false;
@@ -27,12 +39,20 @@ angular.module('users', [
     return $resource('/users/login.json', {id: "@id"}, {
         login: {
             method: 'POST'
+        },
+        logout: {
+            method: 'DELETE'
         }
     });
 
 }]).config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/login', {
         templateUrl: 'partials/login.html',
-        controller: 'LoginController'
+        controller: 'LoginController',
+        controllerAs: 'section'
+    }).when('/logout', {
+        templateUrl: 'partials/login.html',
+        controller: 'LoginController',
+        controllerAs: 'section'
     });
 }]);

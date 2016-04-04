@@ -41,7 +41,12 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
     }
 
-    public function delete() {}
+    final public function delete() {
+        if($this->param('action') == 'login') {
+            unset($_SESSION['uid']);
+        }
+        return false;
+    }
 
     public function __construct($params = NULL, \Stream\App $app = NULL) {
 

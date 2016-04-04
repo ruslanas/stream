@@ -20,6 +20,7 @@ class PageController extends Controller implements DomainControllerInterface {
     protected $_scripts = [
         "/components/angular/angular.min.js",
         "/components/angular-resource/angular-resource.min.js",
+        "/components/angular-animate/angular-animate.min.js",
         "/components/angular-route/angular-route.min.js",
         "/components/angular-bootstrap/ui-bootstrap-tpls.min.js",
     ];

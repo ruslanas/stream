@@ -54,6 +54,7 @@ angular.module('messages', [
 }]).config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {
         templateUrl: 'partials/posts.html',
-        controller: 'PostsController'
+        controller: 'PostsController',
+        controllerAs: 'section'
     });
 }]);

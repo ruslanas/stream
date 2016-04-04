@@ -28,6 +28,7 @@ app.controller('TasksController', ['Task', function(Task) {
 }]).config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/tasks', {
         templateUrl: 'partials/tasks.html',
-        controller: 'TasksController'
+        controller: 'TasksController',
+        controllerAs: 'section'
     });
 }]);

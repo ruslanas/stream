@@ -27,6 +27,7 @@ angular.module('client', [
 }]).config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/clients', {
         templateUrl: 'partials/clients.html',
-        controller: 'ClientsController'
+        controller: 'ClientsController',
+        controllerAs: 'section'
     });
 }]);

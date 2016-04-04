@@ -1,15 +1,15 @@
-<div data-ng-controller="PostsController as app">
+<div>
 
     <div class="navbar bavbar-default">
         
-        <button ng-disabled="app.showForm"
-                ng-click="app.showForm = true"
+        <button ng-disabled="section.showForm"
+                ng-click="section.showForm = true"
                 class="btn btn-xs btn-primary navbar-btn"><i class="glyphicon glyphicon-plus"></i> New message</button>
 
 
     </div>
 
-    <form ng-show="app.showForm" class="jumbotron">
+    <form ng-show="section.showForm" class="jumbotron">
         <div class="form-group">
             <label>Title</label>
             <input class="form-control" ng-model="post.title"/>
@@ -18,10 +18,10 @@
             <label>Body</label>
             <textarea rows="7" class="form-control" ng-model="post.body"></textarea>
         </div>
-        <button class="btn btn-xs btn-success" ng-click="app.create(post)">Save</button>
+        <button class="btn btn-xs btn-success" ng-click="section.create(post)">Save</button>
     </form>
 
-    <div ng-repeat="post in app.posts">
+    <div ng-repeat="post in section.posts">
         <div class="panel panel-info" ng-show="!post.edit">
             <div class="panel-heading">
                 <div class="row">
@@ -31,7 +31,7 @@
                         @ {{post.created}}
                         <button class="btn btn-xs btn-primary" ng-click="post.edit = true">
                             <i class="glyphicon glyphicon-pencil"></i> Edit</button>
-                        <button class="btn btn-xs btn-danger" ng-click="app.delete(post)">
+                        <button class="btn btn-xs btn-danger" ng-click="section.delete(post)">
                             <i class="glyphicon glyphicon-remove"></i> Delete</button>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
 
             <div class="row">
                 <div class="col-xs-6">
-                    <button ng-show="post.edit" ng-click="app.save(post)"
+                    <button ng-show="post.edit" ng-click="section.save(post)"
                             class="btn btn-xs btn-success">Save</button>
                     <button ng-show="post.edit" ng-click="post.edit = false"
                             class="btn btn-xs btn-danger">Cancel</button>

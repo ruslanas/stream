@@ -15,6 +15,10 @@ class Acl {
 
     public function allow($method, $uri) {
 
+        if(!empty($_SESSION['uid']) && $method === 'DELETE' && $uri === '/users/login.json') {
+            return true;
+        }
+
         if(!empty($_SESSION['uid'])) {
 
             $uid = $_SESSION['uid'];
@@ -57,7 +61,7 @@ class Acl {
         
         $action = isset($components[1]) ? $components[1] : '__get_only__';
 
-        if(in_array($action, ["login", "add"]) || $method === 'GET') {
+        if(in_array($action, ["login", "add", "login.json"]) || $method === 'GET') {
             return true;
         }
         

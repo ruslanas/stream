@@ -1,8 +1,8 @@
 <?php $this->layout('basic');?>
 
-<div data-ng-app="stream">
+<div class="view-animate-container">
 
-    <ng-view></ng-view>
+    <ng-view class="view-animate"></ng-view>
 
 </div>
 

@@ -3,7 +3,7 @@
     <head>
         
         <meta charset="utf-8">
-        
+        <base href="/">
         <title><?php echo $this->e($title);?></title>
         
         <?php foreach($stylesheets as $sheet): ?>
@@ -15,7 +15,7 @@
         <?php endforeach; ?>
 
     </head>
-    <body>
+    <body data-ng-app="stream" ng-controller="AppController as sys">
 
         <nav class="navbar navbar-default">
             <div class="container">
@@ -24,16 +24,19 @@
                 </div>
                 <div>
                     <ul class="nav navbar-nav">
-                        <li><a href="/#/clients">Clients</a></li>
-                        <li><a href="/#/tasks">Tasks</a></li>
-                        <li><a href="/user/logout">Sign Out</a></li>
-                        <li><a href="/user/add">Register</a></li>
-                        <li><a href="/#/login">Sign In</a></li>
+
+                        <li><a href="clients" ng-show="authorized" ng-class="">Clients</a></li>
+                        <li><a href="tasks" ng-show="authorized">Tasks</a></li>
+                        
+                        <li><a href="logout" ng-show="authorized">Sign Out</a></li>
+                        
+                        <li><a href="register" ng-show="!authorized">Register</a></li>
+                        <li><a href="login" ng-show="!authorized">Sign In</a></li>
+                    
                     </ul>
                 </div>
             </div>
         </nav>
-
         <section class="container"><?php echo $this->section('content');?></section>
 
     </body>

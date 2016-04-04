@@ -141,6 +141,10 @@ class User extends \Stream\PersistentStorage {
 
         $this->data = $req->post();
 
+        if(empty($this->data)) {
+            $this->data = $req->getPostData();
+        }
+
         $this->data = is_array($this->data) ? $this->data : [];
 
         if(!isset($this->data['email']) || !isset($this->data['password']) || isset($this->data['password2'])) {
