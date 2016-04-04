@@ -1,8 +1,13 @@
-<?php foreach($data as $item): ?>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <a href="/tasks/edit/<?php echo $this->e($item->id);?>"><?php echo $this->e($item->title); ?></a>
+<section ng-app="tasks" ng-controller="TasksController as tasks">
+
+    <div class="panel panel-info" ng-repeat="task in tasks.tasks">
+        <div class="panel-heading">
+            <strong><a href="/tasks/edit/{{task.id}}">{{task.title}}</a></strong>
+        </div>
+        <div class="panel-body">
+            {{task.description}}
+            <br/><button class="btn btn-small btn-danger" ng-click="tasks.delete(task)">Close</button>
+        </div>
     </div>
-    <div class="panel-body"><?php echo $this->e($item->description); ?></div>
-</div>
-<?php endforeach; ?>
+
+</section>

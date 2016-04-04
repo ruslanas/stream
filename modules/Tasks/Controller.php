@@ -13,6 +13,9 @@ class Controller extends \Stream\PageController {
         $this->task = new model\Task(\Stream\App::getConnection());
 
         $this->templates->addFolder('task', __DIR__.DIRECTORY_SEPARATOR.'templates');
+        $this->templates->addData([
+            'scripts' => array_merge($this->_scripts, ['/js/tasks.js'])
+        ]);
     
     }
 

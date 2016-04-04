@@ -1,6 +1,6 @@
 <?php $this->layout('basic'); ?>
 
-<form action="/tasks/save" method="POST">
+<form action="/tasks/save" method="POST" class="jumbotron">
     <input type="hidden" name="id" value="<?php echo $this->e($data->id); ?>"/>
     <div class="form-group">
         <label>Title</label>

@@ -17,6 +17,13 @@ class PageController extends Controller implements DomainControllerInterface {
     protected $templates;
     protected $params = [];
 
+    protected $_scripts = [
+        "/components/angular/angular.min.js",
+        "/components/angular-resource/angular-resource.min.js",
+        "/components/angular-route/angular-route.min.js",
+        "/components/angular-bootstrap/ui-bootstrap-tpls.min.js",
+    ];
+
     public function __construct($params = [], $app = NULL) {
     
         parent::__construct($params, $app);
@@ -56,7 +63,7 @@ class PageController extends Controller implements DomainControllerInterface {
             
             'title' => isset($this->app->title) ? $this->app->title : 'Stream',
             
-            'scripts' => [],
+            'scripts' => $this->_scripts,
             
             'stylesheets' => [
                 "/components/bootstrap/dist/css/bootstrap.min.css"

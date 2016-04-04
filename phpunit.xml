@@ -19,6 +19,7 @@
             <exclude>
             
                 <directory>modules/*/tests</directory>
+                <directory>modules/*/templates</directory>
 
                 <file>lib/Stream/Request.php</file>
                 <file>lib/Stream/RedisCache.php</file>

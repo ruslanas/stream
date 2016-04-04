@@ -45,6 +45,7 @@
 
     <tasks id="1"
         title="Implement new feature"
+        completed="0"
         description="Write feature description and create tests"
         deleted="0"/>
 

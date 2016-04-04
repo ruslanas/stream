@@ -16,8 +16,8 @@ Feature: Todo List
 		And hit "Done"
 		Then task appears in the list
 
-	@wip
-	Scenario: Task completion
-		Given tab "Tasks" is open
-		Then hit "Completed"
-		Then task grays out
+	@completed
+	Scenario: Closing
+		Given there is a task with a title "Test task"
+		Then I find a task with a title "Test task"
+		And call RESTful "DELETE"

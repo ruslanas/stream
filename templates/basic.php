@@ -15,7 +15,7 @@
         <?php endforeach; ?>
 
     </head>
-    <body data-ng-app="stream" data-ng-controller="MainController as app">
+    <body>
 
         <nav class="navbar navbar-default">
             <div class="container">
@@ -37,12 +37,7 @@
             </div>
         </nav>
 
-        <div class="container">
+        <section class="container"><?php echo $this->section('content');?></section>
 
-            <ng-view></ng-view>
-
-            <?php echo $this->section('content');?>
-
-        </div>
     </body>
 </html>

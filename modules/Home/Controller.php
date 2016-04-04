@@ -21,23 +21,20 @@ class Controller extends PageController {
 
         $this->model = new Post(\Stream\App::getConnection());
 
+        $this->_scripts = array_merge($this->_scripts, [
+
+            "/js/app.js",
+            
+            "/js/stream.js",
+            "/js/client.js",
+            
+            "/js/directives/data-grid.js"
+        
+        ]);
+
         $this->templates->addData([
             
-            'scripts' => [
-
-                "/components/angular/angular.min.js",
-                "/components/angular-resource/angular-resource.min.js",
-                "/components/angular-route/angular-route.min.js",
-                "/components/angular-bootstrap/ui-bootstrap-tpls.min.js",
-
-                "/js/app.js",
-                
-                "/js/stream.js",
-                "/js/client.js",
-                
-                "/js/directives/data-grid.js"
-            
-            ]
+            'scripts' => $this->_scripts
 
         ]);
     }
