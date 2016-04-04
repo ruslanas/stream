@@ -2,7 +2,7 @@ angular.module('messages', [
 
     'ngResource'
 
-]).controller('MainController', ['Post', function(Post) {
+]).controller('PostsController', ['Post', function(Post) {
 
     this.title = 'Stream';
     this.posts = Post.query();
@@ -51,4 +51,9 @@ angular.module('messages', [
 
     return $resource('/posts/:id.json', {id: "@id"});
 
+}]).config(['$routeProvider', function($routeProvider) {
+    $routeProvider.when('/', {
+        templateUrl: 'partials/posts.html',
+        controller: 'PostsController'
+    });
 }]);

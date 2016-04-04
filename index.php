@@ -29,3 +29,5 @@ $app->rest(['/tasks.json', '/tasks/:id.json'], modules\Tasks\Api::class);
 $app->domain('/tasks/:action/:id', modules\Tasks\Controller::class);
 
 $app->domain('/dev/:action', modules\Homegrown\Dev\Controller::class);
+
+$app->domain('/contributors/:action', modules\Contributors\Controller::class);

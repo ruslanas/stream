@@ -20,13 +20,14 @@
         <nav class="navbar navbar-default">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/"><?php echo $this->e($title);?></a>
+                    <a class="navbar-brand" href="/#/"><?php echo $this->e($title);?></a>
                 </div>
                 <div>
                     <ul class="nav navbar-nav">
                         <?php if($authorized): ?>
-                            <li><a href="/#clients">Clients</a></li>
+                            <li><a href="/#/clients">Clients</a></li>
                             <li><a href="/tasks/open">Tasks</a></li>
+                            <li><a href="/contributors/open">Contributors</a></li>
                             <li><a href="/user/logout">Sign Out</a></li>
                         <?php else: ?>
                             <li><a href="/user/add">Register</a></li>

@@ -47,6 +47,8 @@ class ModuleContext implements Context, SnippetAcceptingContext {
 
         $this->app->rest(['/user/:action'], \modules\Users\Controller::class);
 
+        $this->app->domain('/contributors/:action', \modules\Contributors\Controller::class);
+
         $this->acl = \Mockery::mock(Acl::class);
         $this->req = \Mockery::mock(Request::class);
 
@@ -66,7 +68,7 @@ class ModuleContext implements Context, SnippetAcceptingContext {
 
         $out = $this->app->dispatch('/'.strtolower($arg1).'/open');
 
-        UT::assertContains('<input name="title"', $out);
+        UT::assertStringStartsWith('<!DOCTYPE html>', $out);
     
     }
 
