@@ -112,4 +112,17 @@ class ModuleContext implements Context, SnippetAcceptingContext {
     {
         $this->description = $arg1;
     }
+
+
+    /**
+     * @Then task appears in the list
+     */
+    public function taskAppearsInTheList()
+    {
+        $out = $this->app->dispatch('/tasks/list');
+
+        UT::assertContains('>'.$this->title.'<', $out);
+        UT::assertContains('/tasks/edit/'.$this->result->id, $out);
+    
+    }
 }

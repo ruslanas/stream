@@ -4,7 +4,7 @@ namespace modules\Tasks;
 
 class Controller extends \Stream\PageController {
 
-    protected $_injectable = ['task', 'request'];
+    protected $_injectable = ['task', 'request', 'params'];
 
     public function __construct($params = NULL, $app = NULL) {
 
@@ -17,20 +17,46 @@ class Controller extends \Stream\PageController {
     }
 
     final public function open() {
-        return $this->templates->render('task::index');
+        return $this->templates->render('task::index', [
+            'data' => $this->task->read()
+        ]);
+    }
+
+    final public function list() {
+        return $this->templates->render('task::list', [
+            'data' => $this->task->read()
+        ]);
     }
 
     final public function save() {
         
         $data = $this->request->post();
-        $res = $this->task->create($data);
+        
+        if(empty($data['id'])) {
+            $res = $this->task->create($data);
+            return $this->redirect('/tasks/edit/'.$res->id);
+        } else {
+            $res = $this->task->update($data['id'], $data);
+            return $this->redirect('/tasks/open');
+        }
 
-        return $this->redirect('/tasks/edit/'.$res->id);
     
     }
 
     final public function edit() {
-        return $this->templates->render('task::edit');
+        
+        if(empty($this->params['id'])) {
+            throw new \Exception;
+        }
+        
+        $id = $this->params['id'];
+        $list = $this->task->read();
+        $data = $this->task->read($id);
+        
+        return $this->templates->render('task::edit', [
+            'data' => $data,
+            'list' => $list
+        ]);
     }
 
 }

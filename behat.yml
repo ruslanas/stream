@@ -1,5 +1,8 @@
 # behat.yml
 default:
+
   suites:
     modules:
+      # filters:
+      #   tags: "@wip"
       contexts: [ ModuleContext ]

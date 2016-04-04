@@ -4,6 +4,8 @@ namespace modules\Tasks;
 
 class ControllerTest extends \PHPUnit_Framework_TestCase {
 
+    public $_data;
+
     public function setUp() {
         
         $this->req = $this->getMockBuilder(\Stream\Request::class)->getMock();
@@ -19,10 +21,20 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testOpen() {
+
+        $this->model->method('read')
+            ->willReturn([(object)[
+                'id'=>1,
+                'title'=>'Title',
+                'description' => 'Description'
+            ]
+        ]);
         $this->assertContains('<input name="title"', $this->tasks->open());
+
     }
 
     public function testSave() {
+
         $this->req->method('post')->willReturn(['title' => 'todo', 'description' => 'implement feature']);
         
         $this->model->method('create')
@@ -31,10 +43,35 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
         $this->tasks->save();
         $this->assertEquals('/tasks/edit/1', $this->tasks->redirect());
+
     }
 
     public function testEdit() {
+        
+        $this->tasks->inject('params', ['id' => 1]);
+
+        $m = \Mockery::mock(model\Task::class);
+
+        $m->shouldReceive('read')
+            ->with()
+            ->andReturn([(object)[
+            'id' => 1,
+            'title' => 'foo',
+            'description' => 'bar'
+        ]]);
+
+        $m->shouldReceive('read')->with(1)->andReturn((object)[
+            'id' => 1,
+            'title' => 'foo',
+            'description' => 'bar'
+        ]);
+
+        $this->tasks->inject('task', $m);
+
         $out = $this->tasks->edit();
+
         $this->assertContains('<textarea', $out);
+    
     }    
+
 }
