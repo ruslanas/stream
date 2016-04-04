@@ -4,16 +4,7 @@ var app = angular.module('stream', [
     'DataGrid',
     'ui.bootstrap',
     'client',
-    'messages'
+    'messages',
+    'tasks',
+    'users'
 ]);
-
-app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/login', {
-        templateUrl: 'partials/login.html',
-        controller: 'LoginController'
-    });
-}]);
-
-app.controller('LoginController', [function() {
-
-}]);

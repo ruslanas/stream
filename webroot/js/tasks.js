@@ -8,7 +8,7 @@ app.controller('TasksController', ['Task', function(Task) {
     
     this.tasks = Task.query();
     var self = this;
-    
+
     this.delete = function(task) {
         task.$remove(function(res) {
 
@@ -25,4 +25,9 @@ app.controller('TasksController', ['Task', function(Task) {
 
     return $resource('/tasks/:id.json', {id: "@id"});
 
+}]).config(['$routeProvider', function($routeProvider) {
+    $routeProvider.when('/tasks', {
+        templateUrl: 'partials/tasks.html',
+        controller: 'TasksController'
+    });
 }]);

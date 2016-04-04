@@ -1,7 +1,7 @@
 <?php
 if(php_sapi_name() == 'cli-server') {
 
-    if(preg_match('/(?:map|png|js|css|html)$/i', $_SERVER['REQUEST_URI'], $matches)) {
+    if(preg_match('/(?:map|png|js|css|html|woff2)$/i', $_SERVER['REQUEST_URI'], $matches)) {
 
         $path = 'webroot'.$_SERVER['REQUEST_URI'];
 
@@ -18,6 +18,9 @@ if(php_sapi_name() == 'cli-server') {
                     break;
                 case 'png':
                     header('Content-Type: image/png');
+                    break;
+                case 'woff2':
+                    header('Content-Type: application/font-woff2');
                     break;
                 default:
                     header('Content-Type: application/octet-stream');

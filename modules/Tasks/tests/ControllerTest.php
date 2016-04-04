@@ -72,6 +72,19 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertContains('<textarea', $out);
     
-    }    
+    }
+
+    public function testGetRest() {
+        
+        $controller = new Api([]);
+
+        $controller->inject('model', $this->model);
+        
+        $this->model->method('read')->willReturn([(object)['id'=>1]]);
+
+        $out = $controller->get();
+        $this->assertEquals(1, count($out));
+    
+    }
 
 }

@@ -24,15 +24,11 @@
                 </div>
                 <div>
                     <ul class="nav navbar-nav">
-                        <?php if($authorized): ?>
-                            <li><a href="/#/clients">Clients</a></li>
-                            <li><a href="/tasks/open">Tasks</a></li>
-                            <li><a href="/contributors/open">Contributors</a></li>
-                            <li><a href="/user/logout">Sign Out</a></li>
-                        <?php else: ?>
-                            <li><a href="/user/add">Register</a></li>
-                            <li><a href="/user/login">Sign In</a></li>
-                        <?php endif; ?>
+                        <li><a href="/#/clients">Clients</a></li>
+                        <li><a href="/#/tasks">Tasks</a></li>
+                        <li><a href="/user/logout">Sign Out</a></li>
+                        <li><a href="/user/add">Register</a></li>
+                        <li><a href="/#/login">Sign In</a></li>
                     </ul>
                 </div>
             </div>

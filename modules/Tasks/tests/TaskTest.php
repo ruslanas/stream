@@ -22,4 +22,9 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
     
     }
 
+    public function testGet() {
+        $data = $this->task->read();
+        $this->assertEquals(1, count($data));
+    }
+
 }

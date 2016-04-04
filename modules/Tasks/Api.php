@@ -4,21 +4,26 @@ namespace modules\Tasks;
 
 class Api extends \Stream\RestController {
 
+    protected $_injectable = ['request', 'model', 'params'];
+
+    public function __construct($params = NULL, $app = NULL) {
+        parent::__construct($params, $app);
+        $this->model = new model\Task(\Stream\App::getConnection());
+    }
+
     final public function delete() {
-        
-        $m = new model\Task($this->app->pdo);
         
         if(empty($this->params['id'])) {
             throw new Exception;
         }
 
-        return $m->delete($this->params['id']);
+        return $this->model->delete($this->params['id']);
     }
 
     final public function get() {
-        $m = new model\Task($this->app->pdo);
 
-        return $m->read();
+        return $this->model->read();
+
     }
 
     public function post() {}

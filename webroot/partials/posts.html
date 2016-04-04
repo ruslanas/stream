@@ -27,10 +27,12 @@
                 <div class="row">
                     <div class="col-md-7"><strong><a href="/posts/edit/{{post.id}}" ng-click="post.edit=true">{{post.title}}</a></strong></div>
                     <div class="col-md-5 text-right">
-                        Auuthor: <strong>{{post.user.username}}</strong>
+                        Author: <strong>{{post.user.username}}</strong>
                         @ {{post.created}}
-                        <button class="btn btn-xs btn-primary" ng-click="post.edit = true">Edit</button>
-                        <button class="btn btn-xs btn-danger" ng-click="app.delete(post)">Delete</button>
+                        <button class="btn btn-xs btn-primary" ng-click="post.edit = true">
+                            <i class="glyphicon glyphicon-pencil"></i> Edit</button>
+                        <button class="btn btn-xs btn-danger" ng-click="app.delete(post)">
+                            <i class="glyphicon glyphicon-remove"></i> Delete</button>
                     </div>
                 </div>
             </div>

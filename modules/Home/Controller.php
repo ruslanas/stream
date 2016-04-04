@@ -27,7 +27,8 @@ class Controller extends PageController {
             
             "/js/stream.js",
             "/js/client.js",
-            
+            '/js/tasks.js',
+            '/js/login.js',
             "/js/directives/data-grid.js"
         
         ]);

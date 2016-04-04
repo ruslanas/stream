@@ -23,6 +23,8 @@ $app->rest(['/events.json', '/events/:id.json'], modules\Events\Controller::clas
 
 $app->domain('/user/:action', modules\Users\Controller::class);
 
+$app->rest('/users/:action.json', modules\Users\Controller::class);
+
 $app->domain('/tasks/:action', modules\Tasks\Controller::class);
 $app->rest(['/tasks.json', '/tasks/:id.json'], modules\Tasks\Api::class);
 

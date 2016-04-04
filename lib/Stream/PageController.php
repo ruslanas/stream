@@ -66,7 +66,8 @@ class PageController extends Controller implements DomainControllerInterface {
             'scripts' => $this->_scripts,
             
             'stylesheets' => [
-                "/components/bootstrap/dist/css/bootstrap.min.css"
+                "/components/bootstrap/dist/css/bootstrap.min.css",
+                "/css/styles.css"
             ]
         ]);
     
