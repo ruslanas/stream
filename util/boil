@@ -1,0 +1,23 @@
+#!/bin/sh
+
+DIR=${PWD##*/}
+
+echo $DIR
+
+cat << EOF > Controller.php
+<?php
+
+namespace modules\\$DIR;
+
+use \Stream\Interfaces\RestApi;
+
+class Controller extends \Stream\PageController implements RestApi {
+    
+    /** Declare final to make accessible */
+    public function get() {}
+    public function post() {}
+    public function delete() {}
+
+}
+
+EOF

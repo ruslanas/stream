@@ -12,14 +12,36 @@ use \Stream\PageController;
 use \Stream\Request;
 use \Stream\Exception\NotFoundException;
 use \Stream\Interfaces\DomainControllerInterface;
+use \Stream\Interfaces\RestApi;
 
 use \modules\Users\model\User;
 
-class Controller extends PageController implements DomainControllerInterface {
+class Controller extends PageController implements DomainControllerInterface, RestApi {
 
     protected $_injectable = ['params', 'request', 'user'];
     
     protected $user;
+
+    /** @param string $param*/
+    private function param($param) {
+        return isset($this->params[$param]) ? $this->params[$param] : NULL;
+    }
+
+    public function get() {}
+    
+    final public function post() {
+
+        if($this->param('action') == 'login') {
+            if($this->user->authenticate($this->request)) {
+                return $this->user->read($_SESSION['uid']);
+            }
+        }
+
+        throw new \Stream\Exception\ForbiddenException;
+
+    }
+
+    public function delete() {}
 
     public function __construct($params = NULL, \Stream\App $app = NULL) {
 

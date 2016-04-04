@@ -19,7 +19,8 @@ class PersistentStorage extends Injectable {
 
     /** @var array Holds data structure definition. Subject to change. */
     protected $table = NULL;
-
+    protected $db = NULL;
+    
     protected $_injectable = ['table'];
 
     /**

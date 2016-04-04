@@ -2,7 +2,10 @@
 
     <div class="panel panel-info" ng-repeat="task in tasks.tasks">
         <div class="panel-heading">
-            <strong><a href="/tasks/edit/{{task.id}}">{{task.title}}</a></strong>
+            <div class="row">
+                <div class="col-md-8"><strong><a href="/tasks/edit/{{task.id}}">{{task.title}}</a></strong></div>
+                <div class="col-md-4">{{task.created}}</div>
+            </div>
         </div>
         <div class="panel-body">
             {{task.description}}

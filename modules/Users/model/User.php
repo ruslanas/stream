@@ -8,12 +8,19 @@ namespace modules\Users\model;
 
 use \PDO;
 
-use \Stream\Util\Injectable;
+class User extends \Stream\PersistentStorage {
 
-class User extends Injectable {
-
-    private $db;
+    protected $db;
     private $_errors = [];
+
+    protected $table = [
+        'users' => [
+            'username',
+            'email',
+            'password'
+        ]
+    ];
+
     private $_table = 'users';
 
     protected $_injectable = ['request'];

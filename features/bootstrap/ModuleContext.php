@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 use PHPUnit_Framework_Assert as UT;
 use Stream\App, Stream\Request, Stream\Acl;
 use modules\Tasks\model\Task;
@@ -39,7 +41,11 @@ class ModuleContext implements Context, SnippetAcceptingContext {
         $this->app->domain('/tasks/:action', \modules\Tasks\Controller::class);
         $this->app->domain('/tasks/:action/:id', \modules\Tasks\Controller::class);
 
+        $this->app->rest(['/acl/:action'], \modules\Acl\Controller::class);
+
         $this->app->rest(['/tasks.json', '/tasks/:id.json'], \modules\Tasks\Api::class);
+
+        $this->app->rest(['/user/:action'], \modules\Users\Controller::class);
 
         $this->acl = \Mockery::mock(Acl::class);
         $this->req = \Mockery::mock(Request::class);
@@ -205,4 +211,38 @@ class ModuleContext implements Context, SnippetAcceptingContext {
         $data = json_decode($json);
         UT::assertEquals('1', $data->deleted);
     }
+
+    /**
+     * @Given logged in as group :arg1 member
+     */
+    public function loggedInAsGroupMember($arg1)
+    {
+        $this->req->shouldReceive('getMethod')->times(1)->andReturn('POST');
+        
+        $this->req->shouldReceive('post')->andReturn([
+            'email' => 'admin@example.com',
+            'password' => 'foo'
+        ]);
+
+        $this->req->shouldReceive('getHeaders')->andReturn([]);
+        $this->acl->shouldReceive('allow')->andReturn(TRUE);
+
+        $out = $this->app->dispatch('/user/login');
+
+        UT::assertTrue(is_object(json_decode($out)), 'Should contain JSON encoded object');
+        
+    }
+
+    /**
+     * @Then call RESTfull :arg1 endpoint :arg2
+     */
+    public function callRestfullEndpoint($arg1, $arg2) {
+       
+        $this->req->shouldReceive('getMethod')->andReturn($arg1);
+        $this->acl->shouldReceive('allow')->andReturn(TRUE);
+
+        $this->app->dispatch($arg2);
+
+    }
+
 }
