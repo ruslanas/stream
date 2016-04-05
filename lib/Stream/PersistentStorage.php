@@ -46,7 +46,10 @@ class PersistentStorage extends Injectable {
 
         foreach($this->table[$tableName] as $tbl => $cols) {
 
-            if(!is_array($cols)) {
+            /**
+             * Skip not array or has key (int) `type`
+             */
+            if(!is_array($cols) || (array_key_exists('type', $cols) && is_int($cols['type'])) ) {
                 continue;
             }
 
@@ -115,7 +118,7 @@ class PersistentStorage extends Injectable {
 
         foreach($this->table[$tableName] as $tbl => $cols) {
             
-            if(!is_array($cols)) {
+            if(!is_array($cols) || (array_key_exists('type', $cols) && is_int($cols['type'])) ) {
                 continue;
             }
 
@@ -216,13 +219,22 @@ class PersistentStorage extends Injectable {
 
         $q = [];
 
+        /**
+         * 
+         */
         foreach ($this->table[$tableName] as $idx => $field) {
             
             if(is_array($field)) {
+
+                // PDO::PARAM_*
+                if(array_key_exists('type', $field) && is_int($field['type'])) {
+                    $q[] = $idx . "=:" .$idx;
+                }
+                
                 continue;
             }
             
-            if (empty($data[$field])) {
+            if(empty($data[$field])) {
                 continue;
             }
 
@@ -241,6 +253,14 @@ class PersistentStorage extends Injectable {
         foreach ($this->table[$tableName] as $idx => $field) {
 
             if(is_array($field)) {
+                
+                // PDO::PARAM_*
+                if(array_key_exists('type', $field) && is_int($field['type'])) {
+        
+                    $statement->bindParam(":" . $idx, $data[$idx], $field['type']);
+
+                }
+
                 continue;
             }
 

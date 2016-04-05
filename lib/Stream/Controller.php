@@ -14,6 +14,7 @@ class Controller extends Injectable {
 
     protected $app;
     protected $request;
+    protected $params;
     
     protected $_redirect = FALSE;
     protected $_injectable = ['request', 'params'];
@@ -40,6 +41,11 @@ class Controller extends Injectable {
         
         return $this->_redirect;
     
+    }
+
+    /** @param string $param*/
+    protected function param($param) {
+        return isset($this->params[$param]) ? $this->params[$param] : NULL;
     }
 
 }

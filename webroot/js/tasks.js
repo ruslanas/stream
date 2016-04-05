@@ -21,6 +21,12 @@ angular.module('tasks', [
     
     }
 
+    this.focus = function(task) {
+
+        task.$save({focus: task.focus == 0 ? 1 : 0});
+    
+    }
+
     this.delete = function(task) {
         task.$remove(function(res) {
 

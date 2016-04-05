@@ -22,13 +22,18 @@ try {
 } catch (Stream\Exception\ForbiddenException $e) {
 
     http_response_code(401);
-    die("Illegal access: ".$e->getMessage());
+    die("Access error: ".$e->getMessage());
 
 } catch (Stream\Exception\UnknownMethodException $e) {
 
     http_response_code(405);
     header($e->getAllow());
     die($e->getMessage());
+
+} catch (PDOException $e) {
+
+    http_response_code(500);
+    die("Database error: ".$e->getMessage());
 
 } catch (Exception $e) {
 

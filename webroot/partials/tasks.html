@@ -27,17 +27,26 @@
 
     </form>
 
-    <div class="panel panel-info" ng-repeat="task in section.tasks">
+    <div ng-class="{'panel-primary': task.focus == 0, 'panel-info': task.focus == 1}"
+        class="panel"
+        ng-repeat="task in section.tasks | orderBy:'focus'">
+        
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-8"><strong>{{task.title}}</strong></div>
                 <div class="col-md-4 text-right">
                     {{task.created}}
+                    <button title="Focus"
+                        class="btn btn-xs"
+                        ng-class="task.focus == 0 ? 'btn-success' : 'btn-primary'"
+                        ng-click="section.focus(task)">{{task.focus == 0 ? 'Un-Focus':'Focus'}}</button>
                     <button class="btn btn-xs btn-danger" ng-click="section.delete(task)">Close</button>
                 </div>
             </div>
         </div>
+        
         <div class="panel-body">{{task.description}}</div>
+    
     </div>
 
 </section>

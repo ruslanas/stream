@@ -2,6 +2,8 @@
 
 namespace modules\Tasks\model;
 
+use \PDO;
+
 class Task extends \Stream\PersistentStorage {
 
     protected $table = [
@@ -11,7 +13,10 @@ class Task extends \Stream\PersistentStorage {
             'title',
             'description',
             'deleted',
-            'user_id'
+            'user_id',
+            'focus' => [
+                'type' => PDO::PARAM_BOOL
+            ]
         ]
     
     ];

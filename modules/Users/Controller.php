@@ -22,11 +22,6 @@ class Controller extends PageController implements DomainControllerInterface, Re
     
     protected $user;
 
-    /** @param string $param*/
-    private function param($param) {
-        return isset($this->params[$param]) ? $this->params[$param] : NULL;
-    }
-
     public function get() {}
     
     final public function post() {

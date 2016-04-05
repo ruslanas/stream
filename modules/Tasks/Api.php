@@ -27,6 +27,16 @@ class Api extends \Stream\RestController {
     }
 
     final public function post() {
-        return $this->model->create($this->request->getPostData());
+        
+        if($this->param('id') !== NULL) {
+            
+            $data = $this->request->getPostData();
+            $data = array_merge($data, $this->request->getGet());
+
+            return $this->model->update($this->param('id'), $data);
+        
+        } else {
+            return $this->model->create($this->request->getPostData());
+        }
     }
 }

@@ -94,4 +94,21 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testPostRestUpdate() {
+        
+        $this->model->expects($this->once())
+            ->method('update')
+            ->willReturn((object)['id'=>1,'focus'=>true]);
+        
+        $this->req->method('getGet')->willReturn(['focus'=>true]);
+        $this->req->method('getPostData')->willReturn(['id'=>1]);
+
+        $this->api->inject('params', ['id' => 1]);
+        
+        $out = $this->api->post();
+
+        $this->assertObjectHasAttribute('id', $out);
+        $this->assertObjectHasAttribute('focus', $out);
+    }
+
 }

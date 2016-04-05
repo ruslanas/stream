@@ -19,7 +19,7 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
         $data = $this->task->create(['title' => 'todo', 'description' => 'implement feature']);
         $this->assertEquals('todo', $data->title);
         $this->assertEquals('implement feature', $data->description);
-    
+
     }
 
     public function testGet() {
