@@ -17,10 +17,9 @@ $app->get('/', function($req) use ($app) {
 
 });
 
-// html5mode refresh
-$app->get('/:tab', function($req) use ($app) {
-    header('Location: /');
-    exit;
+// html5mode rewrite
+$app->hook('hook.notFound', function($req) use ($app) {
+    echo $app->dispatch('/');
 });
 
 $app->rest(['/posts.json', '/posts/:id.json'], modules\Posts\Controller::class);

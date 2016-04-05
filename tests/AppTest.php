@@ -68,6 +68,25 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
     }
     
+    public function testHook() {
+        $this->app->hook('hook.notFound', function() {});
+        $this->assertTrue(is_callable($this->app->hook('hook.notFound')), 'Should return callable');
+    }
+
+    public function testDispatchNotFoundHook() {
+        $ret = '';
+        
+        $this->app->hook('hook.notFound', function($uri) use (&$ret) {
+            $ret = $uri;
+        });
+
+        $this->req->method('getMethod')->willReturn('GET');
+        $this->acl->method('allow')->willReturn(TRUE);
+        $this->app->dispatch('/not_found');
+
+        $this->assertEquals('/not_found', $ret);
+    }
+
     public function testLoadConfig() {
 
         $conf = $this->app->loadConfig();

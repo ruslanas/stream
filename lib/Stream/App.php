@@ -34,6 +34,8 @@ class App extends Injectable implements AppInterface {
     private $_domains = [];
     private $_connections = [];
 
+    private $_hooks = [];
+
     private $get_handlers = [];
     private $post_handlers = [];
     private $delete_handlers = [];
@@ -266,8 +268,16 @@ class App extends Injectable implements AppInterface {
             }
 
             if($handler === null) {
+                
                 ob_end_clean();
-                throw new NotFoundException("Could not ".$method.' '.$uri);
+
+                if(is_callable($this->hook('hook.notFound'))) {
+                    return $this->hook('hook.notFound')($uri);
+                } else {
+
+                    throw new NotFoundException("Could not ".$method.' '.$uri);
+
+                }
             }
 
             $handler($params);
@@ -408,6 +418,13 @@ class App extends Injectable implements AppInterface {
 
     public function serialize($data) {
         return json_encode($data);
+    }
+
+    public function hook($hook, callable $func = NULL) {
+        if($func == NULL) {
+            return isset($this->_hooks[$hook]) ? $this->_hooks[$hook] : NULL;
+        }
+        $this->_hooks[$hook] = $func;
     }
 
 }

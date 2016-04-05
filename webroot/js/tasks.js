@@ -1,10 +1,11 @@
-var app = angular.module('tasks', [
+angular.module('tasks', [
+
     'ngResource',
     'ngRoute',
-    'ui.bootstrap'
-]);
 
-app.controller('TasksController', ['Task', function(Task) {
+    'ui.bootstrap'
+
+]).controller('TasksController', ['Task', function(Task) {
     
     this.tasks = Task.query();
     var self = this;

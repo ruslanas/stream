@@ -1,10 +1,12 @@
-var app = angular.module('stream', [
+angular.module('stream', [
     
     'ngResource',
     'ngRoute',
     'ngAnimate',
-    'DataGrid',
+    
     'ui.bootstrap',
+    
+    'DataGrid',
     
     'client',
     'messages',
