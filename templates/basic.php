@@ -3,7 +3,9 @@
     <head>
         
         <meta charset="utf-8">
+        
         <base href="/">
+        
         <title><?php echo $this->e($title);?></title>
         
         <?php foreach($stylesheets as $sheet): ?>
@@ -33,6 +35,7 @@
                 </div>
             </div>
         </nav>
+
         <section class="container"><?php echo $this->section('content');?></section>
 
     </body>

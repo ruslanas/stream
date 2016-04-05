@@ -17,6 +17,12 @@ $app->get('/', function($req) use ($app) {
 
 });
 
+// html5mode refresh
+$app->get('/:tab', function($req) use ($app) {
+    header('Location: /');
+    exit;
+});
+
 $app->rest(['/posts.json', '/posts/:id.json'], modules\Posts\Controller::class);
 $app->rest(['/clients.json', '/clients/:id.json'], modules\Clients\Controller::class);
 $app->rest(['/events.json', '/events/:id.json'], modules\Events\Controller::class);

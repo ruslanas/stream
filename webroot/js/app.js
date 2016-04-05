@@ -1,13 +1,16 @@
 var app = angular.module('stream', [
+    
     'ngResource',
     'ngRoute',
     'ngAnimate',
     'DataGrid',
     'ui.bootstrap',
+    
     'client',
     'messages',
     'tasks',
     'users'
+
 ]).controller('AppController', ['$scope', '$location', function($scope, $location) {
     
     this.currentMenuItem = '/';
@@ -26,6 +29,7 @@ var app = angular.module('stream', [
     $scope.$on('$routeChangeSuccess', function(evt, curr, prev) {
         self.currentMenuItem = $location.path();
     });
+
 }]).config(['$locationProvider', function($locationProvider) {
     $locationProvider.html5Mode(true);
 }]);

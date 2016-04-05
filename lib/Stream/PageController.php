@@ -18,11 +18,22 @@ class PageController extends Controller implements DomainControllerInterface {
     protected $params = [];
 
     protected $_scripts = [
+    
         "/components/angular/angular.min.js",
         "/components/angular-resource/angular-resource.min.js",
-        "/components/angular-animate/angular-animate.min.js",
         "/components/angular-route/angular-route.min.js",
+    
+        "/components/angular-animate/angular-animate.min.js",
         "/components/angular-bootstrap/ui-bootstrap-tpls.min.js",
+    
+    ];
+
+    protected $_stylesheets = [
+
+        "/components/bootstrap/dist/css/bootstrap.min.css",
+    
+        "/css/styles.css"
+    
     ];
 
     public function __construct($params = [], $app = NULL) {
@@ -56,20 +67,17 @@ class PageController extends Controller implements DomainControllerInterface {
 
     protected function setupTemplate() {
         
-        $this->templates = new Engine(isset($this->app->template_path) ? $this->app->template_path : 'templates');
+        $this->templates = new Engine($this->app && $this->app->template_path ? $this->app->template_path : 'templates');
         
         $this->templates->addData([
             
             'authorized' => !empty($_SESSION['uid']),
             
-            'title' => isset($this->app->title) ? $this->app->title : 'Stream',
+            'title' => $this->app && $this->app->title ? $this->app->title : 'Stream',
             
             'scripts' => $this->_scripts,
             
-            'stylesheets' => [
-                "/components/bootstrap/dist/css/bootstrap.min.css",
-                "/css/styles.css"
-            ]
+            'stylesheets' => $this->_stylesheets
         ]);
     
     }
