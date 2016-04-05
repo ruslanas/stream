@@ -25,14 +25,10 @@
                 <div>
                     <ul class="nav navbar-nav">
 
-                        <li><a href="clients" ng-show="authorized" ng-class="">Clients</a></li>
-                        <li><a href="tasks" ng-show="authorized">Tasks</a></li>
+                        <li ng-class="{active: (mi.path === sys.currentMenuItem)}"
+                            ng-repeat="mi in sys.menuItems"
+                            ng-show="mi.authorize ? authorized : !authorized"><a href="{{mi.path}}">{{mi.title}}</a></li>
                         
-                        <li><a href="logout" ng-show="authorized">Sign Out</a></li>
-                        
-                        <li><a href="register" ng-show="!authorized">Register</a></li>
-                        <li><a href="login" ng-show="!authorized">Sign In</a></li>
-                    
                     </ul>
                 </div>
             </div>

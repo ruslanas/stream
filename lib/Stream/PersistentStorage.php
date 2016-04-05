@@ -144,6 +144,10 @@ class PersistentStorage extends Injectable {
 
         $ret = $this->read($id);
 
+        if(!$ret) {
+            return FALSE;
+        }
+
         $tableName = $this->_get_table_name();
 
         if(in_array('deleted', $this->table[$tableName])) {
@@ -154,11 +158,13 @@ class PersistentStorage extends Injectable {
 
         $statement = $this->db->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        $statement->execute();
-
-        $ret->deleted = 1;
         
+        if($statement->execute()) {
+            $ret->deleted = 1;
+        }
+
         return $ret;
+    
     }
 
     /**
