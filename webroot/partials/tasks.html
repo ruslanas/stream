@@ -1,12 +1,39 @@
 <section>
 
+    <form class="jumbotron">
+
+        <div class="form-group">
+            <label>Task</label>
+            <input class="form-control"
+                type="text"
+                placeholder="Short description" 
+                id="title"
+                autocomplete="off" 
+                ng-model="section.task.title"/>
+        </div>
+        
+        <div class="form-group" ng-show="section.task.title.length > 10 || section.task.description">
+            <label>Description</label>
+            <textarea id="description"
+                    class="form-control"
+                    rows="5"
+                    ng-model="section.task.description"></textarea>
+        </div>
+
+        <button ng-show="section.task.title"
+                ng-click="section.add(section.task)"
+                id="save"
+                class="btn btn-primary">Save</button>
+
+    </form>
+
     <div class="panel panel-info" ng-repeat="task in section.tasks">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-md-8"><strong><a href="/tasks/edit/{{task.id}}">{{task.title}}</a></strong></div>
+                <div class="col-md-8"><strong>{{task.title}}</strong></div>
                 <div class="col-md-4 text-right">
                     {{task.created}}
-                    <button class="btn btn-xs btn-danger" ng-click="tasks.delete(task)">Close</button>
+                    <button class="btn btn-xs btn-danger" ng-click="section.delete(task)">Close</button>
                 </div>
             </div>
         </div>

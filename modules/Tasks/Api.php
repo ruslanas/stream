@@ -26,5 +26,7 @@ class Api extends \Stream\RestController {
 
     }
 
-    public function post() {}
+    final public function post() {
+        return $this->model->create($this->request->getPostData());
+    }
 }

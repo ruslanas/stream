@@ -2,7 +2,7 @@
 
 if [ $# -eq 0 ] ; then
     cat << EOF
-Usage: sh util/boil ModuleName
+Usage: sh util/boil.sh ModuleName
 EOF
     exit 1
 fi

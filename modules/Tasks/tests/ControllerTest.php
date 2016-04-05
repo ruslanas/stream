@@ -13,8 +13,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->api = new Api([]);
+        $this->api->inject('model', $this->model);
+        $this->api->inject('request', $this->req);
+        
         $this->tasks = new Controller([]);
-
         $this->tasks->inject('task', $this->model);
         $this->tasks->inject('request', $this->req);
     
@@ -76,15 +79,19 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetRest() {
         
-        $controller = new Api([]);
-
-        $controller->inject('model', $this->model);
-        
         $this->model->method('read')->willReturn([(object)['id'=>1]]);
-
-        $out = $controller->get();
+        $out = $this->api->get();
         $this->assertEquals(1, count($out));
     
+    }
+
+    public function testPostRest() {
+
+        $this->model->method('create')->willReturn((object)['id'=>1]);
+        $this->req->method('getPostData')->willReturn((object)['id'=>1]);
+        $out = $this->api->post();
+        $this->assertObjectHasAttribute('id', $out);
+
     }
 
 }

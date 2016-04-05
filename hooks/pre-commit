@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if vendor/bin/behat --tags '@completed' ; then
+if vendor/bin/behat --tags '@completed&&~@javascript' ; then
     cat <<\EOF
 --------------------------------------------------------------------------------
 Behat scenarios passed

@@ -8,7 +8,18 @@ angular.module('tasks', [
 ]).controller('TasksController', ['Task', function(Task) {
     
     this.tasks = Task.query();
+    this.task = {};
+
     var self = this;
+
+    this.add = function(task) {
+
+        new Task(task).$save(function(res) {
+            self.tasks.unshift(res);
+            self.task = {};
+        });
+    
+    }
 
     this.delete = function(task) {
         task.$remove(function(res) {

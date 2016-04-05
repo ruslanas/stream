@@ -6,3 +6,10 @@ default:
       # filters:
       #   tags: "@wip"
       contexts: [ ModuleContext ]
+
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://localhost:9001
+      goutte: ~
+      selenium2: ~
+      browser_name: chrome

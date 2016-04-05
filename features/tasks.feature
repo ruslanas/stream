@@ -5,16 +5,12 @@ Feature: Todo List
 	As a developer
 	I need to track my tasks
 
-	@completed
+	@wip @javascript
 	Scenario: Adding task
-		Given tab "Tasks" is open
-		When I create new task memo
-		Then I fill in "Smile" into textbox
-		And hit "Save"
-		When edit form opens
-		Then I fill in "Often" into textarea
-		And hit "Done"
-		Then task appears in the list
+		Given I am on "/tasks"
+		When I fill in "title" with "Smile"
+		And I press "Save"
+		Then I should see "Smile"
 
 	@completed
 	Scenario: Closing

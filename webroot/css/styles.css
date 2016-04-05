@@ -1,6 +1,6 @@
 .view-animate-container {
     position: relative;
-    height: 800px !important;
+    min-height: 800px !important;
     background: white;
     overflow: hidden;
 }

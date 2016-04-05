@@ -12,10 +12,12 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
+use Behat\MinkExtension\Context\MinkContext;
+
 /**
  * Defines application features from the specific context.
  */
-class ModuleContext implements Context, SnippetAcceptingContext {
+class ModuleContext extends MinkContext implements Context, SnippetAcceptingContext {
 
     private $title;
     private $description;
@@ -118,6 +120,7 @@ class ModuleContext implements Context, SnippetAcceptingContext {
      */
     public function editFormOpens() {
     
+        // check if partial contains form
         $out = $this->app->dispatch('/tasks/edit/'.$this->result->id);
 
         UT::assertContains('<textarea', $out);
