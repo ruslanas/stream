@@ -19,7 +19,7 @@
     </head>
     <body data-ng-app="stream" ng-controller="AppController as sys">
 
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default" id="menu">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/#/"><?php echo $this->e($title);?></a>
