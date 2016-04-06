@@ -45,7 +45,7 @@ RewriteEngine On
 RewriteCond %{DOCUMENT_ROOT}/webroot/%{REQUEST_URI} -f
 RewriteRule ^(.+) %{DOCUMENT_ROOT}/webroot/$1 [L]
 
-RewriteCond %{REQUEST_URI} !^/webroot*
+RewriteCond %{REQUEST_URI} !^/webroot/*
 RewriteRule ^ router.php [L]
 ```
 

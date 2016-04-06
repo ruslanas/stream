@@ -34,6 +34,16 @@ angular.module('stream', [
 
 }]).config(['$locationProvider', function($locationProvider) {
     $locationProvider.html5Mode(true);
-}]).run(['$rootScope', 'User', function($rootScope, User) {
-    User.get({action: 'authorize'});
+}]).run([
+
+    '$rootScope', 'User', '$location', function($rootScope, User, $location) {
+
+    User.login(function(res) {
+        
+        $rootScope.authorized = true;
+        $rootScope.user = res;
+
+    }, function(res) {
+        $location.url('/login');
+    });
 }]);

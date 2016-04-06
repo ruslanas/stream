@@ -12,10 +12,6 @@ MySQL - 10.1.12-MariaDB : Database - test_stream
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`test_stream` /*!40100 DEFAULT CHARACTER SET utf8 */;
-
-USE `test_stream`;
-
 /*Table structure for table `clients` */
 
 DROP TABLE IF EXISTS `clients`;
@@ -63,6 +59,23 @@ CREATE TABLE `posts` (
   `modified` datetime DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `deleted` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/*Table structure for table `tasks` */
+
+DROP TABLE IF EXISTS `tasks`;
+
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text,
+  `user_id` int(11) DEFAULT NULL,
+  `deleted` tinyint(1) DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified` datetime DEFAULT NULL,
+  `completed` tinyint(1) DEFAULT '0',
+  `focus` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

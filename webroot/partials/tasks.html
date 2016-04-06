@@ -1,13 +1,13 @@
 <section>
 
     <div class="alert alert-warning" ng-show="section.tasks.length < 10 ? false : true">
-        <strong>Unfinished tasks limit reached!</strong> Stay focused.</div>
+        Unfinished tasks limit reached!<strong> Stay focused.</strong></div>
     <form class="jumbotron" ng-show="section.tasks.length >= 10 ? false : true">
 
         <div class="form-group">
             <input class="form-control"
                 type="text"
-                placeholder="Start typing here to create new task" 
+                placeholder="What are you working on? Start typing here to create new task" 
                 id="title"
                 autocomplete="off" 
                 ng-model="section.task.title"/>
@@ -18,6 +18,7 @@
             <textarea id="description"
                     class="form-control"
                     rows="5"
+                    placeholder="Do you have any requirements?" 
                     ng-model="section.task.description"></textarea>
         </div>
 
@@ -25,7 +26,7 @@
                 ng-click="section.add(section.task)"
                 id="save-btn"
                 class="btn btn-primary">Save</button>
-        <strong>Tasks are not editable!</strong> Think carefully.
+        Tasks are not editable! <strong>Think carefully.</strong>
 
     </form>
 
