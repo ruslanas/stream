@@ -34,4 +34,6 @@ angular.module('stream', [
 
 }]).config(['$locationProvider', function($locationProvider) {
     $locationProvider.html5Mode(true);
+}]).run(['$rootScope', 'User', function($rootScope, User) {
+    User.get({action: 'authorize'});
 }]);

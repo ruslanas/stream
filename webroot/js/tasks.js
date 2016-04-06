@@ -8,15 +8,18 @@ angular.module('tasks', [
 ]).controller('TasksController', ['Task', function(Task) {
     
     this.tasks = Task.query();
-    this.task = {};
+    this.tpl = {tilte: '', description: '', focus: 1};
+    this.task = angular.copy(this.tpl);
 
     var self = this;
 
     this.add = function(task) {
+        
+        task.focus = 1;
 
         new Task(task).$save(function(res) {
             self.tasks.unshift(res);
-            self.task = {};
+            self.task = angular.copy(this.tpl);
         });
     
     }

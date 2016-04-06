@@ -87,8 +87,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
     public function testPostRest() {
 
+        $_SESSION['uid'] = 1;
+
         $this->model->method('create')->willReturn((object)['id'=>1]);
-        $this->req->method('getPostData')->willReturn((object)['id'=>1]);
+        $this->req->method('getPostData')->willReturn(['id'=>1]);
+        $this->req->method('getGet')->willReturn([]);
         $out = $this->api->post();
         $this->assertObjectHasAttribute('id', $out);
 
@@ -96,6 +99,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
     public function testPostRestUpdate() {
         
+        $_SESSION['uid'] = 1;
+
         $this->model->expects($this->once())
             ->method('update')
             ->willReturn((object)['id'=>1,'focus'=>true]);

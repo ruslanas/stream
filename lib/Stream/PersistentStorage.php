@@ -35,7 +35,7 @@ class PersistentStorage extends Injectable {
      * @param int $id
      * @return mixed
      */
-    public function read($id = NULL) {
+    public function read($id = NULL, $uid = NULL) {
 
         reset($this->table);
         $tableName = key($this->table);
@@ -67,28 +67,42 @@ class PersistentStorage extends Injectable {
 
         $query = "SELECT $fieldList FROM `{$tableName}`".$joins;
         
+        $where = '';
+
         if ($id !== NULL) {
             
-            $query .= " WHERE `{$tableName}`.id = :id";
+            $where = " WHERE `{$tableName}`.id = :id";
             if(in_array('deleted', $this->table[$tableName])
                 && !is_array($this->table[$tableName])) {
 
-                $query .= " AND NOT `{$tableName}`.deleted";
+                $where .= " AND NOT `{$tableName}`.deleted";
             
             }
 
         } else {
             
             if(in_array('deleted', $this->table[$tableName])) {
-                $query .= " WHERE NOT `{$tableName}`.deleted";
+                $where = " WHERE NOT `{$tableName}`.deleted";
             }
         
         }
 
-        $statement = $this->db->prepare($query);
+        if(!empty($uid)) {
+            if(!empty($where)) {
+                $where .= " AND `{$tableName}`.user_id = :user_id";
+            } else {
+                $where = " WHERE `{tableName}`.user_id = :user_id";
+            }
+        }
+
+        $statement = $this->db->prepare($query.$where);
 
         if ($id !== NULL) {
             $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        }
+
+        if(!empty($uid)) {
+            $statement->bindParam(':user_id', $uid, PDO::PARAM_INT);
         }
 
         $statement->execute();

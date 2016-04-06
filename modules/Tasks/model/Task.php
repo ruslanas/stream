@@ -15,7 +15,12 @@ class Task extends \Stream\PersistentStorage {
             'deleted',
             'user_id',
             'focus' => [
-                'type' => PDO::PARAM_BOOL
+                'type' => PDO::PARAM_INT
+            ],
+            'users' => [
+                'id',
+                'username',
+                'email'
             ]
         ]
     

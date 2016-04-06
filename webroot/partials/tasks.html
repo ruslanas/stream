@@ -1,18 +1,19 @@
 <section>
 
-    <form class="jumbotron">
+    <div class="alert alert-warning" ng-show="section.tasks.length < 10 ? false : true">
+        <strong>Unfinished tasks limit reached!</strong> Stay focused.</div>
+    <form class="jumbotron" ng-show="section.tasks.length >= 10 ? false : true">
 
         <div class="form-group">
-            <label>Task</label>
             <input class="form-control"
                 type="text"
-                placeholder="Short description" 
+                placeholder="Start typing here to create new task" 
                 id="title"
                 autocomplete="off" 
                 ng-model="section.task.title"/>
         </div>
         
-        <div class="form-group" ng-show="section.task.title.length > 10 || section.task.description">
+        <div class="form-group" ng-show="section.task.title.length > 7 || section.task.description">
             <label>Description</label>
             <textarea id="description"
                     class="form-control"
@@ -24,28 +25,40 @@
                 ng-click="section.add(section.task)"
                 id="save-btn"
                 class="btn btn-primary">Save</button>
+        <strong>Tasks are not editable!</strong> Think carefully.
 
     </form>
 
     <div ng-class="{'panel-primary': task.focus == 0, 'panel-info': task.focus == 1}"
         class="panel"
-        ng-repeat="task in section.tasks | orderBy:'focus'">
+        ng-repeat="task in section.tasks | orderBy:['focus', '-created']">
         
         <div class="panel-heading">
             <div class="row">
-                <div class="col-md-8"><strong>{{task.title}}</strong></div>
-                <div class="col-md-4 text-right">
-                    {{task.created}}
+                <div class="col-sm-3">
+                    <button class="btn btn-xs btn-success" ng-click="section.delete(task)">
+                        <i class="glyphicon glyphicon-ok"></i> Done</button>
                     <button title="Focus"
                         class="btn btn-xs"
-                        ng-class="task.focus == 0 ? 'btn-success' : 'btn-primary'"
-                        ng-click="section.focus(task)">{{task.focus == 0 ? 'Un-Focus':'Focus'}}</button>
-                    <button class="btn btn-xs btn-danger" ng-click="section.delete(task)">Close</button>
+                        ng-class="task.focus == 0 ? 'btn-default' : 'btn-primary'"
+                        ng-click="section.focus(task)">{{task.focus == 0 ? 'Distract':'Focus'}}</button>
+                </div>
+                <div class="col-sm-7"><strong>#{{task.id}} {{task.title}}</strong></div>
+                <div class="col-sm-2 text-right">
+                    <button ng-show="task.focus == 1" class="btn btn-xs btn-danger"
+                        ng-click="section.delete(task)">
+                        <i class="glyphicon glyphicon-remove"></i> Dismiss</button>
                 </div>
             </div>
         </div>
         
-        <div class="panel-body">{{task.description}}</div>
+        <div class="panel-body">
+            <div class="col-sm-offset-3 col-sm-6">{{task.description ? task.description : task.title}}</div>
+            <div class="col-sm-3">
+                by <strong>{{task.user.email}}</strong>
+                <br/>{{task.created}}
+            </div>
+        </div>
     
     </div>
 

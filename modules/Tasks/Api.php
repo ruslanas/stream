@@ -22,21 +22,25 @@ class Api extends \Stream\RestController {
 
     final public function get() {
 
-        return $this->model->read();
+        return $this->model->read(NULL, isset($_SESSION['uid']) ? $_SESSION['uid'] : NULL);
 
     }
 
     final public function post() {
         
+        $uid = $_SESSION['uid'];
+
+        $data = $this->request->getPostData();
+        $data['user_id'] = $uid;
+        
         if($this->param('id') !== NULL) {
             
-            $data = $this->request->getPostData();
             $data = array_merge($data, $this->request->getGet());
 
             return $this->model->update($this->param('id'), $data);
         
         } else {
-            return $this->model->create($this->request->getPostData());
+            return $this->model->create($data);
         }
     }
 }
