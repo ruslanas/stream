@@ -51,7 +51,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
             }
 
             if($this->user->exists($data)) {
-                return $this->_error("Such is user already registered");
+                return $this->_error("Such user is already registered");
             }
 
             return $this->user->add($data);

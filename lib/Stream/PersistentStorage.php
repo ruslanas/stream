@@ -56,35 +56,35 @@ class PersistentStorage extends Injectable {
             $rel = rtrim($tbl, 's')."_id";
 
             $joins .= " LEFT JOIN `{$tbl}` ON `{$tbl}`.id = `{$tableName}`.`$rel`";
-            
+
             foreach($cols as $col) {
-            
+
                 $fieldList .= ", `$tbl`.`$col` AS `{$tbl}_{$col}`";
-            
+
             }
 
         }
 
         $query = "SELECT $fieldList FROM `{$tableName}`".$joins;
-        
+
         $where = '';
 
         if ($id !== NULL) {
-            
+
             $where = " WHERE `{$tableName}`.id = :id";
             if(in_array('deleted', $this->table[$tableName])
                 && !is_array($this->table[$tableName])) {
 
                 $where .= " AND NOT `{$tableName}`.deleted";
-            
+
             }
 
         } else {
-            
+
             if(in_array('deleted', $this->table[$tableName])) {
                 $where = " WHERE NOT `{$tableName}`.deleted";
             }
-        
+
         }
 
         if(!empty($uid)) {
@@ -110,14 +110,14 @@ class PersistentStorage extends Injectable {
         if ($id !== NULL) {
             return $this->reshape($statement->fetch());
         } else {
-            
+
             $data = [];
-            
+
             while ($row = $statement->fetch()) {
-                
+
                 $data[] = $this->reshape($row);
             }
-            
+
             return $data;
         }
     }
@@ -131,7 +131,7 @@ class PersistentStorage extends Injectable {
         $tableName = $this->_get_table_name();
 
         foreach($this->table[$tableName] as $tbl => $cols) {
-            
+
             if(!is_array($cols) || (array_key_exists('type', $cols) && is_int($cols['type'])) ) {
                 continue;
             }
@@ -142,7 +142,7 @@ class PersistentStorage extends Injectable {
                 $property = $tbl."_".$col;
                 $rel->{$col} = $row->{$property};
             }
-            
+
             $rec = rtrim($tbl, 's');
             $row->{$rec} = $rel;
 
@@ -157,7 +157,7 @@ class PersistentStorage extends Injectable {
      * @param int $id
      * @return stdClass|FALSE
      */
-    public function delete($id) {
+    public function delete($id, $uid = NULL) {
 
         $ret = $this->read($id);
 
@@ -173,15 +173,27 @@ class PersistentStorage extends Injectable {
             $query = "DELETE FROM `{$tableName}` WHERE id = :id";
         }
 
+        if($uid !== NULL) {
+            $query .= " AND `{$tableName}`.user_id = :user_id";
+        }
+
         $statement = $this->db->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        
+
+        if($uid !== NULL) {
+            $statement->bindParam(':user_id', $uid, PDO::PARAM_INT);
+        }
+
         if($statement->execute()) {
             $ret->deleted = 1;
         }
 
+        if($statement->rowCount() === 0) {
+            return NULL;
+        }
+
         return $ret;
-    
+
     }
 
     /**
@@ -190,9 +202,9 @@ class PersistentStorage extends Injectable {
      * @return \stdClass
      */
     public function remove($id) {
-        
+
         return $this->delete($id);
-    
+
     }
 
     public function create($data) {
@@ -214,11 +226,11 @@ class PersistentStorage extends Injectable {
     }
 
     private function _get_table_name() {
-    
+
         reset($this->table);
-    
+
         return key($this->table);
-    
+
     }
 
     private function prepareStatement($data, $id = NULL) {
@@ -234,26 +246,26 @@ class PersistentStorage extends Injectable {
         $q = [];
 
         /**
-         * 
+         *
          */
         foreach ($this->table[$tableName] as $idx => $field) {
-            
+
             if(is_array($field)) {
 
                 // PDO::PARAM_*
                 if(array_key_exists('type', $field) && is_int($field['type'])) {
                     $q[] = $idx . "=:" .$idx;
                 }
-                
+
                 continue;
             }
-            
+
             if(empty($data[$field])) {
                 continue;
             }
 
             $q[] = $field . "=:" . $field;
-        
+
         }
 
         $query .= join(',', $q);
@@ -267,10 +279,10 @@ class PersistentStorage extends Injectable {
         foreach ($this->table[$tableName] as $idx => $field) {
 
             if(is_array($field)) {
-                
+
                 // PDO::PARAM_*
                 if(array_key_exists('type', $field) && is_int($field['type'])) {
-        
+
                     $statement->bindParam(":" . $idx, $data[$idx], $field['type']);
 
                 }
@@ -298,27 +310,27 @@ class PersistentStorage extends Injectable {
         $tableName = $this->_get_table_name();
 
         $sql = "SELECT * FROM `{$tableName}` WHERE ";
-        
+
         $filter = [];
-        
+
         foreach($options as $col => $value) {
             $filter[] = "$col = :$col";
         }
-        
+
         $sql .= join(',', $filter);
         $statement = $this->db->prepare($sql);
-        
+
         foreach($options as $col => $value) {
             $statement->bindParam(":$col", $value, PDO::PARAM_STR);
         }
 
         $statement->execute();
         $data = [];
-        
+
         while($row = $statement->fetch()) {
             $data[] = $row;
         }
-        
+
         return $data;
 
     }

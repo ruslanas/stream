@@ -74,9 +74,11 @@ class AclTest extends DatabaseTestCase {
 
 		$this->session->method('get')->with('uid')->willReturn(2);
 
-		$this->assertTrue($this->acl->allow('POST', '/clients.json')); // ???
+		$this->assertTrue($this->acl->allow('POST', '/clients.json'));
+
 		$this->assertFalse($this->acl->allow('DELETE', '/clients/1.json'));
-		$this->assertFalse($this->acl->allow('POST', '/posts.json'));
+
+        $this->assertFalse($this->acl->allow('POST', '/posts.json'));
 		$this->assertFalse($this->acl->allow('PUT', '/clients.json'));
 
 	}
@@ -88,4 +90,12 @@ class AclTest extends DatabaseTestCase {
 		$this->assertFalse($this->acl->allow('GET', '/tasks.json'));
 
 	}
+
+    public function testAllowDeleteOwnTask() {
+
+        $this->session->method('get')->with('uid')->willReturn(2);
+
+        $this->assertTrue($this->acl->allow('DELETE', '/tasks/2.json'));
+
+    }
 }

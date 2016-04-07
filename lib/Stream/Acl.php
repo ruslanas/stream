@@ -54,6 +54,12 @@ class Acl extends \Stream\Util\Injectable {
                     return true;
                 }
 
+                // we promise that user will delete only his own tasks
+
+                if(preg_match('/^\/tasks\/[0-9]+\.json$/', $uri)) {
+                    return true;
+                }
+
                 return false;
 
             }

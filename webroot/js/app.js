@@ -19,7 +19,7 @@ angular.module('stream', [
     this.currentMenuItem = '/';
 
     this.menuItems = [
-        {title: 'Posts', path: '/', authorize: true},
+        // {title: 'Posts', path: '/', authorize: true},
         {title: 'Tasks', path: '/tasks', authorize: true},
         {title: 'Register', path: '/register', authorize: false},
         {title: 'Sign In', path: '/login', authorize: false},
@@ -36,8 +36,35 @@ angular.module('stream', [
         self.currentMenuItem = $location.path();
     });
 
-}]).config(['$locationProvider', function($locationProvider) {
+}]).controller('HomeController', [
+
+    '$rootScope', '$location', function($rootScope, $location) {
+
+    if($rootScope.authorized) {
+        $location.url('/tasks');
+    }
+
+    this.register = function() {
+        $location.url('/register');
+    }
+
+    this.login = function() {
+        $location.url('/login');
+    }
+
+}]).config([
+
+    '$locationProvider', '$routeProvider',
+
+    function($locationProvider, $routeProvider) {
+
     $locationProvider.html5Mode(true);
+    $routeProvider.when('/', {
+        templateUrl: 'partials/home.html',
+        controller: 'HomeController',
+        controllerAs: 'section'
+    });
+
 }]).run([
 
     '$rootScope', 'User', '$location', function($rootScope, User, $location) {
@@ -47,7 +74,6 @@ angular.module('stream', [
         $rootScope.authorized = true;
         $rootScope.user = res;
 
-    }, function(res) {
-        $location.url('/login');
-    });
+    }, function(res) { });
+
 }]);

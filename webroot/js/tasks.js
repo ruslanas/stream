@@ -5,8 +5,10 @@ angular.module('tasks', [
 
     'ui.bootstrap'
 
-]).controller('TasksController', ['Task', function(Task) {
-    
+]).controller('TasksController', [
+
+    'Task', '$rootScope', function(Task, $rootScope) {
+
     this.tasks = Task.query();
     this.tpl = {tilte: '', description: '', focus: 1};
     this.task = angular.copy(this.tpl);
@@ -14,20 +16,20 @@ angular.module('tasks', [
     var self = this;
 
     this.add = function(task) {
-        
+
         task.focus = 1;
 
         new Task(task).$save(function(res) {
             self.tasks.unshift(res);
             self.task = angular.copy(this.tpl);
         });
-    
+
     }
 
     this.focus = function(task) {
 
         task.$save({focus: task.focus == 0 ? 1 : 0});
-    
+
     }
 
     this.delete = function(task) {
@@ -36,7 +38,9 @@ angular.module('tasks', [
             self.tasks = self.tasks.filter(function(el) {
                 return el.id !== res.id;
             });
-            
+
+            $rootScope.message = 'Task dismissed';
+
         }, function(res) {
             alert(res.data);
         });

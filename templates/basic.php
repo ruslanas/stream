@@ -22,7 +22,7 @@
         <nav class="navbar navbar-default" id="menu">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/#/"><?php echo $this->e($title);?></a>
+                    <a class="navbar-brand" href="/"><?php echo $this->e($title);?></a>
                 </div>
                 <div>
                     <ul class="nav navbar-nav">

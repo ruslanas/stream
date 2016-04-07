@@ -34,17 +34,17 @@ angular.module('messages', [
     };
 
     this.delete = function(post) {
-        
+
         post.$remove(function(res) {
 
             self.posts = self.posts.filter(function(el) {
                 return el.id !== res.id;
             });
-            
+
         }, function(res) {
             alert(res.data);
         });
-    
+
     };
 
 }]).factory('Post', ['$resource', function($resource) {
@@ -52,9 +52,5 @@ angular.module('messages', [
     return $resource('/posts/:id.json', {id: "@id"});
 
 }]).config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/', {
-        templateUrl: 'partials/posts.html',
-        controller: 'PostsController',
-        controllerAs: 'section'
-    });
+
 }]);

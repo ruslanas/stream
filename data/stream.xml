@@ -15,7 +15,7 @@
         group="manager"></users>
 
     <posts id="1" title="Test" body="Message body" user_id="1" deleted="0"></posts>
-    
+
     <clients id="1"
         name="Client Name"
         address="Street 10"
@@ -48,6 +48,14 @@
         completed="0"
         focus="1"
         description="Write feature description and create tests"
+        deleted="0"/>
+
+    <tasks id="2"
+        title="Unprivileged users task"
+        completed="0"
+        focus="0"
+        user_id="2"
+        description="Users can delte their tasks only"
         deleted="0"/>
 
 </dataset>

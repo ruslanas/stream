@@ -28,7 +28,7 @@ use \Stream\Util\Injectable;
 /** Application dispatches requests to controllers and manages database connection */
 class App extends Injectable implements AppInterface {
 
-    protected $_injectable = ['acl', 'request', 'cache', '_config'];
+    protected $_injectable = ['acl', 'request', 'cache', '_config', 'session'];
 
     private $_controllers = [];
     private $_domains = [];
@@ -85,6 +85,7 @@ class App extends Injectable implements AppInterface {
     public function __construct(CacheInterface $cache = NULL) {
 
         $this->session = new \Stream\Session;
+        
         $this->acl = new Acl($this->session);
         $this->request = new Request;
 

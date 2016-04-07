@@ -28,9 +28,20 @@ describe('Tasks Tab', function() {
 
         element(by.id('save-btn')).click();
 
-        var item = element(by.css('.panel'));
+        var item = element(by.css('.panel:nth-child(1)'));
 
         expect(item.getText()).toContain(message);
 
     });
+
+    it('should dismiss a task', function() {
+
+        element(by.css('.panel:nth-child(1) button.btn-danger')).click();
+
+        expect(element(by.css('.alert-info > div')).getText()).toEqual('Task dismissed');
+        element(by.linkText('Sign Out')).click();
+        expect(element(by.css('.btn-primary')).getText()).toEqual('Sign In');
+
+    });
+
 });
