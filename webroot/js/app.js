@@ -18,19 +18,31 @@ angular.module('stream', [
 
     this.currentMenuItem = '/';
 
+    this.errors = [];
+
+    var self = this;
+    this.dismiss = function($index) {
+        self.errors.splice($index, 1);
+    };
+
     this.menuItems = [
-        // {title: 'Posts', path: '/', authorize: true},
         {title: 'Tasks', path: '/tasks', authorize: true},
         {title: 'Register', path: '/register', authorize: false},
         {title: 'Sign In', path: '/login', authorize: false},
         {title: 'Sign Out', path: '/logout', authorize: true}
     ];
 
-    var self = this;
+    $rootScope.setError = function(err, type) {
 
-    $rootScope.setError = function(err) {
-        $rootScope.error = err;
-    }
+        if(typeof type === undefined) {
+            type = 'error';
+        }
+
+        self.errors.push({
+            type: type,
+            msg: err
+        });
+    };
 
     $scope.$on('$routeChangeSuccess', function(evt, curr, prev) {
         self.currentMenuItem = $location.path();

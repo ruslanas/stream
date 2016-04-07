@@ -25,7 +25,7 @@ angular.module('users', [
 
             // display system error
             if(res.error) {
-                $rootScope.setError(res.error);
+                $rootScope.setError(res.error, 'danger');
                 return;
             }
 

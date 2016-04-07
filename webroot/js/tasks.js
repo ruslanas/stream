@@ -39,7 +39,7 @@ angular.module('tasks', [
                 return el.id !== res.id;
             });
 
-            $rootScope.message = 'Task dismissed';
+            $rootScope.setError('Task dismissed', 'info');
 
         }, function(res) {
             alert(res.data);
