@@ -46,7 +46,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
             if(!$this->user->valid($data)) {
 
-                return $this->error($this->user->error());
+                return $this->_error($this->user->error());
 
             }
 
