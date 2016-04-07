@@ -35,7 +35,7 @@ bower install
 
 mkdir ../build
 
-if cp -r webroot modules templates lib vendor router.php index.php data/.htaccess \
+if cp -r webroot modules templates lib vendor router.php index.php .htaccess \
 ../build ; then
     echo "Files copied"
 else
