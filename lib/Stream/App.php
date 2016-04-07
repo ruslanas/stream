@@ -273,7 +273,9 @@ class App extends Injectable implements AppInterface {
                 ob_end_clean();
 
                 if(is_callable($this->hook('hook.notFound'))) {
-                    return $this->hook('hook.notFound')($uri);
+                    // php < 7 complains
+                    $_f = $this->hook('hook.notFound');
+                    return $_f($uri);
                 } else {
 
                     throw new NotFoundException("Could not ".$method.' '.$uri);
@@ -281,7 +283,9 @@ class App extends Injectable implements AppInterface {
                 }
             }
 
-            $handler($params);
+            if(is_callable($handler)) {
+                $handler($params);
+            }
 
         }
 
