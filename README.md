@@ -1,3 +1,7 @@
+**Prerequisites**
+
+PHP 7, composer, bower
+
 **Install**
 
 ```{sh}

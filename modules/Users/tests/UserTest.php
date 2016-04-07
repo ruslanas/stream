@@ -11,12 +11,13 @@ use Stream\Request;
 use modules\Users\model\User;
 
 class UserTest extends DatabaseTestCase {
-    
+
     public function setUp() {
-        
+
         parent::setUp();
 
-        $this->req = $this->getMockBuilder(Request::class)->getMock();
+        $this->req = $this->getMockBuilder(Request::class)
+            ->getMock();
 
         $this->user = new User($this->pdo);
 
@@ -35,9 +36,9 @@ class UserTest extends DatabaseTestCase {
 
         $this->assertCount(1, $this->user->error());
         $this->assertFalse($isValid);
-    
+
     }
-    
+
     // something wrong here
     public function testAuthenticateFail() {
 
@@ -53,17 +54,17 @@ class UserTest extends DatabaseTestCase {
     }
 
     public function testAuthenticateSuccess() {
-    
+
         $_SESSION['uid'] = 1;
         $this->assertTrue($this->user->authenticate($this->req));
-    
+
     }
 
     public function testAuthenticateUserNotFound() {
-    
+
         $_SESSION['uid'] = 1000;
         $this->assertFalse($this->user->authenticate($this->req));
-    
+
     }
 
     public function testExists() {
@@ -75,13 +76,15 @@ class UserTest extends DatabaseTestCase {
         $y = $this->user->exists(['email' => 'does_not_exist@example.com']);
         $this->assertFalse($y);
     }
-    
+
     public function testAdd() {
         $this->assertFalse($this->user->add([]));
         $data = ['email' => 'xxx@example.com', 'password' => 'password'];
         $this->assertFalse($this->user->exists($data));
-        $id = $this->user->add($data);
-        $this->assertTrue(is_numeric($id), 'Must return user Id');
+
+        $res = $this->user->add($data);
+        $this->assertTrue(is_numeric($res->id), 'Id is numeric');
+
         $this->assertTrue($this->user->exists($data));
     }
 
@@ -94,9 +97,9 @@ class UserTest extends DatabaseTestCase {
             'password' => 'foo',
             'password2' => 'bar'
         ]);
-        
+
         $this->assertFalse($isValid);
-        
+
         $err = $this->user->error();
         $this->assertEquals(2, count($err));
         $this->assertArrayHasKey('email', $err);
@@ -114,6 +117,7 @@ class UserTest extends DatabaseTestCase {
     public function testGetById() {
         $data = $this->user->getById(1);
         $this->assertEquals('admin@example.com', $data->email);
+        $this->assertEquals('', $data->password);
     }
 
     public function testGetList() {

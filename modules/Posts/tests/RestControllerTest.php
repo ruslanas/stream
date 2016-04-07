@@ -16,30 +16,34 @@ use \modules\Posts\Controller;
 class RestControllerTest extends \PHPUnit_Framework_TestCase {
 
     public function setUp() {
-        
+
         $this->controller = new Controller;
 
         $this->req = $this->getMockBuilder(Request::class)->getMock();
-        
+
         $this->model = $this->getMockBuilder(model\Post::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->controller->inject('request', $this->req);
         $this->controller->inject('model', $this->model);
-    
+
     }
 
     public function testApi() {
 
         $this->controller->inject('params', []);
-        $this->model->method('getList')->willReturn([(object)['title' => 'Title']]);
-        
+
+        $this->model->method('read')->willReturn([(object)['title' => 'Title']]);
+
         $data = $this->controller->get();
 
         $this->assertTrue(is_array($data));
         $this->assertEquals(count($data), 1);
         $this->assertObjectHasAttribute('title', $data[0]);
+    }
+
+    public function testApiGetById() {
 
         $this->controller->inject('params', ['id' => 1]);
         $this->model->method('getById')->with(1)->willReturn((object)['title' => 'Title']);
@@ -51,7 +55,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPostCreatesNewPost() {
-        
+
         $this->controller->inject('params', []);
 
         $data = [
@@ -88,7 +92,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase {
 
         $this->model->method('delete')->with(1)->willReturn((object)['id'=>1]);
         $this->controller->inject('params', ['id' => 1]);
-        
+
         $res = $this->controller->delete();
 
         $this->assertEquals(1, $res->id);

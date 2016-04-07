@@ -1,24 +1,26 @@
 <section>
 
-    <div class="alert alert-warning" ng-show="section.tasks.length < 10 ? false : true">
-        Unfinished tasks limit reached!<strong> Stay focused.</strong></div>
+    <div class="alert alert-warning text-center"
+        ng-show="section.tasks.length < 10 ? false : true">
+        <strong>Stay focused!</strong>
+    </div>
     <form class="jumbotron" ng-show="section.tasks.length >= 10 ? false : true">
 
         <div class="form-group">
             <input class="form-control"
                 type="text"
-                placeholder="What are you working on? Start typing here to create new task" 
+                placeholder="Working on anything? Start typing here to create a task"
                 id="title"
-                autocomplete="off" 
+                autocomplete="off"
                 ng-model="section.task.title"/>
         </div>
-        
+
         <div class="form-group" ng-show="section.task.title.length > 7 || section.task.description">
             <label>Description</label>
             <textarea id="description"
                     class="form-control"
                     rows="5"
-                    placeholder="Do you have any requirements?" 
+                    placeholder="Do you have any requirements?"
                     ng-model="section.task.description"></textarea>
         </div>
 
@@ -33,7 +35,7 @@
     <div ng-class="{'panel-primary': task.focus == 0, 'panel-info': task.focus == 1}"
         class="panel"
         ng-repeat="task in section.tasks | orderBy:['focus', '-created']">
-        
+
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-3">
@@ -52,7 +54,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="panel-body">
             <div class="col-sm-offset-3 col-sm-6">{{task.description ? task.description : task.title}}</div>
             <div class="col-sm-3">
@@ -60,7 +62,7 @@
                 <br/>{{task.created}}
             </div>
         </div>
-    
+
     </div>
 
 </section>

@@ -2,11 +2,11 @@ angular.module('users', [
     'ngResource',
     'ngRoute',
 ]).controller('LoginController',
-    
+
     ['User', '$rootScope', '$location', function(User, $rootScope, $location) {
 
-    this.user = {};
-    
+    this.user = $rootScope.user ? $rootScope.user : {};
+
     var self = this;
 
     if($rootScope.authorized) {
@@ -15,14 +15,38 @@ angular.module('users', [
         });
     }
 
+    this.register = function($event, user) {
+
+        $event.preventDefault();
+
+        var user = new User(user);
+
+        user.$register(function(res) {
+
+            // display system error
+            if(res.error) {
+                $rootScope.setError(res.error);
+                return;
+            }
+
+            $rootScope.user = res;
+
+            $location.url('/login');
+
+        }, function(res) {
+            console.log(res);
+        });
+
+    }
+
     this.login = function($event) {
 
         $event.preventDefault();
 
         var user = new User(self.user);
-        
+
         user.$login(function(res) {
-            
+
             $rootScope.authorized = true;
             $rootScope.user = res;
             $location.url('/tasks');
@@ -36,13 +60,25 @@ angular.module('users', [
 
 }]).factory('User', ['$resource', function($resource) {
 
-    return $resource('/users/login.json', {id: "@id"}, {
+    return $resource('/users/:action.json', {action: "@action"}, {
+
         login: {
-            method: 'POST'
+            method: 'POST',
+            params: {
+                action: 'login'
+            }
         },
+
         logout: {
-            method: 'DELETE'
+            method: 'POST',
+            params: {action: 'logout'}
+        },
+
+        register: {
+            method: 'POST',
+            params: {action: 'register'}
         }
+
     });
 
 }]).config(['$routeProvider', function($routeProvider) {
@@ -52,6 +88,10 @@ angular.module('users', [
         controllerAs: 'section'
     }).when('/logout', {
         templateUrl: 'partials/login.html',
+        controller: 'LoginController',
+        controllerAs: 'section'
+    }).when('/register', {
+        templateUrl: 'partials/register.html',
         controller: 'LoginController',
         controllerAs: 'section'
     });

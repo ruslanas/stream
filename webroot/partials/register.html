@@ -1,0 +1,18 @@
+<form>
+    <div class="form-group">
+        <label>Email:</label>
+        <input id="email"
+            type="email"
+            class="form-control"
+            ng-model="section.user.email"/>
+    </div>
+    <div class="form-group">
+        <label>Password:</label>
+        <input id="password" type="password" class="form-control" ng-model="section.user.password"/>
+    </div>
+    <div class="form-group">
+        <label>Repeat password:</label>
+        <input id="password2" type="password" class="form-control" ng-model="section.user.password2"/>
+    </div>
+    <button id="register-btn" class="btn btn-success" ng-click="section.register($event, section.user)">Register</button>
+</form>

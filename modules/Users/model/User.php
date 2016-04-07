@@ -53,7 +53,7 @@ class User extends \Stream\PersistentStorage {
         if(count($this->_errors)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -70,12 +70,21 @@ class User extends \Stream\PersistentStorage {
     }
 
     public function getById($id) {
-        
+
         $statement = $this->db->prepare("SELECT * FROM `{$this->_table}` WHERE id = :id");
 
         $statement->bindParam(":id", $id, PDO::PARAM_INT);
         $statement->execute();
-        return $statement->fetch();
+        $data = $statement->fetch();
+
+        /////////////////////////////////////////////////
+        // Do not send even hashed passwords to client //
+        /////////////////////////////////////////////////
+        if(isset($data->password)) {
+            $data->password = '';
+        }
+
+        return $data;
     }
 
     public function getList() {
@@ -104,39 +113,41 @@ class User extends \Stream\PersistentStorage {
         $statement->bindParam(':email', $data['email'], PDO::PARAM_STR);
         $statement->bindParam(':password', $encrypted, PDO::PARAM_STR);
         $statement->execute();
-        
-        return $this->db->lastInsertId();
-    
+
+        return $this->getById($this->db->lastInsertId());
+
     }
 
     /**
      * Check if user exists
      */
     public function loggedIn() {
-        
+
         if(!empty($_SESSION['uid'])) {
-            
+
             $data = $this->getById($_SESSION['uid']);
-            
+
             if(!empty($data)) {
 
                 return true;
-            
+
             }
         }
-        
+
         return false;
     }
 
     /**
      * Check if session started
+     * @param \Stream\Request $req
+     * @return bool
      */
     public function authenticate($req) {
-        
+
         if($this->loggedIn()) {
-        
+
             return true;
-        
+
         }
 
         $this->data = $req->post();
@@ -148,17 +159,17 @@ class User extends \Stream\PersistentStorage {
         $this->data = is_array($this->data) ? $this->data : [];
 
         if(!isset($this->data['email']) || !isset($this->data['password']) || isset($this->data['password2'])) {
-            
+
             return false;
-        
+
         }
 
         $sql = "SELECT * FROM `{$this->_table}` WHERE email = :email";
-        
+
         $statement = $this->db->prepare($sql);
         $statement->bindParam(":email", $this->data['email']);
         $statement->execute();
-        
+
         $row = $statement->fetch();
 
         if($row && password_verify($this->data['password'], $row->password)) {
@@ -168,6 +179,7 @@ class User extends \Stream\PersistentStorage {
             return false;
         }
     }
+
     public function error() {
         return $this->_errors;
     }

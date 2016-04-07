@@ -1,9 +1,9 @@
 # features/tasks.feature
 
-Feature: Todo List
+Feature: Tasks
 	In order to progress on project
 	As a developer
-	I need to track my tasks
+	I need to keep track of my tasks
 
 	@wip @javascript
 	Scenario: Adding task

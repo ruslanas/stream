@@ -2,7 +2,7 @@
 
 /**
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
- * @link http://github.com/ruslanas/stream/blob/master/App.php
+ * @link http://github.com/ruslanas/stream
  */
 
 namespace Stream;
@@ -64,7 +64,7 @@ class App extends Injectable implements AppInterface {
      * @return \PDO
      */
     static public function getConnection($conf = NULL) {
-        
+
         $app = self::getInstance();
 
         $app->loadConfig();
@@ -75,7 +75,7 @@ class App extends Injectable implements AppInterface {
         }
 
         return $app->connect($conf);
-    
+
     }
 
     public static function deleteInstance() {
@@ -84,11 +84,12 @@ class App extends Injectable implements AppInterface {
 
     public function __construct(CacheInterface $cache = NULL) {
 
-        $this->acl = new Acl;
+        $this->session = new \Stream\Session;
+        $this->acl = new Acl($this->session);
         $this->request = new Request;
 
         $this->cache = ($cache !== NULL) ? $cache : new Cache;
-        
+
         static::$instance = $this;
     }
 
@@ -111,7 +112,7 @@ class App extends Injectable implements AppInterface {
             $dsn = "mysql:host={$this->_config['host']};dbname={$this->_config['database']};charset=utf8mb4";
             $pdo = new PDO($dsn, $this->_config['user'], $this->_config['password']);
         } else {
-            
+
             if(!isset($this->_config[$conf]) || !is_array($this->_config[$conf])) {
                 throw new Exception("Configuration for `{$conf}` not found");
             }
@@ -125,11 +126,11 @@ class App extends Injectable implements AppInterface {
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 
         $this->_connections[$conf] = $pdo;
-        
+
         $this->pdo = $pdo;
 
         return $pdo;
-    
+
     }
 
     protected function authorize($method, $uri) {
@@ -161,11 +162,11 @@ class App extends Injectable implements AppInterface {
         $controller = $this->createController($method, $uri);
 
         if($controller !== NULL) {
-            
+
             if(method_exists($controller, $method)) {
 
                 $reflection = new \ReflectionMethod($controller, $method);
-                
+
                 if($reflection->isFinal()) {
                     $out = $controller->{$method}();
                 } else {
@@ -173,9 +174,9 @@ class App extends Injectable implements AppInterface {
                     // unsupported HTTP request method or corresponding controller
                     // method is not declared final
                     throw new \Stream\Exception\UnknownMethodException("Hacker?");
-                
+
                 }
-            
+
             } else {
                 throw new NotFoundException('Page `$uri` not found');
             }
@@ -183,11 +184,11 @@ class App extends Injectable implements AppInterface {
             if($controller->redirect()) {
 
                 header('Location: '.$controller->redirect());
-            
+
             }
-            
+
             return $this->serialize($out);
-        
+
         }
 
         $headers = $this->request->getHeaders();
@@ -213,7 +214,7 @@ class App extends Injectable implements AppInterface {
         });
 
         if($controller instanceof DomainControllerInterface) {
-            
+
             try {
                 $out = $controller->dispatch($uri);
             } catch(NotFoundException $e) {
@@ -222,15 +223,15 @@ class App extends Injectable implements AppInterface {
             }
 
             if($controller->redirect()) {
-                
+
                 header('Location: '.$controller->redirect());
-            
+
                 ob_end_clean();
 
                 return;
-            
+
             }
-            
+
             ob_end_flush();
 
             return $out;
@@ -258,9 +259,9 @@ class App extends Injectable implements AppInterface {
             $handler = null;
 
             foreach($handlers as $regexp => $func) {
-                
+
                 $params = $this->match($regexp, $uri);
-                
+
                 if(is_array($params)) {
                     $handler = $func;
                     break;
@@ -268,7 +269,7 @@ class App extends Injectable implements AppInterface {
             }
 
             if($handler === null) {
-                
+
                 ob_end_clean();
 
                 if(is_callable($this->hook('hook.notFound'))) {
@@ -289,7 +290,7 @@ class App extends Injectable implements AppInterface {
     }
 
     protected function match($parameterized, $uri) {
-        
+
         $components = explode('?', $uri);
         $path = rtrim($components[0], '/');
 
@@ -298,15 +299,15 @@ class App extends Injectable implements AppInterface {
         }
 
         $re = preg_replace('/\:\w*/', '(\w*)', $parameterized);
-        
+
         $re = '[^'.$re.'$]';
-        
+
         $count = preg_match_all($re, $path, $matches);
-        
+
         if($count > 0) {
 
             preg_match_all('/\:(\w*)/', $parameterized, $parms);
-            
+
             $out = [];
 
             for($i=1; $i<count($matches); $i++) {
@@ -315,29 +316,29 @@ class App extends Injectable implements AppInterface {
 
             return $out;
         }
-        
+
         return FALSE;
     }
 
     protected function createController($method, $uri) {
-        
+
         foreach($this->_controllers as $regexp => $controller_class) {
-            
+
             $matches = $this->match($regexp, $uri);
-            
+
             if($matches !== FALSE) {
                 if(class_exists($controller_class)) {
-        
+
                     $implements = class_implements($controller_class);
-                
+
                     if(!in_array(RestApi::class, $implements)) {
 
                         throw new Exception("Controller `{$controller_class}` must implement RestApi");
-                    
+
                     }
-        
+
                     return new $controller_class($matches, $this);
-        
+
                 } else {
                     throw new NotFoundException;
                 }
@@ -348,21 +349,21 @@ class App extends Injectable implements AppInterface {
     }
 
     protected function createDomainController($uri) {
-        
+
         foreach($this->_domains as $name => $controller_class) {
-            
+
             $matches = $this->match($name, $uri);
-            
+
             if($matches !== false) {
-        
+
                 if(class_exists($controller_class)) {
                     return new $controller_class($matches, $this);
                 } else {
                     throw new \Stream\Exception\NotFoundException("Page controller not found");
                 }
-        
+
             }
-        
+
         }
     }
 
@@ -393,7 +394,7 @@ class App extends Injectable implements AppInterface {
         if(!is_string($controller)) {
             throw new \Exception('App configuration error');
         }
-    
+
         if(!is_array($endpoints)) {
             $endpoints = [$endpoints];
         }
@@ -401,7 +402,7 @@ class App extends Injectable implements AppInterface {
         foreach($endpoints as $ep) {
             $this->_controllers[$ep] = $controller;
         }
-    
+
     }
 
     public function domain($name, $controller) {
@@ -409,9 +410,9 @@ class App extends Injectable implements AppInterface {
     }
 
     public function loadConfig() {
-        
+
         require 'config.php';
-        
+
         $this->_config = array_merge($this->_config, $config);
         return $this->_config;
     }

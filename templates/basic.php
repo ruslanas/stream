@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+
         <meta charset="utf-8">
-        
+
         <base href="/">
-        
+
         <title><?php echo $this->e($title);?></title>
-        
+
         <?php foreach($stylesheets as $sheet): ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $sheet; ?>">
         <?php endforeach; ?>
@@ -29,8 +29,10 @@
 
                         <li ng-class="{active: (mi.path === sys.currentMenuItem)}"
                             ng-repeat="mi in sys.menuItems"
-                            ng-show="mi.authorize ? authorized : !authorized"><a href="{{mi.path}}">{{mi.title}}</a></li>
-                        
+                            ng-show="mi.authorize ? authorized : !authorized">
+                            <a href="{{mi.path}}">{{mi.title}}</a>
+                        </li>
+
                     </ul>
                 </div>
             </div>

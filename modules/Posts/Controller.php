@@ -19,7 +19,7 @@ class Controller extends RestController {
     protected $_injectable = ['params', 'request', 'model'];
 
     public function __construct($params = NULL, \Stream\App $app = NULL) {
-        
+
         parent::__construct($params, $app);
 
         $this->model = new Post(\Stream\App::getConnection());
@@ -27,13 +27,21 @@ class Controller extends RestController {
     }
 
     final public function get() {
+
         if(isset($this->params['id'])) {
+
             $id = $this->params['id'];
+
             $data = $this->model->getById($id);
+
         } else {
-            $data = $this->model->getList();
+
+            $data = $this->model->read();
+
         }
+
         return $data;
+
     }
 
     final public function delete() {
@@ -45,7 +53,7 @@ class Controller extends RestController {
         $id = $this->params['id'];
 
         return $this->model->delete($id);
-    
+
     }
 
     final public function post() {
