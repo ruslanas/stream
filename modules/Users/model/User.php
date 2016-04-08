@@ -10,34 +10,30 @@ use \PDO;
 
 class User extends \Stream\PersistentStorage {
 
-    protected $db;
-    private $_errors = [];
-
-    protected $structure = [
-        'users',
-        ['email', PDO::PARAM_STR],
-        ['password', PDO::PARAM_STR]
-    ];
-
-    protected $table = [
-        'users' => [
-            'username',
-            'email',
-            'password'
-        ]
-    ];
-
-    private $_table = 'users';
-
-    protected $_injectable = ['request'];
-
     public $data = [];
 
-    public function __construct(PDO $pdo = NULL) {
-        $this->db = $pdo;
+    protected $_errors = [];
+
+    protected $structure = [
+
+        'users',
+
+        ['id', PDO::PARAM_INT],
+        ['email', PDO::PARAM_STR],
+        ['password', PDO::PARAM_STR],
+        ['deleted', PDO::PARAM_BOOL],
+        ['created', PDO::PARAM_STR],
+        ['modified', PDO::PARAM_STR],
+        ['group', PDO::PARAM_STR]
+
+    ];
+
+    public function __construct($pdo = NULL) {
+        parent::__construct($pdo);
     }
 
     public function valid(Array $data = NULL) {
+
         $this->_errors = [];
 
         if(!empty($data['email'])) {
@@ -61,31 +57,23 @@ class User extends \Stream\PersistentStorage {
         }
 
         return true;
+
     }
 
     public function exists($data) {
-        $statement = $this->db->prepare("SELECT * FROM `{$this->_table}` WHERE email = :email");
-        $statement->bindParam(":email", $data['email'], PDO::PARAM_STR);
-        $statement->execute();
-        $row = $statement->fetch();
-        if($row === FALSE) {
-            return false;
-        } else {
-            return true;
-        }
+
+        return !!$this->search(['email' => $data['email']]);
+
     }
 
     public function getById($id) {
 
-        $statement = $this->db->prepare("SELECT * FROM `{$this->_table}` WHERE id = :id");
-
-        $statement->bindParam(":id", $id, PDO::PARAM_INT);
-        $statement->execute();
-        $data = $statement->fetch();
+        $data = $this->read($id);
 
         /////////////////////////////////////////////////
         // Do not send even hashed passwords to client //
         /////////////////////////////////////////////////
+
         if(isset($data->password)) {
             $data->password = '';
         }
@@ -94,13 +82,7 @@ class User extends \Stream\PersistentStorage {
     }
 
     public function getList() {
-        $statement = $this->db->prepare("SELECT * FROM `{$this->_table}` LIMIT 100");
-        $statement->execute();
-        $out = [];
-        while($row = $statement->fetch()) {
-            $out[] = $row;
-        }
-        return $out;
+        return $this->read();
     }
 
     public function add($data) {
@@ -113,14 +95,9 @@ class User extends \Stream\PersistentStorage {
 
         $encrypted = password_hash($data['password'], PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO `{$this->_table}` (email, password) VALUES (:email, :password)";
+        $data['password'] = $encrypted;
 
-        $statement = $this->db->prepare($sql);
-        $statement->bindParam(':email', $data['email'], PDO::PARAM_STR);
-        $statement->bindParam(':password', $encrypted, PDO::PARAM_STR);
-        $statement->execute();
-
-        return $this->getById($this->db->lastInsertId());
+        return $this->create($data);
 
     }
 
@@ -156,21 +133,21 @@ class User extends \Stream\PersistentStorage {
 
         }
 
-        $this->data = $req->post();
+        $data = $req->post();
 
-        if(empty($this->data)) {
-            $this->data = $req->getPostData();
+        if(empty($data)) {
+            $data = $req->getPostData();
         }
 
-        $this->data = is_array($this->data) ? $this->data : [];
+        $data = is_array($data) ? $data : [];
 
-        if(!isset($this->data['email']) || !isset($this->data['password']) || isset($this->data['password2'])) {
+        if(!isset($data['email']) || !isset($data['password']) || isset($data['password2'])) {
 
             return false;
 
         }
 
-        return $this->login($this->data);
+        return $this->login($data);
     }
 
     /**
@@ -180,7 +157,7 @@ class User extends \Stream\PersistentStorage {
      */
     public function login($data = []) {
 
-        $sql = "SELECT * FROM `{$this->_table}` WHERE email = :email";
+        $sql = "SELECT * FROM `{$this->structure[0]}` WHERE email = :email";
 
         $statement = $this->db->prepare($sql);
         $statement->bindParam(":email", $data['email']);

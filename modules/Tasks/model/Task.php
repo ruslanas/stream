@@ -17,7 +17,10 @@ class Task extends \Stream\PersistentStorage {
         ['focus', PDO::PARAM_BOOL],
         ['created', PDO::PARAM_STR],
         ['modified', PDO::PARAM_STR],
-        ['deleted', PDO::PARAM_BOOL],
+        ['delegate_id', PDO::PARAM_INT],
+        ['user_id', PDO::PARAM_INT],
+
+        ['deleted', PDO::PARAM_BOOL], // record will be marked as deleted
 
         ['users as user', [
             ['id', PDO::PARAM_INT],
@@ -28,28 +31,6 @@ class Task extends \Stream\PersistentStorage {
             ['id', PDO::PARAM_INT],
             ['email', PDO::PARAM_STR]
         ], 'delegate.id = delegate_id']
-
-    ];
-
-    protected $table = [
-
-        'tasks' => [
-
-            'id',
-            'title',
-            'description',
-            'deleted',
-            'user_id',
-            'delegate_id',
-            'focus' => ['type' => PDO::PARAM_BOOL],
-
-            'users' => [
-                'id',
-                'username',
-                'email'
-            ]
-
-        ]
 
     ];
 

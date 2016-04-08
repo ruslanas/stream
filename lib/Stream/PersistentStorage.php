@@ -17,23 +17,22 @@ use \Stream\Util\Injectable;
 
 class PersistentStorage extends Injectable {
 
-    /** @var array Holds data structure definition. Subject to change. */
-    protected $table = NULL;
-    protected $db = NULL;
-
-    protected $structure = NULL;
     protected $_injectable = ['table', 'structure'];
+
+    protected $storage;
+    protected $db;
 
     /**
      * @param PDO $pdo
      */
-    public function __construct(PDO $pdo) {
+    public function __construct(PDO $pdo = NULL) {
         $this->db = $pdo;
     }
 
     /**
-     * Construct select query with a very hacky join just to pass a testcase
-     * @param int $id
+     * Read from database
+     * @param int|NULL $id
+     * @param int|NULL $uid
      * @return mixed
      */
     public function read($id = NULL, $uid = NULL) {
@@ -76,7 +75,11 @@ class PersistentStorage extends Injectable {
         $statement->execute();
 
         if ($id !== NULL) {
-            return \Stream\Util\QueryBuilder::reshape($this->structure, $statement->fetch());
+
+            $data = $statement->fetch();
+
+            return \Stream\Util\QueryBuilder::reshape($this->structure, $data);
+
         } else {
 
             $data = [];
@@ -88,36 +91,6 @@ class PersistentStorage extends Injectable {
 
             return $data;
         }
-    }
-
-    protected function reshape($row) {
-
-        if($row === FALSE) {
-            return FALSE;
-        }
-
-        $tableName = $this->_get_table_name();
-
-        foreach($this->table[$tableName] as $tbl => $cols) {
-
-            if(!is_array($cols) || (array_key_exists('type', $cols) && is_int($cols['type'])) ) {
-                continue;
-            }
-
-            $rel = new stdClass();
-
-            foreach($cols as $col) {
-                $property = $tbl."_".$col;
-                $rel->{$col} = $row->{$property};
-            }
-
-            $rec = rtrim($tbl, 's');
-            $row->{$rec} = $rel;
-
-        }
-
-        return $row;
-
     }
 
     /**
@@ -135,7 +108,12 @@ class PersistentStorage extends Injectable {
 
         $tableName = $this->_get_table_name();
 
-        if(in_array('deleted', $this->table[$tableName])) {
+        $deletable = true;
+        array_walk($this->structure, function($it) use (&$deletable) {
+            if($it[0] === 'deleted') { $deletable = false; }
+        });
+
+        if(!$deletable) {
             $query = "UPDATE `{$tableName}` SET deleted = 1 WHERE id = :id";
         } else {
             $query = "DELETE FROM `{$tableName}` WHERE id = :id";
@@ -177,100 +155,31 @@ class PersistentStorage extends Injectable {
 
     public function create($data) {
 
-        $statement = $this->prepareStatement($data);
+        $statement = \Stream\Util\QueryBuilder::update($this->db, $this->structure, $data);
 
         $statement->execute();
 
-        return $this->read($this->db->lastInsertId());
+        $id = $this->db->lastInsertId();
+
+        return $this->read($id);
     }
 
     public function update($id, $data) {
 
-        $statement = $this->prepareStatement($data, $id);
+        $statement = \Stream\Util\QueryBuilder::update($this->db, $this->structure, $data, $id);
 
         $statement->execute();
 
         return $this->read($id);
     }
 
+    /** Get table name from structure DSL */
     private function _get_table_name() {
 
-        reset($this->table);
+        if($this->structure !== NULL) { return $this->structure[0]; }
 
-        return key($this->table);
+        throw new \Exception;
 
-    }
-
-    private function prepareStatement($data, $id = NULL) {
-
-        $tableName = $this->_get_table_name();
-
-        if ($id === NULL) {
-            $query = "INSERT INTO `{$tableName}` SET ";
-        } else {
-            $query = "UPDATE `{$tableName}` SET ";
-        }
-
-        $q = [];
-
-        /**
-         *
-         */
-        foreach ($this->table[$tableName] as $idx => $field) {
-
-            if(is_array($field)) {
-
-                // PDO::PARAM_*
-                if(array_key_exists('type', $field) && is_int($field['type'])) {
-                    $q[] = $idx . "=:" .$idx;
-                }
-
-                continue;
-            }
-
-            if(empty($data[$field])) {
-                continue;
-            }
-
-            $q[] = $field . "=:" . $field;
-
-        }
-
-        $query .= join(',', $q);
-
-        if ($id !== NULL) {
-            $query .= " WHERE id = :id";
-        }
-
-        $statement = $this->db->prepare($query);
-
-        foreach ($this->table[$tableName] as $idx => $field) {
-
-            if(is_array($field)) {
-
-                // PDO::PARAM_*
-                if(array_key_exists('type', $field) && is_int($field['type'])) {
-
-                    $statement->bindParam(":" . $idx, $data[$idx], $field['type']);
-
-                }
-
-                continue;
-            }
-
-            if (empty($data[$field])) {
-                continue;
-            }
-
-            $statement->bindParam(":" . $field, $data[$field]);
-
-        }
-
-        if ($id !== NULL) {
-            $statement->bindParam(":id", $id);
-        }
-
-        return $statement;
     }
 
     public function search($options) {

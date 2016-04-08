@@ -34,23 +34,44 @@
 
     <div id="tasks-container">
 
-        <div ng-class="{'panel-primary': task.focus == 0, 'panel-info': task.focus == 1}"
+        <div ng-class="{'panel-primary': task.focus == 1, 'panel-info': task.focus == 0}"
             class="panel"
-            ng-repeat="task in section.tasks | orderBy:['focus', '-created']">
+            ng-repeat="task in section.tasks | orderBy:['-focus', '-created']">
 
             <div class="panel-heading">
                 <div class="row">
+
                     <div class="col-sm-3">
+                        
+                        <strong>#{{task.id}}</strong>
+
                         <button class="btn btn-xs btn-success" ng-click="section.delete(task)">
                             <i class="glyphicon glyphicon-ok"></i> Done</button>
+
                         <button title="Focus"
                             class="btn btn-xs"
                             ng-class="task.focus == 0 ? 'btn-default' : 'btn-primary'"
-                            ng-click="section.focus(task)">{{task.focus == 0 ? 'Distract':'Focus'}}</button>
+                            ng-click="section.focus(task)">{{task.focus == 1 ? 'Distract':'Focus'}}</button>
+
                     </div>
-                    <div class="col-sm-7"><strong>#{{task.id}} {{task.title}}</strong></div>
-                    <div class="col-sm-2 text-right">
-                        <button ng-show="task.focus == 1" class="btn btn-xs btn-danger"
+
+                    <div class="col-sm-6"><strong>{{task.title}}</strong></div>
+                    <div class="col-sm-3 text-right">
+
+                        <form class="form-inline" ng-show="task.focus == 1">
+                            <div class="form-group">
+                                <input type="text"
+                                    ng-model="task.delegate.email"
+                                    placeholder="Email or user name" 
+                                    class="form-control input-xs"/>
+
+                            </div>
+                            <button ng-disabled="task.delegate.email ? false : true"
+                                ng-click="section.delegate(task)"
+                                class="btn btn-xs btn-info">Delegate</button>
+                        </form>
+                        <span ng-show="task.focus == 0 && task.delegate.email">to <strong>{{task.delegate.email}}</strong></span>
+                        <button ng-show="task.focus == 0" class="btn btn-xs btn-danger"
                             ng-click="section.delete(task)">
                             <i class="glyphicon glyphicon-remove"></i> Dismiss</button>
                     </div>

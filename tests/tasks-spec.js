@@ -20,11 +20,13 @@ describe('Tasks Tab', function() {
 
     it('should add a task', function() {
 
-        var message = "Test should pass";
+        var message = "Add a task";
 
         var mi = element(by.id('title'));
 
         mi.sendKeys(message);
+        
+        element(by.id('description')).sendKeys("and description");
 
         element(by.id('save-btn')).click();
 
@@ -34,9 +36,24 @@ describe('Tasks Tab', function() {
 
     });
 
+    it("should delegate", function() {
+
+
+        element(by.linkText('Tasks')).click();
+
+        var task = element(by.className('panel-primary'));
+
+        task.element(by.css('.input-xs')).sendKeys("admin@stream.wri.lt");
+
+        task.element(by.css('.btn-info')).click();
+
+        expect(element(by.className('panel-info')).getText()).toContain('admin@stream.wri.lt');
+
+    });
+
     it('should dismiss a task', function() {
 
-        element(by.css('.panel:nth-child(1) button.btn-danger')).click();
+        element(by.css('.panel:not(.panel-primary) .btn-danger')).click();
 
         expect(element(by.css('.alert-info > div')).getText()).toEqual('Task dismissed');
         element(by.linkText('Sign Out')).click();

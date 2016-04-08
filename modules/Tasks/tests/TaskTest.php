@@ -61,6 +61,19 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
     }
 
+    public function testUpdate() {
+
+        $data = $this->task->update(1, ['delegate_id' => 2]);
+        
+        $this->assertEquals(2, $data->delegate->id);
+
+    }
+
+    public function testUpdateThrowsException() {
+        $this->expectException(\Exception::class);
+        $this->task->update(1, []);
+    }
+
     public function testDelete() {
 
         $data = $this->task->read();

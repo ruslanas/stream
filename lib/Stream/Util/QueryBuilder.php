@@ -2,6 +2,8 @@
 
 namespace Stream\Util;
 
+use \PDO;
+
 /*
 protected $structure = [
 
@@ -92,5 +94,58 @@ class QueryBuilder {
 
         return $out;
     }
+
+    static public function update($db, $dsl, $data, $id = NULL) {
+
+        if(empty($data)) { throw new \Exception; }
+
+        $tableName = $dsl[0];
+
+        if ($id === NULL) {
+            $query = "INSERT INTO `{$tableName}` SET ";
+        } else {
+            $query = "UPDATE `{$tableName}` SET ";
+        }
+
+        $q = [];
+        $t = [];
+
+        $num = count($dsl);
+
+        for($i=1;$i<$num;$i++) {
+
+            $col = $dsl[$i];
+            if(count($col) > 2 || !isset($data[$col[0]])) {
+                continue;
+            }
+
+            $q[] = $col[0] . "=:" . $col[0];
+            $t[$col[0]] = $col[1];
+
+        }
+
+        $query .= join(',', $q);
+
+        if ($id !== NULL) {
+            $query .= " WHERE `{$tableName}`.id = :id";
+        }
+
+        $statement = $db->prepare($query);
+
+        foreach($t as $col => $type) {
+
+            $statement->bindValue(":" . $col, $data[$col], $type);
+
+        }
+
+        if ($id !== NULL) {
+            $statement->bindValue(":id", $id, PDO::PARAM_INT);
+        }
+
+
+        return $statement;
+
+    }
+
 
 }

@@ -35,6 +35,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->user->method('authenticate')->willReturn(FALSE);
 
         $out = $this->controller->login();
+        
         $this->assertContains('action="/user/login"', $out);
         $this->assertStringStartsWith('<!DOCTYPE html>', $out);
 

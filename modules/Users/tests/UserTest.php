@@ -21,8 +21,6 @@ class UserTest extends DatabaseTestCase {
 
         $this->user = new User($this->pdo);
 
-        $this->user->inject('request', $this->req);
-
     }
 
     // contributor suggested test
@@ -77,15 +75,24 @@ class UserTest extends DatabaseTestCase {
         $this->assertFalse($y);
     }
 
-    public function testAdd() {
+    public function testAddEmpty() {
+
         $this->assertFalse($this->user->add([]));
-        $data = ['email' => 'xxx@example.com', 'password' => 'password'];
+
+    }
+
+    public function testAdd() {
+
+        $data = ['email' => 'xxx@example.com', 'password' => '******'];
+
         $this->assertFalse($this->user->exists($data));
 
         $res = $this->user->add($data);
+
         $this->assertTrue(is_numeric($res->id), 'Id is numeric');
 
         $this->assertTrue($this->user->exists($data));
+
     }
 
     public function testValid() {

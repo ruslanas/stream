@@ -26,9 +26,15 @@ angular.module('tasks', [
 
     }
 
+    // delegate to admin for now
+    this.delegate = function(task) {
+        task.$save({delegate_id: 1, focus: 0});
+    }
+
     this.focus = function(task) {
 
-        task.$save({focus: task.focus == 0 ? 1 : 0});
+        task.focus = (task.focus == 0) ? 1 : 0;
+        task.$save();
 
     }
 
