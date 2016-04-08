@@ -21,7 +21,8 @@ class PersistentStorage extends Injectable {
     protected $table = NULL;
     protected $db = NULL;
 
-    protected $_injectable = ['table'];
+    protected $structure = NULL;
+    protected $_injectable = ['table', 'structure'];
 
     /**
      * @param PDO $pdo
@@ -37,53 +38,20 @@ class PersistentStorage extends Injectable {
      */
     public function read($id = NULL, $uid = NULL) {
 
-        reset($this->table);
-        $tableName = key($this->table);
+        $tableName = $this->structure[0];
 
-        $fieldList = "`{$tableName}`.*";
-
-        $joins = '';
-
-        foreach($this->table[$tableName] as $tbl => $cols) {
-
-            /**
-             * Skip not array or has key (int) `type`
-             */
-            if(!is_array($cols) || (array_key_exists('type', $cols) && is_int($cols['type'])) ) {
-                continue;
-            }
-
-            $rel = rtrim($tbl, 's')."_id";
-
-            $joins .= " LEFT JOIN `{$tbl}` ON `{$tbl}`.id = `{$tableName}`.`$rel`";
-
-            foreach($cols as $col) {
-
-                $fieldList .= ", `$tbl`.`$col` AS `{$tbl}_{$col}`";
-
-            }
-
-        }
-
-        $query = "SELECT $fieldList FROM `{$tableName}`".$joins;
+        $query = \Stream\Util\QueryBuilder::select($this->structure);
 
         $where = '';
 
         if ($id !== NULL) {
 
             $where = " WHERE `{$tableName}`.id = :id";
-            if(in_array('deleted', $this->table[$tableName])
-                && !is_array($this->table[$tableName])) {
-
-                $where .= " AND NOT `{$tableName}`.deleted";
-
-            }
+            $where .= " AND NOT `{$tableName}`.deleted";
 
         } else {
 
-            if(in_array('deleted', $this->table[$tableName])) {
-                $where = " WHERE NOT `{$tableName}`.deleted";
-            }
+            $where = " WHERE NOT `{$tableName}`.deleted";
 
         }
 
@@ -108,14 +76,14 @@ class PersistentStorage extends Injectable {
         $statement->execute();
 
         if ($id !== NULL) {
-            return $this->reshape($statement->fetch());
+            return \Stream\Util\QueryBuilder::reshape($this->structure, $statement->fetch());
         } else {
 
             $data = [];
 
             while ($row = $statement->fetch()) {
 
-                $data[] = $this->reshape($row);
+                $data[] = \Stream\Util\QueryBuilder::reshape($this->structure, $row);
             }
 
             return $data;
@@ -307,6 +275,10 @@ class PersistentStorage extends Injectable {
 
     public function search($options) {
 
+        if(empty($options)) {
+            return [];
+        }
+
         $tableName = $this->_get_table_name();
 
         $sql = "SELECT * FROM `{$tableName}` WHERE ";
@@ -317,11 +289,22 @@ class PersistentStorage extends Injectable {
             $filter[] = "$col = :$col";
         }
 
-        $sql .= join(',', $filter);
+        $sql .= join(' AND ', $filter);
+
         $statement = $this->db->prepare($sql);
 
         foreach($options as $col => $value) {
-            $statement->bindParam(":$col", $value, PDO::PARAM_STR);
+
+            $type = \PDO::PARAM_STR;
+
+            if(is_array($value)) {
+
+                list($value, $type) = $value;
+
+            }
+
+            $statement->bindValue(":$col", $value, $type);
+
         }
 
         $statement->execute();

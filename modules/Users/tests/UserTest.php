@@ -121,7 +121,13 @@ class UserTest extends DatabaseTestCase {
     }
 
     public function testGetList() {
+
         $data = $this->user->getList();
-        $this->assertEquals(2, count($data));
+
+        $this->assertGreaterThan(0, count($data));
+
+        $this->assertObjectHasAttribute('email', $data[0]);
+        $this->assertObjectHasAttribute('password', $data[0]);
+
     }
 }

@@ -19,29 +19,27 @@ class Controller extends PageController {
 
         $this->templates->addFolder('stream', __DIR__.DIRECTORY_SEPARATOR.'templates');
 
-        $this->model = new Post(\Stream\App::getConnection());
-
         $this->_scripts = array_merge($this->_scripts, [
 
             "/js/app.js",
-            
+
             "/js/stream.js",
             "/js/client.js",
             '/js/tasks.js',
             '/js/login.js',
             "/js/directives/data-grid.js"
-        
+
         ]);
 
         $this->templates->addData([
-            
+
             'scripts' => $this->_scripts
 
         ]);
     }
 
     final public function index() {
-        
+
         return $this->templates->render('stream::index');
 
     }

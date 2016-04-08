@@ -17,7 +17,7 @@ class Injectable {
         if(in_array($property, $this->_injectable)) {
             $this->{$property} = $object;
         } else {
-            throw new \Exception('Property not injectable');
+            throw new \Exception("Property `{$property}` not injectable");
         }
 
     }

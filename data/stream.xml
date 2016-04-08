@@ -14,6 +14,11 @@
         deleted="0"
         group="manager"></users>
 
+    <users id="3"
+        email="behat@stream.wri.lt"
+        password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
+        deleted="0"></users>
+
     <posts id="1" title="Test" body="Message body" user_id="1" deleted="0"></posts>
 
     <clients id="1"
@@ -47,6 +52,8 @@
         title="Implement new feature"
         completed="0"
         focus="1"
+        user_id="1"
+        delegate_id="2"
         description="Write feature description and create tests"
         deleted="0"/>
 

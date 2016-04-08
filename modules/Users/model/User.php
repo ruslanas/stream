@@ -13,6 +13,12 @@ class User extends \Stream\PersistentStorage {
     protected $db;
     private $_errors = [];
 
+    protected $structure = [
+        'users',
+        ['email', PDO::PARAM_STR],
+        ['password', PDO::PARAM_STR]
+    ];
+
     protected $table = [
         'users' => [
             'username',
@@ -164,19 +170,34 @@ class User extends \Stream\PersistentStorage {
 
         }
 
+        return $this->login($this->data);
+    }
+
+    /**
+     * Find user in database and set session (uid)
+     * @param array $credentials
+     * @return \stdClass|false
+     */
+    public function login($data = []) {
+
         $sql = "SELECT * FROM `{$this->_table}` WHERE email = :email";
 
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(":email", $this->data['email']);
+        $statement->bindParam(":email", $data['email']);
         $statement->execute();
 
         $row = $statement->fetch();
 
-        if($row && password_verify($this->data['password'], $row->password)) {
+        if($row && password_verify($data['password'], $row->password)) {
+
             $_SESSION['uid'] = $row->id;
-            return true;
+
+            return $row;
+
         } else {
+
             return false;
+
         }
     }
 

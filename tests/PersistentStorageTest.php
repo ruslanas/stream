@@ -9,12 +9,27 @@ use Stream\Test\DatabaseTestCase;
 use Stream\PersistentStorage;
 
 class PersistentStorageTest extends DatabaseTestCase {
-    
+
     public function setUp() {
-        
+
         parent::setUp();
 
         $this->storage = new PersistentStorage($this->pdo);
+
+        $this->storage->inject('structure', [
+            'posts',
+
+            ['id', PDO::PARAM_INT],
+            ['title', PDO::PARAM_STR],
+            ['body', PDO::PARAM_STR],
+            ['deleted', PDO::PARAM_BOOL],
+
+            ['users as user', [
+                ['id', PDO::PARAM_INT],
+                ['email', PDO::PARAM_STR],
+                ['deleted', PDO::PARAM_BOOL],
+            ], 'user.id = posts.user_id'],
+        ]);
 
         $this->storage->inject('table', [
             'posts' => [
@@ -33,7 +48,7 @@ class PersistentStorageTest extends DatabaseTestCase {
     }
 
     public function testRead() {
-        
+
         $data = $this->storage->read(1);
         $this->assertObjectHasAttribute('title', $data);
 
@@ -52,6 +67,6 @@ class PersistentStorageTest extends DatabaseTestCase {
     public function testRemove() {
 
         $this->assertEquals(1, $this->storage->remove(1)->id);
-    
+
     }
 }
