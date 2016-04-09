@@ -42,7 +42,10 @@ class Api extends \Stream\RestController {
 
     final public function get() {
 
-        return $this->model->read(NULL, isset($_SESSION['uid']) ? $_SESSION['uid'] : NULL);
+        return $this->model->search([
+            'user_id' => $this->session->get('uid'),
+            'delegate_id' => $this->session->get('uid')
+        ], true);
 
     }
 

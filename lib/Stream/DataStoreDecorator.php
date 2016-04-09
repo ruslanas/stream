@@ -12,7 +12,14 @@ class DataStoreDecorator extends PersistentStorage implements \Countable, \Itera
         parent::__construct($pdo);
     }
 
-    public function count() { return count($this->_data); }
+    public function count() {
+    
+        if(is_array($this->_data)) { return count($this->data); }
+        if(is_object($this->_data)) { return 1; }
+        
+        return 0;
+    
+    }
 
     public function next() { $this->_idx++; }
  
@@ -44,8 +51,8 @@ class DataStoreDecorator extends PersistentStorage implements \Countable, \Itera
     /**
      * @return \Stream\DataStoreDecorator
      */
-    public function search($data = []) {
-        $this->_data = parent::search($data);
+    public function search($data = [], $_ = NULL) {
+        $this->_data = parent::search($data, $_);
         return $this;
     }
 

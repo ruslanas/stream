@@ -41,7 +41,7 @@
             <div class="panel-heading">
                 <div class="row">
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         
                         <strong>#{{task.id}}</strong>
 
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="col-sm-6"><strong>{{task.title}}</strong></div>
-                    <div class="col-sm-3 text-right">
+                    <div class="col-sm-4 text-right">
 
                         <form class="form-inline" ng-show="task.focus == 1">
                             <div class="form-group">
@@ -70,7 +70,7 @@
                                 ng-click="section.delegate(task, task.delegate.email)"
                                 class="btn btn-xs btn-info">Delegate</button>
                         </form>
-                        <span ng-show="task.focus == 0 && task.delegate.email">to <strong>{{task.delegate.email}}</strong></span>
+                        <span ng-show="task.focus == 0 && task.delegate.email"><strong>{{task.delegate.email}}</strong></span>
                         <button ng-show="task.focus == 0" class="btn btn-xs btn-danger"
                             ng-click="section.delete(task)">
                             <i class="glyphicon glyphicon-remove"></i> Dismiss</button>
@@ -79,10 +79,12 @@
             </div>
 
             <div class="panel-body">
-                <div class="col-sm-offset-3 col-sm-6">{{task.description ? task.description : task.title}}</div>
-                <div class="col-sm-3">
-                    by <strong>{{task.user.email}}</strong>
-                    <br/>{{task.created}}
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-6">{{task.description ? task.description : task.title}}</div>
+                    <div class="col-sm-4">
+                        by <strong>{{task.user.email}}</strong>
+                        <br/>{{task.created}}
+                    </div>
                 </div>
             </div>
 

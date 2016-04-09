@@ -195,23 +195,34 @@ class PersistentStorage extends Injectable {
 
     }
 
-    public function search($options) {
+    public function search($options, $_ = NULL) {
 
         if(empty($options)) {
             return [];
         }
 
-        $tableName = $this->_get_table_name();
+        $sql = \Stream\Util\QueryBuilder::select($this->structure);
 
-        $sql = "SELECT * FROM `{$tableName}` WHERE ";
+        $where = " WHERE NOT `{$this->structure[0]}`.deleted AND ";
+
+        $sql .= $where;
 
         $filter = [];
 
+        // there's a room for improvement
         foreach($options as $col => $value) {
-            $filter[] = "$col = :$col";
+
+            if($col === 'id') {
+                $filter[] = "`{$this->structure[0]}`.id = :id";
+            } else {
+                $filter[] = "$col = :$col";
+            }
+        
         }
 
-        $sql .= join(' AND ', $filter);
+        $str = $_ ? ' OR ' : ' AND ';
+
+        $sql .= join($str, $filter);
 
         $statement = $this->db->prepare($sql);
 
@@ -233,7 +244,7 @@ class PersistentStorage extends Injectable {
         $data = [];
 
         while($row = $statement->fetch()) {
-            $data[] = $row;
+            $data[] = \Stream\Util\QueryBuilder::reshape($this->structure, $row);
         }
 
         return $data;

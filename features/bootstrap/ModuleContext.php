@@ -64,34 +64,15 @@ class ModuleContext extends MinkContext implements Context, SnippetAcceptingCont
      */
     public function thereIsTaskWithTitleAndId($arg1, $arg2) {
 
-        $task = new Task($this->pdo);
+        $task = new \modules\Tasks\Decorators\Task($this->pdo);
 
-        $found = $task->search([
-            'title' => $arg1,
-            'id' => $arg2
-        ]);
-
-        if(!$found) {
-
-            $found = $task->create([
-                'title' => $arg1,
-                'id' => $arg2,
-                'user_id' => $this->user->id
-            ]);
-
-        } elseif($found[0]->user_id === NULL) {
-            $task->update($found[0]->id, [
-                'user_id' => $this->user->id
-            ]);
-            $found = $task->search([
-                'title' => $arg1,
-                'id' => $arg2
-            ]);
+        if(count($task->read($arg2))) {
+            $task->update(NULL, ['title'=>$arg1, 'user_id' => $this->user->id]);
         } else {
-            $found = $found[0];
+            $task->create(['id'=>$arg2, 'title'=>$arg1, 'user_id' => $this->user->id]);
         }
 
-        UT::assertEquals(10, $found->id);
+        UT::assertEquals(10, $task->id);
 
     }
 
