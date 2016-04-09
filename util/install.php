@@ -27,6 +27,12 @@ try {
     $e->getMessage();
 }
 
+$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__.DIRECTORY_SEPARATOR.'webroot'));
+
+foreach($iterator as $item) {
+    chmod($item, 0755);
+}
+
 unlink('latest.tar');
 unlink($fname);
 

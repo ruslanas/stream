@@ -41,7 +41,7 @@
             <div class="panel-heading">
                 <div class="row">
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         
                         <strong>#{{task.id}}</strong>
 
@@ -55,7 +55,7 @@
 
                     </div>
 
-                    <div class="col-sm-6"><strong>{{task.title}}</strong></div>
+                    <div class="col-sm-5"><strong>{{task.title}}</strong></div>
                     <div class="col-sm-4 text-right">
 
                         <form class="form-inline" ng-show="task.focus == 1">
@@ -80,7 +80,7 @@
 
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-offset-2 col-sm-6">{{task.description ? task.description : task.title}}</div>
+                    <div class="col-sm-offset-3 col-sm-5">{{task.description ? task.description : task.title}}</div>
                     <div class="col-sm-4">
                         by <strong>{{task.user.email}}</strong>
                         <br/>{{task.created}}
