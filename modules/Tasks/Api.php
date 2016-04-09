@@ -46,7 +46,21 @@ class Api extends \Stream\RestController {
 
     }
 
+    private function delegate($id, $email) {
+        
+        $task = (new Decorators\Task($this->app->pdo))->read($id);
+        $task->delegate($email)->update(NULL, ['focus' => 0]);
+
+        return $task->current();
+    
+    }
+
     final public function post() {
+
+        if($this->request->getGet('action') === 'delegate') {
+            $email = $this->request->getGet('email');
+            return $this->delegate($this->param('id'), $email);
+        }
 
         $uid = $_SESSION['uid'];
 

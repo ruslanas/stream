@@ -67,7 +67,7 @@
 
                             </div>
                             <button ng-disabled="task.delegate.email ? false : true"
-                                ng-click="section.delegate(task)"
+                                ng-click="section.delegate(task, task.delegate.email)"
                                 class="btn btn-xs btn-info">Delegate</button>
                         </form>
                         <span ng-show="task.focus == 0 && task.delegate.email">to <strong>{{task.delegate.email}}</strong></span>

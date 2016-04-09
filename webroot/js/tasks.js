@@ -27,8 +27,8 @@ angular.module('tasks', [
     }
 
     // delegate to admin for now
-    this.delegate = function(task) {
-        task.$save({delegate_id: 1, focus: 0});
+    this.delegate = function(task, email) {
+        task.$delegate({email: email, focus: 0});
     }
 
     this.focus = function(task) {
@@ -54,7 +54,12 @@ angular.module('tasks', [
 
 }]).factory('Task', ['$resource', function($resource) {
 
-    return $resource('/tasks/:id.json', {id: "@id"});
+    return $resource('/tasks/:id.json', {id: "@id"}, {
+        delegate: {
+            method: 'POST',
+            params: {'action': 'delegate' }
+        }
+    });
 
 }]).config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/tasks', {

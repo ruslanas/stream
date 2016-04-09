@@ -38,16 +38,17 @@ describe('Tasks Tab', function() {
 
     it("should delegate", function() {
 
+        var email = parseInt(Math.random() * 10000) + '_protractor@example.com';
 
         element(by.linkText('Tasks')).click();
 
         var task = element(by.className('panel-primary'));
 
-        task.element(by.css('.input-xs')).sendKeys("admin@stream.wri.lt");
+        task.element(by.css('.input-xs')).sendKeys(email);
 
         task.element(by.css('.btn-info')).click();
 
-        expect(element(by.className('panel-info')).getText()).toContain('admin@stream.wri.lt');
+        expect(element(by.className('panel-info')).getText()).toContain(email);
 
     });
 

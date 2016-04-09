@@ -31,7 +31,9 @@ class Request {
         return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
     }
 
-    public function getGet() {
-        return $_GET;
+    public function getGet($key = NULL) {
+        if($key === NULL) { return $_GET; }
+        if(isset($_GET[$key])) { return $_GET[$key]; }
+        return NULL;
     }
 }
