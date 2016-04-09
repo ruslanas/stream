@@ -2,7 +2,7 @@
 
 namespace modules\Task\tests;
 
-use modules\Tasks\model\Task;
+use modules\Tasks;
 
 class TaskTest extends \Stream\Test\DatabaseTestCase {
 
@@ -10,7 +10,7 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
         parent::setUp();
 
-        $this->task = new Task($this->pdo);
+        $this->task = new Tasks\model\Task($this->pdo);
 
     }
 
@@ -90,10 +90,24 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
     public function testDelegate() {
 
-        $task = new \modules\Tasks\Decorators\Task($this->pdo);
-        $task->read(2)->delegate("behat@stream.wri.lt");
+        $task = (new Tasks\Decorators\Task($this->pdo))
+            
+            ->read(2)->delegate("behat@stream.wri.lt");
         
         $this->assertEquals(3, $task->delegate->id);
+
+    }
+
+    public function testDelegateNewUser() {
+
+        // it should create new user
+        $task = (new Tasks\Decorators\Task($this->pdo))
+            
+            ->read(2)
+            ->delegate("admin@stream.wri.lt");
+
+        $this->assertEquals(4, $task->delegate->id);
+        $this->assertEquals('admin@stream.wri.lt', $task->delegate->email);
 
     }
 

@@ -6,6 +6,7 @@ Feature: Tasks
     As project owner
 	I need to keep track of all tasks
 
+    @completed
     Scenario: Delegation
 
         Given log in with email "behat@stream.wri.lt" and password "foo"

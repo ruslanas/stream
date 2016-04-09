@@ -41,11 +41,21 @@ class Task extends \Stream\DataStoreDecorator {
 
     ];
 
+    /**
+     * @param string $email
+     */
     public function delegate($email) {
     
-        $user = new \modules\Users\Decorators\User($this->db);
-        $this->update(NULL, ['delegate_id' => $user->search(['email' => $email])[0]->id]);
+        $user = (new \modules\Users\Decorators\User($this->db))->search(['email' => $email]);
+
+        if($user->current() === NULL) {
+            $user->create(['email'=>$email]);
+        }
+
+        $this->update(NULL, ['delegate_id' => $user->current()->id]);
     
+        return $this;
+
     }
 
 }

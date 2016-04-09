@@ -166,6 +166,8 @@ class PersistentStorage extends Injectable {
 
         $id = $this->db->lastInsertId();
 
+        if(empty($id)) { throw new \Exception('Failed to create record'); }
+
         return $this->read($id);
     }
 

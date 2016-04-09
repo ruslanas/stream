@@ -39,4 +39,25 @@ class DataStoreDecoratorTest extends \Stream\Test\DatabaseTestCase {
         $this->assertEquals('admin@example.com', $this->task->delegate->email);
     }
 
+    public function testCreate() {
+        
+        $this->task->create(['title' => 'New Task']);
+        $this->assertEquals(3, $this->task->id);
+        $this->assertEquals('New Task', $this->task->title);
+
+    }
+
+    public function testTraversable() {
+    
+        $this->task->read();
+        
+        $prev = '';
+        
+        foreach($this->task as $next) {
+            $this->assertNotEquals($prev, $next->title);
+            $prev = $next->title;
+        }
+    
+    }
+
 }
