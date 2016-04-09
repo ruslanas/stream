@@ -88,4 +88,13 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
     }
 
+    public function testDelegate() {
+
+        $task = new \modules\Tasks\Decorators\Task($this->pdo);
+        $task->read(2)->delegate("behat@stream.wri.lt");
+        
+        $this->assertEquals(3, $task->delegate->id);
+
+    }
+
 }

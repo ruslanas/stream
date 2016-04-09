@@ -33,7 +33,7 @@ class PersistentStorage extends Injectable {
      * Read from database
      * @param int|NULL $id
      * @param int|NULL $uid
-     * @return mixed
+     * @return \stdClass|array
      */
     public function read($id = NULL, $uid = NULL) {
 
@@ -96,7 +96,7 @@ class PersistentStorage extends Injectable {
     /**
      * Returns deleted record or FALSE
      * @param int $id
-     * @return stdClass|FALSE
+     * @return \stdClass|FALSE
      */
     public function delete($id, $uid = NULL) {
 
@@ -153,6 +153,11 @@ class PersistentStorage extends Injectable {
 
     }
 
+    /**
+     * Insert record with associative $data
+     * @param array $data
+     * @return \stdClass
+     */
     public function create($data) {
 
         $statement = \Stream\Util\QueryBuilder::update($this->db, $this->structure, $data);
@@ -164,6 +169,12 @@ class PersistentStorage extends Injectable {
         return $this->read($id);
     }
 
+    /**
+     * Update record $id with associative $data
+     * @param int $id
+     * @param array $data
+     * @return \stdClass
+     */
     public function update($id, $data) {
 
         $statement = \Stream\Util\QueryBuilder::update($this->db, $this->structure, $data, $id);

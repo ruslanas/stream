@@ -116,6 +116,10 @@ class ModuleContext extends MinkContext implements Context, SnippetAcceptingCont
      */
     public function delegateTo($arg1) {
 
+
+        $this->task = new Task(['title' => 'task']);
+        $this->task->delegate($arg1);
+
         $user = new User($this->pdo);
 
         $this->delegate = $user->search([

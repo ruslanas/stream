@@ -6,10 +6,10 @@ angular.module('stream', [
 
     'ui.bootstrap',
 
-    'DataGrid',
+    // 'DataGrid',
 
-    'client',
-    'messages',
+    // 'client',
+    // 'messages',
     'tasks',
     'users'
 
