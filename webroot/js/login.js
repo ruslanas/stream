@@ -9,6 +9,8 @@ angular.module('stream.user', [
 
     this.user = $rootScope.user ? $rootScope.user : {};
 
+    this.error = {};
+
     var self = this;
 
     if($rootScope.authorized) {
@@ -27,7 +29,7 @@ angular.module('stream.user', [
 
             // display system error
             if(res.error) {
-                $rootScope.setError(res.error, 'danger');
+                self.error = res.error;
                 return;
             }
 
@@ -48,6 +50,11 @@ angular.module('stream.user', [
         var user = new User(self.user);
 
         user.$login(function(res) {
+
+            if(res.error) {
+                self.error = res.error;
+                return false;
+            }
 
             $rootScope.authorized = true;
             $rootScope.user = res;

@@ -32,6 +32,11 @@ class User extends \Stream\PersistentStorage {
         parent::__construct($pdo);
     }
 
+    /**
+     * Check if user data is valid and sets error messages if not valid
+     * @param array $data
+     * @return bool TURE if all fields valid, otherwise FALSE
+     */
     public function valid(Array $data = NULL) {
 
         $this->_errors = [];
@@ -41,7 +46,7 @@ class User extends \Stream\PersistentStorage {
                 $this->_errors['email'] = 'Email invalid';
             }
         } else {
-            $this->_errors['email'] = 'Can\'t be empty';
+            $this->_errors['email'] = 'Must be valid email address';
         }
 
         if(!empty($data['password']) && !empty($data['password2'])) {

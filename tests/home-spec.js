@@ -6,7 +6,7 @@ describe('Home page', function() {
 
     it('should have a huge button', function() {
 
-        var item = element(by.css('.btn-lg'));
+        var item = element(by.css('.btn-primary'));
         expect(item.getText()).toContain('Join');
 
         item.click();

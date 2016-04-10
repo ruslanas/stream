@@ -51,7 +51,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
         }
 
         if($this->user->exists($data)) {
-            return $this->_error("Such user is already registered");
+            return (object)['error'=> ['email' => 'User is already registered <a href="/login">Sign In</a>']];
         }
 
         return $this->user->add($data);
@@ -100,7 +100,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
             return $this->user->read($this->app->session->get('uid'));
         }
 
-        return (object)['error' => '_'];
+        return (object)['error' => ['password' => 'Retype password', 'email' => 'Is email spelled correctly?']];
 
     }
 

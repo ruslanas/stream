@@ -34,7 +34,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         $this->controller->inject('params', ['action' => 'login']);
         $this->user->method('authenticate')->willReturn(false);
         $out = $this->controller->post();
-        $this->assertEquals('_', $out->error);
+        $this->assertObjectHasAttribute('error', $out);
     }
 
 }

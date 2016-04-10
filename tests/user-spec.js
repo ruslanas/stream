@@ -24,4 +24,19 @@ describe('New User', function() {
         expect(element(by.id('email')).getAttribute('value')).toEqual(email);
 
     });
+
+    it('should provide validation errors', function() {
+    
+        var email = 'email@email';
+        var password = 'password';
+    
+        element(by.linkText('Register')).click();
+        element(by.css('[type=email]')).sendKeys(email);
+        element(by.css('[type=password]')).sendKeys(password);
+        element(by.css('.btn-primary')).click();
+
+        expect(element(by.css('.help-block')).getText()).toContain('Email invalid');
+    
+    });
+
 });
