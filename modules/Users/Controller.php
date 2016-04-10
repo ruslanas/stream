@@ -26,35 +26,47 @@ class Controller extends PageController implements DomainControllerInterface, Re
         return ['error'=>$message];
     }
 
+    public function __construct($params = NULL, \Stream\App $app = NULL) {
+
+        parent::__construct($params, $app);
+
+        $this->user = new User(\Stream\App::getConnection());
+
+    }
+
     public function get() {}
+
+    private function register($data) {
+
+        $data = $this->request->getPostData();
+
+        if($data === NULL) {
+            return $this->_error("No data");
+        }
+
+        if(!$this->user->valid($data)) {
+
+            return $this->_error($this->user->error());
+
+        }
+
+        if($this->user->exists($data)) {
+            return $this->_error("Such user is already registered");
+        }
+
+        return $this->user->add($data);
+
+    }
 
     final public function post() {
 
         if($this->param('action') === 'login') {
-            if($this->user->authenticate($this->request)) {
-                return $this->user->read($this->app->session->get('uid'));
-            }
+            return $this->login();
         }
 
         if($this->param('action') === 'register') {
 
-            $data = $this->request->getPostData();
-
-            if($data === NULL) {
-                return $this->_error("No data");
-            }
-
-            if(!$this->user->valid($data)) {
-
-                return $this->_error($this->user->error());
-
-            }
-
-            if($this->user->exists($data)) {
-                return $this->_error("Such user is already registered");
-            }
-
-            return $this->user->add($data);
+            return $this->register($this->request->getPostData());
 
         }
 
@@ -75,70 +87,20 @@ class Controller extends PageController implements DomainControllerInterface, Re
         return false;
     }
 
-    public function __construct($params = NULL, \Stream\App $app = NULL) {
-
-        parent::__construct($params, $app);
-
-        $this->user = new User(\Stream\App::getConnection());
-
-        $this->templates->addFolder('user', __DIR__.DIRECTORY_SEPARATOR.'templates');
-
-    }
-
-    final public function index() {
-        return $this->login();
-    }
-
-    final public function add() {
-
-        if($this->user->authenticate($this->request)) {
-
-            return $this->redirect('/');
-
-        }
-
-        $data = $this->request->post();
-
-        if($data && $this->user->exists($data)) {
-
-            return $this->redirect('/user/add');
-
-        }
-
-        if($this->user->valid($data)) {
-
-            $this->user->add($data);
-
-            return $this->redirect('/user/login');
-
-        }
-
-        return $this->templates->render('user::add', []);
-
-    }
-
-    final public function logout() {
+    private function logout() {
 
         unset($_SESSION['uid']);
-
-        $this->redirect('/user/login');
+        return true;
 
     }
 
-    final public function login() {
+    private function login() {
 
         if($this->user->authenticate($this->request)) {
-
-            return $this->redirect('/');
-
+            return $this->user->read($this->app->session->get('uid'));
         }
 
-        // required by template
-        $data = array_merge(['email' => ''], $this->user->data);
-
-        return $this->templates->render('user::login', [
-            'data' => $data
-        ]);
+        return (object)['error' => '_'];
 
     }
 

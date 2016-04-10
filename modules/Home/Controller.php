@@ -11,32 +11,24 @@ use Stream\PageController;
 
 class Controller extends PageController {
 
-    private $model;
-
     public function __construct($params = NULL, $app = NULL) {
 
-        parent::__construct($params, $app);
-
-        $this->templates->addFolder('stream', __DIR__.DIRECTORY_SEPARATOR.'templates');
-
+        $this->_stylesheets[] = '/css/styles.css';
+        
         $this->_scripts = array_merge($this->_scripts, [
 
+            '/components/angular-sanitize/angular-sanitize.min.js',
             "/js/app.js",
 
             '/js/tasks.js',
             '/js/login.js',
 
-            // "/js/stream.js",
-            // "/js/client.js",
-            // "/js/directives/data-grid.js"
-
         ]);
 
-        $this->templates->addData([
+        parent::__construct($params, $app);
 
-            'scripts' => $this->_scripts
+        $this->templates->addFolder('stream', __DIR__.DIRECTORY_SEPARATOR.'templates');
 
-        ]);
     }
 
     final public function index() {

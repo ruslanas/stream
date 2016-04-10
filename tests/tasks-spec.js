@@ -1,7 +1,7 @@
 describe('Tasks Tab', function() {
 
     beforeEach(function() {
-        browser.get('http://localhost:9001/tasks');
+        browser.get('http://localhost:9001');
     });
 
     it('needs to login', function() {

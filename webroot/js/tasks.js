@@ -1,9 +1,7 @@
-angular.module('tasks', [
+angular.module('stream.tasks', [
 
     'ngResource',
     'ngRoute',
-
-    'ui.bootstrap'
 
 ]).controller('TasksController', [
 
@@ -18,7 +16,9 @@ angular.module('tasks', [
     this.add = function(task) {
 
         task.focus = 1;
-
+        
+        if(!task.description) { task.description = task.title; }
+        
         new Task(task).$save(function(res) {
             self.tasks.unshift(res);
             self.task = angular.copy(this.tpl);
@@ -36,6 +36,11 @@ angular.module('tasks', [
         task.focus = (task.focus == 0) ? 1 : 0;
         task.$save();
 
+    }
+
+    this.complete = function(task) {
+        task.completed = 1;
+        task.$save();
     }
 
     this.delete = function(task) {

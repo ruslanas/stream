@@ -3,24 +3,30 @@ angular.module('stream', [
     'ngResource',
     'ngRoute',
     'ngAnimate',
+    'ngSanitize',
 
     'ui.bootstrap',
 
-    // 'DataGrid',
-
-    // 'client',
-    // 'messages',
-    'tasks',
-    'users'
+    'stream.tasks',
+    'stream.user'
 
 ]).controller('AppController', [
-    '$scope', '$location', '$rootScope', function($scope, $location, $rootScope) {
+
+    '$scope', '$location', '$rootScope', 'User',
+
+    function($scope, $location, $rootScope, User) {
+
+    User.login(function(res) {
+        if(res.error) { return ; };
+        $rootScope.authorized = true;
+    });
 
     this.currentMenuItem = '/';
 
     this.errors = [];
 
     var self = this;
+
     this.dismiss = function($index) {
         self.errors.splice($index, 1);
     };
@@ -52,7 +58,7 @@ angular.module('stream', [
 
     '$rootScope', '$location', function($rootScope, $location) {
 
-    if($rootScope.authorized) {
+    if($rootScope.authorized === true) {
         $location.url('/tasks');
     }
 
@@ -66,26 +72,34 @@ angular.module('stream', [
 
 }]).config([
 
-    '$locationProvider', '$routeProvider',
+    '$locationProvider', '$routeProvider', '$httpProvider',
 
-    function($locationProvider, $routeProvider) {
+    function($locationProvider, $routeProvider, $httpProvider) {
 
     $locationProvider.html5Mode(true);
+
+    $httpProvider.interceptors.push(function($q, $rootScope) {
+
+        return {
+
+            responseError: function(r) {
+                
+                if(r.status === 401) {
+                    $rootScope.authorized = false;
+                }
+
+                return $q.reject(r);
+            
+            }
+        
+        }
+    
+    });
+
     $routeProvider.when('/', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController',
         controllerAs: 'section'
     });
-
-}]).run([
-
-    '$rootScope', 'User', '$location', function($rootScope, User, $location) {
-
-    User.login(function(res) {
-
-        $rootScope.authorized = true;
-        $rootScope.user = res;
-
-    }, function(res) { });
 
 }]);

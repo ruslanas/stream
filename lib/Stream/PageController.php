@@ -30,9 +30,7 @@ class PageController extends Controller implements DomainControllerInterface {
 
     protected $_stylesheets = [
 
-        "/components/bootstrap/dist/css/bootstrap.min.css",
-    
-        "/css/styles.css"
+        "/components/bootstrap/dist/css/bootstrap.css",
     
     ];
 

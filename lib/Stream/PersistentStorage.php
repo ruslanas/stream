@@ -222,7 +222,7 @@ class PersistentStorage extends Injectable {
 
         $str = $_ ? ' OR ' : ' AND ';
 
-        $sql .= join($str, $filter);
+        $sql .= '('.join($str, $filter).')';
 
         $statement = $this->db->prepare($sql);
 

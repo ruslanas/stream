@@ -19,6 +19,7 @@ class Task extends \Stream\PersistentStorage {
         ['modified', PDO::PARAM_STR],
         ['delegate_id', PDO::PARAM_INT],
         ['user_id', PDO::PARAM_INT],
+        ['completed', PDO::PARAM_BOOL],
 
         ['deleted', PDO::PARAM_BOOL], // record will be marked as deleted
 

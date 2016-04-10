@@ -1,6 +1,8 @@
-angular.module('users', [
+angular.module('stream.user', [
+
     'ngResource',
     'ngRoute',
+
 ]).controller('LoginController',
 
     ['User', '$rootScope', '$location', function(User, $rootScope, $location) {
