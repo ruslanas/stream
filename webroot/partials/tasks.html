@@ -63,6 +63,7 @@
                         <form class="form-inline" ng-show="task.focus == 1 && task.completed != 1">
                             <div class="form-group">
                                 <input type="text"
+                                    uib-typeahead="user for user in section.getUsers($viewValue)"
                                     ng-model="task.delegate.email"
                                     placeholder="Email or user name" 
                                     class="form-control input-xs"/>

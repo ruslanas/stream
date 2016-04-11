@@ -1,5 +1,7 @@
 <?php
 
+use \Stream\Util\QueryBuilder;
+
 class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
@@ -23,6 +25,30 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
             ], 'delegate.id = tasks.delegate_id']
 
         ];
+    }
+
+    public function testFilter() {
+    
+        $statement = QueryBuilder::filter($this->dsl,
+            
+            [' ANd ',
+                ['liKe', 'title', '%impl%'],
+                [' oR',
+                    ['= ', 'tasks.user_id', 1],
+                    ['delegate_id', 2],
+                    ['lIke', 'user.email', 'admin%']]
+            
+            ], \Stream\App::getConnection('test_stream')
+
+        );
+
+        $statement->execute();
+
+        $expected = "WHERE ((title LIKE ?) AND ((tasks.user_id = ?) OR (delegate_id = ?) OR (user.email LIKE ?)))";
+        
+        $this->assertContains($expected, $statement->queryString);
+        $this->assertEquals(1, $statement->rowCount());    
+    
     }
 
     public function testSelect() {

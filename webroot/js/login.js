@@ -78,6 +78,12 @@ angular.module('stream.user', [
             }
         },
 
+        search: {
+            method: 'GET',
+            isArray: true,
+            params: {action: 'search'}
+        },
+
         logout: {
             method: 'POST',
             params: {action: 'logout'}

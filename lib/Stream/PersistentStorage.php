@@ -195,6 +195,21 @@ class PersistentStorage extends Injectable {
 
     }
 
+    public function filter($f) {
+        
+        if(empty($f)) { return []; }
+
+        $st = \Stream\Util\QueryBuilder::filter($this->structure, $f, $this->db);
+        $st->execute();
+        $arr = [];
+        while($r = $st->fetch()) { $arr[] = \Stream\Util\QueryBuilder::reshape($this->structure, $r); }
+        return $arr;
+    }
+
+    /**
+     * @param array $options
+     * @param bool $_
+     */
     public function search($options, $_ = NULL) {
 
         if(empty($options)) {
@@ -212,6 +227,18 @@ class PersistentStorage extends Injectable {
         // there's a room for improvement
         foreach($options as $col => $value) {
 
+            //[$col, $type]
+            //[$op => [$col, $type]]
+
+            if(is_array($value)) {
+
+                reset($value);
+                $col = key($value);
+                $filter[] = "$col LIKE :$col";
+                continue;
+            
+            }
+
             if($col === 'id') {
                 $filter[] = "`{$this->structure[0]}`.id = :id";
             } else {
@@ -228,11 +255,13 @@ class PersistentStorage extends Injectable {
 
         foreach($options as $col => $value) {
 
-            $type = \PDO::PARAM_STR;
-
             if(is_array($value)) {
 
-                list($value, $type) = $value;
+                reset($value);
+                $col = key($value);
+
+                list($value, $type) = $value[$col];
+                $value = $value === NULL ? '' : $value;
 
             }
 

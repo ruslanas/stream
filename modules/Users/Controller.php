@@ -34,7 +34,18 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
     }
 
-    public function get() {}
+    final public function get() {
+        
+        $user = (new Decorators\User($this->app->pdo))
+            ->filter(['like', 'email', $this->request->getGet('email').'%']);
+        
+        $out = [];
+        foreach($user as $u) {
+            $out[] = $u->email;
+        }
+
+        return $out;
+    }
 
     private function register($data) {
 

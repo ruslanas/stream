@@ -14,8 +14,27 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
     }
 
+
+    public function testSearchComplex() {
+    
+        $found = $this->task->filter(
+            
+            // inst ::= [op, [col|inst, val|[col, val]], [inst]]
+
+            [' and ',
+                [' like ', 'tasks.title', '%implement%'],
+                [' or ', ['tasks.user_id', 1], ['delegate_id', 1]]
+            ]
+        
+        );
+
+        $this->assertEquals(1, count($found));
+
+    }
+
     public function testSearchByTitle() {
-        $found = $this->task->search(['title' => 'Implement new feature']);
+        
+        $found = $this->task->filter(['title', 'Implement new feature']);
 
         $this->assertGreaterThan(0, count($found));
         $this->assertObjectHasAttribute('id', $found[0]);
@@ -25,9 +44,9 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
     public function testSearchAnd() {
 
-        $found = $this->task->search([
-            'id' => [1, \PDO::PARAM_INT],
-            'title' => ['implement new feature', \PDO::PARAM_STR]
+        $found = $this->task->filter(['and',
+            ['tasks.id', 1],
+            ['like', 'tasks.title', '%new%']
         ]);
 
         $this->assertEquals('Implement new feature', $found[0]->title);
@@ -35,7 +54,7 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
     }
 
     public function testSearchEmpty() {
-        $found = $this->task->search([]);
+        $found = $this->task->filter([]);
         $this->assertEquals(0, count($found));
     }
 

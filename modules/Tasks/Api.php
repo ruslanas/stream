@@ -42,10 +42,15 @@ class Api extends \Stream\RestController {
 
     final public function get() {
 
-        return $this->model->search([
-            'user_id' => $this->session->get('uid'),
-            'delegate_id' => $this->session->get('uid')
-        ], true);
+        return $this->model->filter(
+            
+            ['and',
+                ['or',
+                    ['user_id', $this->session->get('uid')],
+                    ['delegate_id', $this->session->get('uid')]
+                ],
+                ['tasks.deleted', 0]
+            ]);
 
     }
 

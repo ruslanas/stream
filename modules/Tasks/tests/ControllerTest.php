@@ -83,7 +83,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetRest() {
 
-        $this->model->method('search')->willReturn([(object)['id'=>1]]);
+        $this->model->method('filter')->willReturn([(object)['id'=>1]]);
         $out = $this->api->get();
         $this->assertEquals(1, count($out));
 

@@ -56,6 +56,11 @@ class DataStoreDecorator extends PersistentStorage implements \Countable, \Itera
         return $this;
     }
 
+    public function filter($filter) {
+        $this->_data = parent::filter($filter);
+        return $this;
+    }
+
     public function read($id = NULL, $uid = NULL) {
         $this->_data = parent::read($id);
         if(is_array($this->_data)) {

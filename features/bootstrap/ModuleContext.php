@@ -109,9 +109,7 @@ class ModuleContext extends MinkContext implements Context, SnippetAcceptingCont
      */
     public function thereIsUserWithEmail($arg1) {
         $user = new User($this->pdo);
-        $found = $user->search([
-            'email' => $arg1
-        ]);
+        $found = $user->filter(['email', $arg1]);
 
         if(count($found) === 0) {
             $user->create(['email' => $arg1]);

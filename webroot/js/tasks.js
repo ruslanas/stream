@@ -5,13 +5,21 @@ angular.module('stream.tasks', [
 
 ]).controller('TasksController', [
 
-    'Task', '$rootScope', function(Task, $rootScope) {
+    'Task', '$rootScope', 'User', function(Task, $rootScope, User) {
 
     this.tasks = Task.query();
     this.tpl = {tilte: '', description: '', focus: 1};
     this.task = angular.copy(this.tpl);
 
     var self = this;
+
+    this.getUsers = function($viewValue) {
+        
+        return User.search({email: $viewValue}).$promise.then(function(res) {
+            return res;
+        });
+
+    };
 
     this.add = function(task) {
 
@@ -53,7 +61,7 @@ angular.module('stream.tasks', [
             $rootScope.setError('Task dismissed', 'info');
 
         }, function(res) {
-            alert(res.data);
+            $rootScope.setError('Unexpected error occured', 'danger');
         });
     };
 

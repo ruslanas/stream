@@ -29,6 +29,46 @@ protected $structure = [
  */
 class QueryBuilder {
 
+/**
+    [' AND ',
+        ['liKe', 'title', '%test%'],
+        [' oR', ['= ', 'task.user_id', 1], ['delegate_id', 1]]
+    ]
+*/
+    static private function parse($val, &$values, $pos = 0) {
+    
+        if(!is_array($val)) { 
+            if($pos === 1) return $val ; else { $values[] = $val; return '?'; }
+        }
+
+        if(count($val) == 2) { array_unshift($val, ' = '); }
+
+        $tk = [];
+
+        for($i=1;$i<count($val);$i++) { $tk[] = self::parse($val[$i], $values, $i) ; }
+
+        $str = join(' '.strtoupper(trim($val[0])).' ', $tk);
+
+        return '('.$str.')';
+    
+    }
+
+    static public function filter(array $dsl, array $filter, \PDO $pdo) {
+        
+        $values = [];
+        
+        $q = self::select($dsl).' WHERE '.self::parse($filter, $values);
+        
+        $statement = $pdo->prepare($q);
+        
+        for($i=0;$i<count($values);$i++) {
+            $statement->bindParam($i+1, $values[$i]);
+        }
+        
+        return $statement;
+
+    }
+
     static public function select($dsl) {
 
         $table = $dsl[0];

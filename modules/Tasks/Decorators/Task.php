@@ -47,7 +47,7 @@ class Task extends \Stream\DataStoreDecorator {
      */
     public function delegate($email) {
     
-        $user = (new \modules\Users\Decorators\User($this->db))->search(['email' => $email]);
+        $user = (new \modules\Users\Decorators\User($this->db))->filter(['email', $email]);
 
         if($user->current() === NULL) {
             $user->create(['email'=>$email]);

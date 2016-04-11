@@ -67,7 +67,7 @@ class User extends \Stream\PersistentStorage {
 
     public function exists($data) {
 
-        return !!$this->search(['email' => $data['email']]);
+        return !!$this->filter(['email', $data['email']]);
 
     }
 
