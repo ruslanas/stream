@@ -5,7 +5,15 @@ angular.module('stream.tasks', [
 
 ]).controller('TasksController', [
 
-    'Task', '$rootScope', 'User', function(Task, $rootScope, User) {
+    'Task', '$rootScope', 'User', '$routeParams',
+    function(Task, $rootScope, User, $routeParams) {
+
+    if($routeParams.key !== undefined) {
+        User.login({key: $routeParams.key}, function(res) {
+            $rootScope.user = res;
+            $rootScope.authorized = true;
+        });
+    }
 
     this.tasks = Task.query();
     this.tpl = {tilte: '', description: '', focus: 1};
@@ -76,6 +84,11 @@ angular.module('stream.tasks', [
 
 }]).config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/tasks', {
+        templateUrl: 'partials/tasks.html',
+        controller: 'TasksController',
+        controllerAs: 'section'
+    });
+    $routeProvider.when('/tk/:key', {
         templateUrl: 'partials/tasks.html',
         controller: 'TasksController',
         controllerAs: 'section'

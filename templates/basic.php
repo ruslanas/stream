@@ -30,7 +30,7 @@
                         <li ng-class="{active: (mi.path === sys.currentMenuItem)}"
                             ng-repeat="mi in sys.menuItems"
                             ng-show="mi.authorize ? authorized : !authorized">
-                            <a href="{{mi.path}}">{{mi.title}}</a>
+                            <a href="{{mi.path}}" ng-bind="mi.title"></a>
                         </li>
 
                     </ul>

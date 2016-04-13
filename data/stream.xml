@@ -14,6 +14,7 @@
         email="info@example.com"
         password="$2y$10$zYL4GQFW/Gc.oc7OPG4Oc.c01RQhvb2o5iqrQ0MojuKJ4MkpdkQSu"
         deleted="0"
+        access_key="a7f33d97c25bf4c2b478"
         group="manager"></users>
 
     <users id="3"

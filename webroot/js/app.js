@@ -6,6 +6,7 @@ angular.module('stream', [
     'ngSanitize',
 
     'ui.bootstrap',
+    'wiz.markdown',
 
     'stream.tasks',
     'stream.user'

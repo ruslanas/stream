@@ -43,7 +43,7 @@ class Api extends \Stream\RestController {
     final public function get() {
 
         return $this->model->filter(
-            
+
             ['and',
                 ['or',
                     ['user_id', $this->session->get('uid')],
@@ -70,7 +70,7 @@ class Api extends \Stream\RestController {
             return $this->delegate($this->param('id'), $email);
         }
 
-        $uid = $_SESSION['uid'];
+        $uid = $this->session->get('uid');
 
         $data = $this->request->getPostData();
         $data['user_id'] = $uid;
@@ -84,5 +84,6 @@ class Api extends \Stream\RestController {
         } else {
             return $this->model->create($data);
         }
+    
     }
 }

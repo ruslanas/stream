@@ -27,13 +27,13 @@ class Acl extends \Stream\Util\Injectable {
         $components = explode('?', $uri);
         $uri = $components[0];
 
+        if(strpos($uri, '/tk/') === 0) { return true; }
+
         if($method === 'GET' && in_array($uri, [
-            "/posts.json",
             "/tasks",
             "/register",
             "/login",
             "/logout",
-            "/posts"
         ])) { return true; }
 
         if($uid === NULL && $method === 'POST' && in_array($uri, [
@@ -49,10 +49,6 @@ class Acl extends \Stream\Util\Injectable {
             $data = $user->getById($uid);
 
             if($method === 'DELETE') {
-
-                if($data->group == 'admin') {
-                    return true;
-                }
 
                 // we promise that user will delete only his own tasks
 

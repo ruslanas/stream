@@ -22,4 +22,33 @@ class Injectable {
 
     }
 
+    public function use() {
+
+        $deps = func_get_args();
+    
+        foreach($deps as $dep) {
+        
+            if(is_array($dep)) {
+        
+                if(empty($dep[1] || !is_object($dep[1]))) {
+                    throw new Exception;
+                }
+
+                $name = $dep[0];
+                
+                $dep = $dep[1];
+        
+            } else {
+        
+                $path = explode('\\', get_class($dep));
+                $name = end($path);
+        
+            }
+        
+        }
+
+        $this->{$name} = $dep;
+    
+    }
+
 }

@@ -31,13 +31,6 @@ class AclTest extends DatabaseTestCase {
 		$this->assertFalse($this->acl->allow('POST', '/clients.json'));
 	}
 
-	public function testAllowAnonymousPublicPosts() {
-
-		$this->session->method('get')->with('uid')->willReturn(NULL);
-		$this->assertTrue($this->acl->allow('GET', '/posts.json'));
-
-	}
-
 	public function testAllowTasksAnonymosForbidden() {
 
 		$this->session->method('get')->with('uid')->willReturn(NULL);
@@ -56,16 +49,6 @@ class AclTest extends DatabaseTestCase {
 	public function testAllowUserRegistration() {
 		$this->session->method('get')->with('uid')->willReturn(NULL);
 		$this->assertTrue($this->acl->allow('POST', '/users/register.json'));
-	}
-
-	public function testAllowAdmin() {
-		// admin can create and delete
-
-		$this->session->method('get')->with('uid')->willReturn(1);
-
-		$this->assertTrue($this->acl->allow('GET', '/'));
-		$this->assertTrue($this->acl->allow('POST', '/clients.json'));
-		$this->assertTrue($this->acl->allow('DELETE', '/clients/1.json'));
 	}
 
 	public function testAllowManager() {
@@ -98,4 +81,23 @@ class AclTest extends DatabaseTestCase {
         $this->assertTrue($this->acl->allow('DELETE', '/tasks/2.json'));
 
     }
+
+    ////////////////////////////////////////
+    // DataStore will validate and reject //
+    ////////////////////////////////////////
+
+    /**
+     * Assert that user cannot delete other users tasks
+     */
+
+    // public function testAllowDenyDeleteTask() {
+    	
+    //     $this->session->method('get')->with('uid')->willReturn(3);
+
+    // 	$allow = $this->acl->allow('DELETE', '/tasks/2.json');
+    	
+    //     $this->assertFalse($allow);
+    
+    // }
+
 }

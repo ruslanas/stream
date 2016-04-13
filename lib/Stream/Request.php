@@ -18,9 +18,13 @@ class Request {
 
     }
 
-    public function getPostData() {
+    public function getPostData($key = NULL) {
         $raw_post_data = file_get_contents('php://input');
-        return json_decode($raw_post_data, true);
+        $data = json_decode($raw_post_data, true);
+
+        if(isset($key)) { return isset($data[$key]) ? $data[$key] : NULL; }
+    
+        return $data;
     }
 
     public function getHeaders() {

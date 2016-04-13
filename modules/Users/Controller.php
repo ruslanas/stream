@@ -32,6 +32,8 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
         $this->user = new User(\Stream\App::getConnection());
 
+        $this->u = new Decorators\User(\Stream\App::getConnection());
+
     }
 
     final public function get() {
@@ -69,9 +71,28 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
     }
 
+    private function grant($key) {
+        $data = $this->u->filter(['access_key', $key])->current();
+        
+        if(!empty($data)) {
+        
+            unset($data->password);
+
+            $this->Session->set('uid', $data->id);
+        
+        }
+        
+        return $data;
+    }
+
     final public function post() {
 
         if($this->param('action') === 'login') {
+            
+            if($this->request->getPostData('key')) {
+                return $this->grant($this->request->getPostData('key'));
+            }
+
             return $this->login();
         }
 

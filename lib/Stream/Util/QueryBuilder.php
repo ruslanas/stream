@@ -29,6 +29,10 @@ protected $structure = [
  */
 class QueryBuilder {
 
+    public function __construct(\PDO $pdo) {
+        $this->pdo = $pdo;
+    }
+
 /**
     [' AND ',
         ['liKe', 'title', '%test%'],

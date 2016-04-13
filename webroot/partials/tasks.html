@@ -86,7 +86,7 @@
                     <div class="col-sm-3 text-center">
                         <h3>#{{task.id}}</h3>
                     </div>
-                    <div class="col-sm-5" ng-bind-html="task.description" style="white-space: pre-line"></div>
+                    <div class="col-sm-5" ng-bind-html="task.description | wizMarkdownFltr" style="white-space: pre-line"></div>
                     <div class="col-sm-4">
                         by <strong>{{task.user.email}}</strong>
                         <br/>{{task.created}}

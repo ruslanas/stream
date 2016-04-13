@@ -90,4 +90,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('@', $obj->owner->email);
 
     }
+
 }
+
+

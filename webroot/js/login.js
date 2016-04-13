@@ -16,6 +16,7 @@ angular.module('stream.user', [
     if($rootScope.authorized) {
         User.logout(function() {
             $rootScope.authorized = false;
+            $rootScope.user = false;
         });
     }
 
