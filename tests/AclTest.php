@@ -11,10 +11,9 @@ class AclTest extends DatabaseTestCase {
 		parent::setUp();
 
 		$this->acl = new Acl;
+        $this->session = $this->getMockBuilder(\Stream\Session::class)->getMock();
 
-		$this->session = $this->getMockBuilder(\Stream\Session::class)->getMock();
-
-		$this->acl->inject('session', $this->session);
+		$this->acl->use(['Session', $this->session]);
 
 	}
 

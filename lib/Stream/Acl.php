@@ -15,13 +15,9 @@ class Acl extends \Stream\Util\Injectable {
 
     protected $_injectable = ['session'];
 
-    public function __construct(\Stream\Session $session = NULL) {
-        $this->session = $session;
-    }
-
     public function allow($method, $uri) {
 
-        $uid = $this->session->get('uid');
+        $uid = $this->Session->get('uid');
 
         // ingnore query parameters
         $components = explode('?', $uri);

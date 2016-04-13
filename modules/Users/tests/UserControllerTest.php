@@ -28,7 +28,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         
         $this->controller->inject('params', []);
 
-        $this->controller->use(['request', $this->req]);
+        $this->controller->use(['Request', $this->req]);
         $this->controller->use(['user', $this->user]);
     
     }

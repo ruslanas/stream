@@ -33,7 +33,7 @@ class Controller extends \Stream\PageController {
 
     final public function save() {
         
-        $data = $this->request->post();
+        $data = $this->Request->post();
         
         if(empty($data['id'])) {
             $res = $this->task->create($data);

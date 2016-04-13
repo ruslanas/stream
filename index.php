@@ -7,6 +7,12 @@
  */
 
 $app = new Stream\App();
+
+$app->use(new \Stream\Cache);
+$app->use(new \Stream\Request);
+$app->use(new \Stream\Session);
+$app->use(new \Stream\Acl);
+
 $app->loadConfig();
 
 $app->get('/', function($req) use ($app) {

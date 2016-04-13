@@ -19,11 +19,12 @@ class AppTest extends PHPUnit_Framework_TestCase {
         $this->app = new App();
 
         $this->acl = $this->getMockBuilder(Acl::class)->getMock();
-        $this->app->inject('acl', $this->acl);
+
+        $this->app->use(['Acl', $this->acl]);
         
         $this->req = $this->getMockBuilder(Request::class)->getMock();
-        $this->app->inject('request', $this->req);
-        
+        $this->app->use(['Request', $this->req]);
+        $this->app->use(new Cache);
     }
 
     public function testApp() {

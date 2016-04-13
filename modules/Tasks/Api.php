@@ -8,13 +8,7 @@ class Api extends \Stream\RestController {
 
     public function __construct($params = NULL, $app = NULL) {
 
-        $deps = [];
-
-        if($app !== NULL) {
-            $deps = ['session' => $app->session];
-        }
-
-        parent::__construct($params, $app, $deps);
+        parent::__construct($params, $app);
 
         $this->model = new model\Task(\Stream\App::getConnection());
 
@@ -31,7 +25,7 @@ class Api extends \Stream\RestController {
             throw new \Exception('Insufficient argument');
         }
 
-        $out = $this->model->delete($this->params['id'], $this->session->get('uid'));
+        $out = $this->model->delete($this->params['id'], $this->Session->get('uid'));
         if($out === NULL) {
             throw new \Exception('Not deleted');
         }
@@ -46,8 +40,8 @@ class Api extends \Stream\RestController {
 
             ['and',
                 ['or',
-                    ['user_id', $this->session->get('uid')],
-                    ['delegate_id', $this->session->get('uid')]
+                    ['user_id', $this->Session->get('uid')],
+                    ['delegate_id', $this->Session->get('uid')]
                 ],
                 ['tasks.deleted', 0]
             ]);
@@ -65,19 +59,19 @@ class Api extends \Stream\RestController {
 
     final public function post() {
 
-        if($this->request->getGet('action') === 'delegate') {
-            $email = $this->request->getGet('email');
+        if($this->Request->getGet('action') === 'delegate') {
+            $email = $this->Request->getGet('email');
             return $this->delegate($this->param('id'), $email);
         }
 
-        $uid = $this->session->get('uid');
+        $uid = $this->Session->get('uid');
 
-        $data = $this->request->getPostData();
+        $data = $this->Request->getPostData();
         $data['user_id'] = $uid;
 
         if($this->param('id') !== NULL) {
 
-            $data = array_merge($data, $this->request->getGet());
+            $data = array_merge($data, $this->Request->getGet());
 
             return $this->model->update($this->param('id'), $data);
 

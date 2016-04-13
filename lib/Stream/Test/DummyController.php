@@ -55,7 +55,7 @@ class DummyController extends RestController implements DomainControllerInterfac
 
     final public function post() {
         
-        $this->data = $this->request->getPostData();
+        $this->data = $this->Request->getPostData();
 
         $this->data['params'] = $this->params;
         

@@ -82,16 +82,10 @@ class App extends Injectable implements AppInterface {
         static::$instance = NULL;
     }
 
-    public function __construct(CacheInterface $cache = NULL) {
-
-        $this->session = new \Stream\Session;
-        
-        $this->acl = new Acl($this->session);
-        $this->request = new Request;
-
-        $this->cache = ($cache !== NULL) ? $cache : new Cache;
+    public function __construct() {
 
         static::$instance = $this;
+    
     }
 
     public function __get($name) {
@@ -136,7 +130,9 @@ class App extends Injectable implements AppInterface {
 
     protected function authorize($method, $uri) {
 
-        if(!$this->acl->allow($method, $uri)) {
+        $this->Acl->use($this->Session);
+
+        if(!$this->Acl->allow($method, $uri)) {
             return false;
         }
 
@@ -153,7 +149,7 @@ class App extends Injectable implements AppInterface {
      */
     public function dispatch($uri) {
 
-        $method = $this->request->getMethod();
+        $method = $this->Request->getMethod();
 
         if(!$this->authorize($method, $uri)) {
             throw new ForbiddenException("Not allowed");
@@ -169,7 +165,9 @@ class App extends Injectable implements AppInterface {
                 $reflection = new \ReflectionMethod($controller, $method);
 
                 if($reflection->isFinal()) {
+
                     $out = $controller->{$method}();
+                
                 } else {
 
                     // unsupported HTTP request method or corresponding controller
@@ -192,12 +190,12 @@ class App extends Injectable implements AppInterface {
 
         }
 
-        $headers = $this->request->getHeaders();
+        $headers = $this->Request->getHeaders();
 
         $revalidate = (!empty($headers['Cache-Control'])
             && strpos($headers['Cache-Control'], 'max-age=0') !== FALSE) ? true : false;
 
-        $cached = $this->cache->fetch($uri);
+        $cached = $this->Cache->fetch($uri);
 
         // cached and valid
         if(!$revalidate && $method === 'GET' && !empty($cached)) {
@@ -209,7 +207,7 @@ class App extends Injectable implements AppInterface {
 
         ob_start(function ($buffer) use ($uri, $method) {
             if($method == 'GET') {
-                $this->cache->store($uri, $buffer, $this->cache_ttl);
+                $this->Cache->store($uri, $buffer, $this->cache_ttl);
             }
             return $buffer;
         });
@@ -342,7 +340,12 @@ class App extends Injectable implements AppInterface {
 
                     }
 
-                    return new $controller_class($matches, $this);
+                    $controller = new $controller_class($matches, $this);
+
+                    $controller->use(['Request', $this->Request]);
+                    $controller->use(['Session', $this->Session]);
+                
+                    return $controller;
 
                 } else {
                     throw new NotFoundException;
@@ -362,9 +365,18 @@ class App extends Injectable implements AppInterface {
             if($matches !== false) {
 
                 if(class_exists($controller_class)) {
-                    return new $controller_class($matches, $this);
+                
+                    $controller = new $controller_class($matches, $this);
+                    
+                    $controller->use(['Request', $this->Request]);
+                    $controller->use(['Session', $this->Session]);
+
+                    return $controller;
+                
                 } else {
+
                     throw new \Stream\Exception\NotFoundException("Page controller not found");
+                
                 }
 
             }

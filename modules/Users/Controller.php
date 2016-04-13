@@ -39,7 +39,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
     final public function get() {
         
         $user = (new Decorators\User($this->app->pdo))
-            ->filter(['like', 'email', $this->request->getGet('email').'%']);
+            ->filter(['like', 'email', $this->Request->getGet('email').'%']);
         
         $out = [];
         foreach($user as $u) {
@@ -51,7 +51,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
     private function register($data) {
 
-        $data = $this->request->getPostData();
+        $data = $this->Request->getPostData();
 
         if($data === NULL) {
             return $this->_error("No data");
@@ -89,8 +89,8 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
         if($this->param('action') === 'login') {
             
-            if($this->request->getPostData('key')) {
-                return $this->grant($this->request->getPostData('key'));
+            if($this->Request->getPostData('key')) {
+                return $this->grant($this->Request->getPostData('key'));
             }
 
             return $this->login();
@@ -98,7 +98,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
         if($this->param('action') === 'register') {
 
-            return $this->register($this->request->getPostData());
+            return $this->register($this->Request->getPostData());
 
         }
 
@@ -128,7 +128,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
 
     private function login() {
 
-        if($this->user->authenticate($this->request)) {
+        if($this->user->authenticate($this->Request)) {
             return $this->user->read($this->app->session->get('uid'));
         }
 
