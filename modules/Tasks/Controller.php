@@ -25,12 +25,6 @@ class Controller extends \Stream\PageController {
         ]);
     }
 
-    final public function list() {
-        return $this->templates->render('task::list', [
-            'data' => $this->task->read()
-        ]);
-    }
-
     final public function save() {
         
         $data = $this->Request->post();

@@ -20,6 +20,7 @@ angular.module('stream', [
     User.login(function(res) {
         if(res.error) { return ; };
         $rootScope.authorized = true;
+        $rootScope.user = res;
     });
 
     this.currentMenuItem = '/';

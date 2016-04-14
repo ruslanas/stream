@@ -13,6 +13,7 @@ class Controller extends PageController {
 
     public function __construct($params = NULL, $app = NULL) {
 
+        $this->_stylesheets[] = 'https://fonts.googleapis.com/css?family=Open+Sans';
         $this->_stylesheets[] = '/css/styles.css';
         
         $this->_scripts = array_merge($this->_scripts, [

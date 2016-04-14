@@ -1,10 +1,6 @@
 <section>
 
-    <div class="alert alert-success text-center"
-        ng-show="section.tasks.length < 20 ? false : true">
-        <strong>Stay focused!</strong>
-    </div>
-    <form class="jumbotron" ng-show="section.tasks.length >= 20 ? false : true">
+    <form class="jumbotron">
 
         <div class="form-group">
             <input class="form-control"
@@ -73,8 +69,20 @@
                                 ng-click="section.delegate(task, task.delegate.email)"
                                 class="btn btn-xs btn-info">Delegate</button>
                         </form>
-                        <span ng-show="task.focus == 0 && task.delegate.email"><strong>{{task.delegate.email}}</strong></span>
-                        <button ng-show="task.focus == 0" class="btn btn-xs btn-danger"
+                        
+                        <span ng-show="task.focus == 0 && task.delegate.email">
+                            
+                            <i class="glyphicon glyphicon-ok-sign" ng-show="task.accepted == 1 ? true : false"></i>
+                            <strong>{{task.delegate.email}}</strong>
+
+                            <button ng-show="(task.delegate.email == user.email && task.accepted == 1) ? true : false"
+                                    ng-click="section.reject(task)"
+                                    class="btn btn-warning btn-xs">Reject</button>
+                        
+                        </span>
+                        
+                        <button ng-show="task.focus == 0 && (task.delegate.email != user.email)"
+                            class="btn btn-xs btn-danger"
                             ng-click="section.delete(task)">
                             <i class="glyphicon glyphicon-remove"></i> Dismiss</button>
                     </div>

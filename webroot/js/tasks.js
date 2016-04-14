@@ -40,24 +40,29 @@ angular.module('stream.tasks', [
             self.task = angular.copy(this.tpl);
         });
 
-    }
+    };
 
     // delegate to admin for now
     this.delegate = function(task, email) {
         task.$delegate({email: email, focus: 0});
-    }
+    };
+
+    this.reject = function(task) {
+        task.accepted = false;
+        task.$save();
+    };
 
     this.focus = function(task) {
 
         task.focus = (task.focus == 0) ? 1 : 0;
         task.$save();
 
-    }
+    };
 
     this.complete = function(task) {
         task.completed = 1;
         task.$save();
-    }
+    };
 
     this.delete = function(task) {
         task.$remove(function(res) {
@@ -76,10 +81,12 @@ angular.module('stream.tasks', [
 }]).factory('Task', ['$resource', function($resource) {
 
     return $resource('/tasks/:id.json', {id: "@id"}, {
+        
         delegate: {
             method: 'POST',
-            params: {'action': 'delegate' }
+            params: {action: 'delegate' }
         }
+    
     });
 
 }]).config(['$routeProvider', function($routeProvider) {

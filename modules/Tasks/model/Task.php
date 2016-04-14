@@ -22,6 +22,7 @@ class Task extends \Stream\PersistentStorage {
         ['completed', PDO::PARAM_BOOL],
 
         ['deleted', PDO::PARAM_BOOL], // record will be marked as deleted
+        ['accepted', PDO::PARAM_BOOL],
 
         ['users as user', [
             ['id', PDO::PARAM_INT],
@@ -34,5 +35,17 @@ class Task extends \Stream\PersistentStorage {
         ], 'delegate.id = delegate_id']
 
     ];
+
+    public function isValid($data) {
+        
+        //////////////////////////////////
+        // Get currently logged in user //
+        //////////////////////////////////
+
+        $this->use('Session');
+
+        return !empty($data['user_id']) && $this->Session->get('uid') !== $data['user_id'] ? false : true;
+
+    }
 
 }

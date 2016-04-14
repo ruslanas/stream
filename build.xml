@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Stream" default="build" basedir="." description="">
+    
+    <property name="buildDir" value="build"/>
+
+    <fileset id="srcfiles" dir="./">
+        
+        <include name="index.php"/>
+        <include name="router.php"/>
+        <include name="router-dev.php"/>
+        <include name="composer.json"/>
+        
+        <include name="lib/**"/>
+        <include name="templates/**"/>
+        <include name="modules/**"/>
+        <exclude name="modules/*/tests/**"/>
+    
+    </fileset>
+
+    <fileset id="webroot" dir="./">
+    
+        <include name="webroot/css/**"/>
+        <include name="webroot/js/**"/>
+        <include name="webroot/partials/**"/>
+        <include name="webroot/components/bootstrap/dist/**"/>
+        <include name="webroot/components/jquery/dist/**"/>
+        <include name="webroot/components/angular*/*.js"/>
+        <include name="webroot/components/wiz-markdown/wizMarkdown/*.js"/>
+    
+    </fileset>
+
+    <target name="build">
+        <echo msg="Copying..."/>
+        <copy todir="${buildDir}">
+            <fileset refid="srcfiles"/>
+            <fileset refid="webroot"/>
+        </copy>
+        <exec command="composer install --no-dev" dir="${buildDir}"/>
+    </target>
+
+</project>

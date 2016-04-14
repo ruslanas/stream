@@ -27,10 +27,12 @@ protected $structure = [
 ];
 
  */
+
 class QueryBuilder {
 
-    public function __construct(\PDO $pdo) {
+    public function __construct(\PDO $pdo, $dsl) {
         $this->pdo = $pdo;
+        $this->dsl = $dsl;
     }
 
 /**
@@ -57,7 +59,10 @@ class QueryBuilder {
     
     }
 
-    static public function filter(array $dsl, array $filter, \PDO $pdo) {
+    public function filter(array $filter) {
+    
+        $dsl = $this->dsl;
+        $pdo = $this->pdo;
         
         $values = [];
         
@@ -73,12 +78,13 @@ class QueryBuilder {
 
     }
 
-    static public function select($dsl) {
+    public function select() {
 
+        $dsl = $this->dsl;
+        
         $table = $dsl[0];
         $fields = [];
         $joins = [];
-        $tables = [];
 
         for($i=1;$i<count($dsl);$i++) {
 
@@ -107,7 +113,10 @@ class QueryBuilder {
 
     }
 
-    static public function reshape($dsl, $data) {
+    public function reshape($data) {
+        
+        $dsl = $this->dsl;
+        
         $out = new \stdClass;
 
         if(empty($data)) { return $data; }
@@ -139,8 +148,11 @@ class QueryBuilder {
         return $out;
     }
 
-    static public function update($db, $dsl, $data, $id = NULL) {
+    public function update($data, $id = NULL) {
 
+        $dsl = $this->dsl;
+        $db = $this->pdo;
+        
         if(empty($data)) { throw new \Exception; }
 
         $tableName = $dsl[0];

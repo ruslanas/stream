@@ -6,6 +6,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
 
+        $this->pdo = \Stream\App::getConnection('test_stream');
         $this->dsl = [
 
             'tasks',
@@ -25,11 +26,13 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
             ], 'delegate.id = tasks.delegate_id']
 
         ];
+        
+        $this->builder = new QueryBuilder($this->pdo, $this->dsl);
     }
 
     public function testFilter() {
     
-        $statement = QueryBuilder::filter($this->dsl,
+        $statement = $this->builder->filter(
             
             [' ANd ',
                 ['liKe', 'title', '%impl%'],
@@ -38,9 +41,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
                     ['delegate_id', 2],
                     ['lIke', 'user.email', 'admin%']]
             
-            ], \Stream\App::getConnection('test_stream')
-
-        );
+            ]);
 
         $statement->execute();
 
@@ -52,7 +53,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testSelect() {
-        $query = \Stream\Util\QueryBuilder::select($this->dsl);
+        $query = $this->builder->select();
 
         $expected = "SELECT tasks.id, tasks.title, tasks.description, user.id as user_id, user.email as user_email, delegate.id as delegate_id, delegate.email as delegate_email"
             . " FROM tasks"
@@ -77,7 +78,9 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
             ], 'owner.id = table.user_id']
 
         ];
-
+        
+        $builder = new QueryBuilder($this->pdo, $dsl);
+        
         $data = (object)[
             'id' => 1,
             'table_table' => 'table',
@@ -85,7 +88,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase {
             'owner_email' => '@',
         ];
 
-        $obj = \Stream\Util\QueryBuilder::reshape($dsl, $data);
+        $obj = $builder->reshape($data);
 
         $this->assertEquals('@', $obj->owner->email);
 

@@ -41,7 +41,10 @@ class Api extends \Stream\RestController {
             ['and',
                 ['or',
                     ['user_id', $this->Session->get('uid')],
-                    ['delegate_id', $this->Session->get('uid')]
+                    ['and',
+                        ['delegate_id', $this->Session->get('uid')],
+                        ['accepted', "1"]
+                    ]
                 ],
                 ['tasks.deleted', 0]
             ]);
@@ -67,16 +70,22 @@ class Api extends \Stream\RestController {
         $uid = $this->Session->get('uid');
 
         $data = $this->Request->getPostData();
-        $data['user_id'] = $uid;
+        
 
         if($this->param('id') !== NULL) {
+
+            unset($data['user_id']); // cannot be changed
 
             $data = array_merge($data, $this->Request->getGet());
 
             return $this->model->update($this->param('id'), $data);
 
         } else {
+
+            $data['user_id'] = $uid;
+            
             return $this->model->create($data);
+        
         }
     
     }

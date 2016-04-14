@@ -7,6 +7,8 @@ class Injectable {
     /** @var array Should contain injectable properties */
     protected $_injectable = [];
 
+    static protected $_deps = [];
+
     /**
      * Injects dependencies
      * @param string $property protected class memeber name
@@ -28,10 +30,17 @@ class Injectable {
     
         foreach($deps as $dep) {
         
+            if(is_string($dep)) {
+                $this->{$dep} = self::$_deps[$dep];
+                continue;
+            }
+
             if(is_array($dep)) {
         
                 if(empty($dep[1] || !is_object($dep[1]))) {
+
                     throw new Exception;
+
                 }
 
                 $name = $dep[0];
@@ -45,10 +54,11 @@ class Injectable {
         
             }
         
+            $this->{$name} = $dep;
+            self::$_deps[$name] = $dep;
+            
         }
 
-        $this->{$name} = $dep;
-    
     }
 
 }

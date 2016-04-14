@@ -10,7 +10,11 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
         parent::setUp();
 
+        $this->session = $this->getMockBuilder(\Stream\Session::class)->getMock();
+
         $this->task = new Tasks\model\Task($this->pdo);
+
+        $this->task->use(['Session', $this->session]);
 
     }
 
@@ -128,6 +132,30 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
         $this->assertEquals(4, $task->delegate->id);
         $this->assertEquals('admin@stream.wri.lt', $task->delegate->email);
 
+    }
+
+    public function testReject() {
+        
+        $task = (new Tasks\Decorators\Task($this->pdo))
+            ->read(1)
+            ->reject();
+
+        $this->assertEquals(0, $task->accepted);
+
+    }
+
+    public function testUpdateException() {
+        
+        $this->session->expects($this->once())
+            ->method('get')
+            ->with('uid')->willReturn(1);
+
+        $this->expectException(\Exception::class);
+
+        $this->task->update(1, [
+            'user_id' => 2
+        ]);
+    
     }
 
 }

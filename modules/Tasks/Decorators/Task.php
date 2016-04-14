@@ -26,6 +26,8 @@ class Task extends \Stream\DataStoreDecorator {
         ['modified', PDO::PARAM_STR],
         ['delegate_id', PDO::PARAM_INT],
         ['user_id', PDO::PARAM_INT],
+
+        ['accepted', PDO::PARAM_BOOL],
         ['completed', PDO::PARAM_BOOL],
 
         ['deleted', PDO::PARAM_BOOL], // record will be marked as deleted
@@ -53,10 +55,18 @@ class Task extends \Stream\DataStoreDecorator {
             $user->create(['email'=>$email]);
         }
 
-        $this->update(NULL, ['delegate_id' => $user->current()->id]);
+        $this->update(NULL, [
+            'delegate_id' => $user->current()->id,
+            'accepted' => "1"
+        ]);
     
         return $this;
 
+    }
+
+    public function reject() {
+        $this->update(NULL, ['accepted' => 0]);
+        return $this;
     }
 
 }

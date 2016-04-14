@@ -9,7 +9,9 @@ class DataStoreDecorator extends PersistentStorage implements \Countable, \Itera
     private $_idx = 0;
 
     public function __construct(\PDO $pdo = NULL) {
+        
         parent::__construct($pdo);
+    
     }
 
     public function count() {

@@ -5,8 +5,6 @@
  */
 
 use Stream\App;
-use Stream\Exception\NotFoundException;
-use Stream\Test\DatabaseTestCase;
 use Stream\Request;
 
 use modules\Users;
@@ -20,7 +18,9 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
         App::getConnection('test_stream');
         
         $this->req = $this->getMockBuilder(Request::class)->getMock();
-        $this->user = $this->getMockBuilder(model\User::class)->getMock();
+        $this->user = $this->getMockBuilder(model\User::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->controller = new Users\Controller;
 

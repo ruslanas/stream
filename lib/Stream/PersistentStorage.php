@@ -7,9 +7,9 @@
 namespace Stream;
 
 use \PDO;
-use \stdClass;
 
-use \Stream\Util\Injectable;
+use Stream\Util\Injectable;
+use Stream\Util\QueryBuilder;
 
 /**
  * SCRUD
@@ -21,12 +21,21 @@ class PersistentStorage extends Injectable {
 
     protected $storage;
     protected $db;
+    protected $QueryBuilder;
 
     /**
      * @param PDO $pdo
      */
-    public function __construct(PDO $pdo = NULL) {
+    public function __construct(PDO $pdo = NULL, $dsl = NULL) {
+        
+        if($dsl !== NULL) {
+            $this->structure = $dsl;
+        }
+        
         $this->db = $pdo;
+        
+        $this->use(new QueryBuilder($pdo, $this->structure));
+    
     }
 
     /**
@@ -39,7 +48,7 @@ class PersistentStorage extends Injectable {
 
         $tableName = $this->structure[0];
 
-        $query = \Stream\Util\QueryBuilder::select($this->structure);
+        $query = $this->QueryBuilder->select();
 
         $where = '';
 
@@ -78,7 +87,7 @@ class PersistentStorage extends Injectable {
 
             $data = $statement->fetch();
 
-            return \Stream\Util\QueryBuilder::reshape($this->structure, $data);
+            return $this->QueryBuilder->reshape($data);
 
         } else {
 
@@ -86,7 +95,7 @@ class PersistentStorage extends Injectable {
 
             while ($row = $statement->fetch()) {
 
-                $data[] = \Stream\Util\QueryBuilder::reshape($this->structure, $row);
+                $data[] = $this->QueryBuilder->reshape($row);
             }
 
             return $data;
@@ -160,7 +169,7 @@ class PersistentStorage extends Injectable {
      */
     public function create($data) {
 
-        $statement = \Stream\Util\QueryBuilder::update($this->db, $this->structure, $data);
+        $statement = $this->QueryBuilder->update($data);
 
         $statement->execute();
 
@@ -171,6 +180,10 @@ class PersistentStorage extends Injectable {
         return $this->read($id);
     }
 
+    protected function isValid($data) {
+        return true;
+    }
+
     /**
      * Update record $id with associative $data
      * @param int $id
@@ -179,7 +192,11 @@ class PersistentStorage extends Injectable {
      */
     public function update($id, $data) {
 
-        $statement = \Stream\Util\QueryBuilder::update($this->db, $this->structure, $data, $id);
+        if(!$this->isValid($data)) {
+            throw new \Exception;
+        }
+
+        $statement = $this->QueryBuilder->update($data, $id);
 
         $statement->execute();
 
@@ -199,10 +216,13 @@ class PersistentStorage extends Injectable {
         
         if(empty($f)) { return []; }
 
-        $st = \Stream\Util\QueryBuilder::filter($this->structure, $f, $this->db);
+        $st = $this->QueryBuilder->filter($f);
+        
         $st->execute();
         $arr = [];
-        while($r = $st->fetch()) { $arr[] = \Stream\Util\QueryBuilder::reshape($this->structure, $r); }
+        while($r = $st->fetch()) {
+            $arr[] = $this->QueryBuilder->reshape($r);
+        }
         return $arr;
     }
 
@@ -216,7 +236,7 @@ class PersistentStorage extends Injectable {
             return [];
         }
 
-        $sql = \Stream\Util\QueryBuilder::select($this->structure);
+        $sql = $this->QueryBuilder->select();
 
         $where = " WHERE NOT `{$this->structure[0]}`.deleted AND ";
 
@@ -273,7 +293,7 @@ class PersistentStorage extends Injectable {
         $data = [];
 
         while($row = $statement->fetch()) {
-            $data[] = \Stream\Util\QueryBuilder::reshape($this->structure, $row);
+            $data[] = $this->QueryBuilder->reshape($row);
         }
 
         return $data;

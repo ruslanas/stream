@@ -129,7 +129,7 @@ class Controller extends PageController implements DomainControllerInterface, Re
     private function login() {
 
         if($this->user->authenticate($this->Request)) {
-            return $this->user->read($this->app->session->get('uid'));
+            return $this->user->read($this->app->Session->get('uid'));
         }
 
         return (object)['error' => ['password' => 'Retype password', 'email' => 'Is email spelled correctly?']];

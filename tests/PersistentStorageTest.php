@@ -14,9 +14,7 @@ class PersistentStorageTest extends DatabaseTestCase {
 
         parent::setUp();
 
-        $this->storage = new PersistentStorage($this->pdo);
-
-        $this->storage->inject('structure', [
+        $dsl = [
             'posts',
 
             ['id', PDO::PARAM_INT],
@@ -29,22 +27,10 @@ class PersistentStorageTest extends DatabaseTestCase {
                 ['email', PDO::PARAM_STR],
                 ['deleted', PDO::PARAM_BOOL],
             ], 'user.id = posts.user_id'],
-        ]);
+        ];
 
-        $this->storage->inject('table', [
-            'posts' => [
-                'id',
-                'title',
-                'body',
-                'deleted',
-                'users' => [
-                    'id',
-                    'username',
-                    'email',
-                    'deleted'
-                ]
-            ]
-        ]);
+        $this->storage = new PersistentStorage($this->pdo, $dsl);
+        
     }
 
     public function testRead() {
