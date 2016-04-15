@@ -39,6 +39,10 @@ class ModuleContext extends MinkContext implements Context, SnippetAcceptingCont
         $this->app->inject('acl', $this->acl);
         $this->app->inject('request', $this->req);
         $this->app->inject('session', $this->sess);
+        
+        $this->app->service('QueryBuilder', function($pdo, $structure) {
+            return new \Stream\Util\QueryBuilder($pdo, $structure);
+        });
 
     }
 

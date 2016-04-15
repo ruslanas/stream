@@ -10,12 +10,8 @@ class Request {
     
     public function post() {
 
-        if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return null;
-        } else {
-            return $_POST;
-        }
-
+        return filter_input_array(INPUT_POST);
+        
     }
 
     public function getPostData($key = NULL) {
@@ -32,12 +28,15 @@ class Request {
     }
 
     public function getMethod() {
-        return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
+        return filter_input(INPUT_SERVER, 'REQUEST_METHOD');
     }
 
     public function getGet($key = NULL) {
-        if($key === NULL) { return $_GET; }
-        if(isset($_GET[$key])) { return $_GET[$key]; }
-        return NULL;
+        if($key === NULL) { return filter_input_array(INPUT_GET); }
+        return filter_input(INPUT_GET, $key);
+    }
+    
+    public function getUri() {
+        return filter_input(INPUT_SERVER, 'REQUEST_URI');
     }
 }

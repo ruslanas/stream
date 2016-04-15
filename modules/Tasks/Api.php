@@ -76,17 +76,23 @@ class Api extends \Stream\RestController {
 
             unset($data['user_id']); // cannot be changed
 
-            $data = array_merge($data, $this->Request->getGet());
+            $get = $this->Request->getGet();
+            
+            if(is_array($get)) {
+                $data = array_merge($data, $get);
+            }
 
-            return $this->model->update($this->param('id'), $data);
+            $out = $this->model->update($this->param('id'), $data);
 
         } else {
 
             $data['user_id'] = $uid;
             
-            return $this->model->create($data);
+            $out = $this->model->create($data);
         
         }
+
+        return $out;
     
     }
 }

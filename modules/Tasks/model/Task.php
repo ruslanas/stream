@@ -42,7 +42,7 @@ class Task extends \Stream\PersistentStorage {
         // Get currently logged in user //
         //////////////////////////////////
 
-        $this->use('Session');
+        $this->uses('Session');
 
         return !empty($data['user_id']) && $this->Session->get('uid') !== $data['user_id'] ? false : true;
 

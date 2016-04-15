@@ -6,14 +6,18 @@
  * @author Ruslanas Balciunas <ruslanas.com@gmail.com>
  */
 
-$app = new Stream\App();
+$app = new Stream\App;
 
-$app->use(new \Stream\Cache);
-$app->use(new \Stream\Request);
-$app->use(new \Stream\Session);
-$app->use(new \Stream\Acl);
+$app->uses(new \Stream\Cache);
+$app->uses(new \Stream\Request);
+$app->uses(new \Stream\Session);
+$app->uses(new \Stream\Acl);
 
 $app->loadConfig();
+
+$app->service('QueryBuilder', function($pdo, $structure) {
+    return new \Stream\Util\QueryBuilder($pdo, $structure);
+});
 
 $app->get('/', function($req) use ($app) {
 

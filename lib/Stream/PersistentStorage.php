@@ -34,8 +34,8 @@ class PersistentStorage extends Injectable {
         
         $this->db = $pdo;
         
-        $this->use(new QueryBuilder($pdo, $this->structure));
-    
+        $this->service('QueryBuilder', $pdo, $this->structure);
+
     }
 
     /**

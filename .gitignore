@@ -3,5 +3,5 @@ vendor/*
 *.log
 config.php
 .idea/*
-/nbproject/private/
+/nbproject/
 /build/

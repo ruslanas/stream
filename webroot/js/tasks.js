@@ -5,8 +5,9 @@ angular.module('stream.tasks', [
 
 ]).controller('TasksController', [
 
-    'Task', '$rootScope', 'User', '$routeParams',
-    function(Task, $rootScope, User, $routeParams) {
+    'Task', '$rootScope', 'User', '$routeParams', '$uibModal',
+
+    function(Task, $rootScope, User, $routeParams, $uibModal) {
 
     if($routeParams.key !== undefined) {
         User.login({key: $routeParams.key}, function(res) {
@@ -44,7 +45,23 @@ angular.module('stream.tasks', [
 
     // delegate to admin for now
     this.delegate = function(task, email) {
-        task.$delegate({email: email, focus: 0});
+        
+        var modal = $uibModal.open({
+            templateUrl: 'partials/delegate.html',
+            controller: 'ConfirmController',
+            resolve: {
+                data: function() {
+                    return task;
+                }
+            }
+        });
+
+        modal.result.then(function() {
+
+            task.$delegate({email: email, focus: 0});
+    
+        }, function() { });
+    
     };
 
     this.reject = function(task) {
@@ -60,22 +77,64 @@ angular.module('stream.tasks', [
     };
 
     this.complete = function(task) {
-        task.completed = 1;
-        task.$save();
+        var modal = $uibModal.open({
+            templateUrl: 'partials/complete.html',
+            controller: 'ConfirmController',
+            resolve: {
+                data: function() {
+                    return task;
+                }
+            }
+        });
+
+        modal.result.then(function() {
+
+            task.completed = 1;
+            task.$save();
+    
+        }, function() { });
     };
 
     this.delete = function(task) {
-        task.$remove(function(res) {
 
-            self.tasks = self.tasks.filter(function(el) {
-                return el.id !== res.id;
+        var modal = $uibModal.open({
+            templateUrl: 'partials/confirm.html',
+            controller: 'ConfirmController',
+            resolve: {
+                data: function() {
+                    return task;
+                }
+            }
+        });
+
+        modal.result.then(function() {
+
+            task.$remove(function(res) {
+
+                self.tasks = self.tasks.filter(function(el) {
+                    return el.id !== res.id;
+                });
+
+                $rootScope.setError('Task dismissed', 'info');
+
+            }, function(res) {
+                $rootScope.setError('Unexpected error occured', 'danger');
             });
 
-            $rootScope.setError('Task dismissed', 'info');
+        }, function() { console.log('Dismiss dismissed'); });
+        
+    };
 
-        }, function(res) {
-            $rootScope.setError('Unexpected error occured', 'danger');
-        });
+}]).controller('ConfirmController', ['$scope', '$uibModalInstance', 'data', function($scope, $uibModalInstance, data) {
+    
+    $scope.task = data;
+
+    $scope.confirm = function() {
+        $uibModalInstance.close();
+    };
+
+    $scope.cancel = function() {
+        $uibModalInstance.dismiss();
     };
 
 }]).factory('Task', ['$resource', function($resource) {

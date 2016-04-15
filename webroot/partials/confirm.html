@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h3 class="modal-title">Delete task?</h3>
+</div>
+<div class="modal-body">
+    <h1>{{task.title}}</h1>
+    <p ng-bind-html="task.description"></p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">No, do not delete</button>
+    <button class="btn btn-danger" ng-click="confirm()">Yes, delete</button>
+</div>

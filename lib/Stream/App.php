@@ -12,14 +12,11 @@ use \Exception;
 
 use \Closure;
 
-use \Stream\Request;
-
 use \Stream\Exception\ForbiddenException;
 use \Stream\Exception\NotFoundException;
 use \Stream\Exception\UnknownMethodException;
 
 use \Stream\Interfaces\AppInterface;
-use \Stream\Interfaces\CacheInterface;
 use \Stream\Interfaces\RestApi;
 use \Stream\Interfaces\DomainControllerInterface;
 
@@ -130,13 +127,15 @@ class App extends Injectable implements AppInterface {
 
     protected function authorize($method, $uri) {
 
-        $this->Acl->use($this->Session);
-
+        $this->Acl->uses('Session');
+        $this->Acl->uses(new \modules\Users\model\User(self::getConnection()));
+        
         if(!$this->Acl->allow($method, $uri)) {
             return false;
         }
 
         return true;
+        
     }
 
     /**
@@ -305,10 +304,11 @@ class App extends Injectable implements AppInterface {
 
         $re = '[^'.$re.'$]';
 
+        $matches = [];
         $count = preg_match_all($re, $path, $matches);
 
         if($count > 0) {
-
+            $parms = [];
             preg_match_all('/\:(\w*)/', $parameterized, $parms);
 
             $out = [];
@@ -342,8 +342,8 @@ class App extends Injectable implements AppInterface {
 
                     $controller = new $controller_class($matches, $this);
 
-                    $controller->use(['Request', $this->Request]);
-                    $controller->use(['Session', $this->Session]);
+                    $controller->uses(['Request', $this->Request]);
+                    $controller->uses(['Session', $this->Session]);
                 
                     return $controller;
 
@@ -368,8 +368,8 @@ class App extends Injectable implements AppInterface {
                 
                     $controller = new $controller_class($matches, $this);
                     
-                    $controller->use(['Request', $this->Request]);
-                    $controller->use(['Session', $this->Session]);
+                    $controller->uses(['Request', $this->Request]);
+                    $controller->uses(['Session', $this->Session]);
 
                     return $controller;
                 

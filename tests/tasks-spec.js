@@ -48,6 +48,8 @@ describe('Tasks Tab', function() {
 
         task.element(by.css('.btn-info')).click();
 
+        element(by.css('.modal-dialog .btn-primary')).click();
+
         expect(element(by.className('panel-info')).getText()).toContain(email);
 
     });
@@ -55,6 +57,7 @@ describe('Tasks Tab', function() {
     it('should dismiss a task', function() {
 
         element(by.css('.panel:not(.panel-primary) .btn-danger')).click();
+        element(by.css('.modal-dialog .btn-danger')).click();
 
         expect(element(by.css('.alert-info > div')).getText()).toEqual('Task dismissed');
         element(by.linkText('Sign Out')).click();

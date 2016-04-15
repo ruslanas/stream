@@ -40,9 +40,7 @@ class Acl extends \Stream\Util\Injectable {
 
         if($uid !== NULL) {
 
-            $user = new User(App::getConnection());
-
-            $data = $user->getById($uid);
+            $data = $this->User->getById($uid);
 
             if($method === 'DELETE') {
 

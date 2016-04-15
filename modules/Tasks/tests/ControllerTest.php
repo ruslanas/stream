@@ -19,15 +19,15 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
         $this->api = new Api([]);
         $this->api->inject('model', $this->model);
         
-        $this->api->use(['Request', $this->req]);
-        $this->api->use(['Session', $this->sess]);
+        $this->api->uses(['Request', $this->req]);
+        $this->api->uses(['Session', $this->sess]);
 
         $this->tasks = new Controller([]);
         
         $this->tasks->inject('task', $this->model);
 
-        $this->tasks->use(['Request', $this->req]);
-        $this->tasks->use(['Session', $this->req]);
+        $this->tasks->uses(['Request', $this->req]);
+        $this->tasks->uses(['Session', $this->req]);
 
     }
 

@@ -24,12 +24,12 @@ class UserControllerTest extends PHPUnit_Framework_TestCase {
 
         $this->controller = new Users\Controller;
 
-        $this->controller->use(new \Stream\Session);
+        $this->controller->uses(new \Stream\Session);
         
         $this->controller->inject('params', []);
 
-        $this->controller->use(['Request', $this->req]);
-        $this->controller->use(['user', $this->user]);
+        $this->controller->uses(['Request', $this->req]);
+        $this->controller->uses(['user', $this->user]);
     
     }
 

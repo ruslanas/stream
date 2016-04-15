@@ -67,8 +67,11 @@ class Controller extends PageController implements DomainControllerInterface, Re
             return (object)['error'=> ['email' => 'User is already registered <a href="/login">Sign In</a>']];
         }
 
-        return $this->user->add($data);
+        $out = $this->user->add($data);
 
+        unset($out->password);
+
+        return $out;
     }
 
     private function grant($key) {

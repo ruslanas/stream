@@ -46,7 +46,9 @@
                             <button title="Focus"
                                 class="btn btn-xs"
                                 ng-class="task.focus == 0 ? 'btn-default' : 'btn-primary'"
-                                ng-click="section.focus(task)">{{task.focus == 1 ? 'Distract':'Focus'}}</button>
+                                ng-click="section.focus(task)">
+                                <i class="glyphicon glyphicon-pushpin"></i>
+                                {{task.focus == 1 ? 'Distract':'Focus'}}</button>
                         </div>
                     </div>
 
@@ -72,7 +74,7 @@
                         
                         <span ng-show="task.focus == 0 && task.delegate.email">
                             
-                            <i class="glyphicon glyphicon-ok-sign" ng-show="task.accepted == 1 ? true : false"></i>
+                            <i class="glyphicon glyphicon-hourglass" ng-show="task.accepted == 1 ? true : false"></i>
                             <strong>{{task.delegate.email}}</strong>
 
                             <button ng-show="(task.delegate.email == user.email && task.accepted == 1) ? true : false"

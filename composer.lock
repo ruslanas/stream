@@ -1113,16 +1113,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.2.3",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b"
+                "reference": "31382fef2889136415751badebbd1cb022a4ed72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2e89629ff057ebb49492ba08e6995d3a6a80021b",
-                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/31382fef2889136415751badebbd1cb022a4ed72",
+                "reference": "31382fef2889136415751badebbd1cb022a4ed72",
                 "shasum": ""
             },
             "require": {
@@ -1167,7 +1167,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-02-18 21:54:00"
+            "time": "2016-04-13 19:56:01"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -1765,16 +1765,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.2",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09"
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/064b38c16790249488e7a8b987acf1c9d7383c09",
-                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5f56ed5212dc509c8dc8caeba2715732abb32dbf",
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf",
                 "shasum": ""
             },
             "require": {
@@ -1839,7 +1839,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-04-02 13:12:58"
+            "time": "2016-04-12 18:29:35"
         },
         {
             "name": "myclabs/deep-copy",
@@ -4706,16 +4706,16 @@
         },
         {
             "name": "zendframework/zend-cache",
-            "version": "2.6.1",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-cache.git",
-                "reference": "e2f62aaf4a8f884060483921a8d6d39d9087705d"
+                "reference": "33211da0598e8f20a8d425945e3d452a87c50364"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-cache/zipball/e2f62aaf4a8f884060483921a8d6d39d9087705d",
-                "reference": "e2f62aaf4a8f884060483921a8d6d39d9087705d",
+                "url": "https://api.github.com/repos/zendframework/zend-cache/zipball/33211da0598e8f20a8d425945e3d452a87c50364",
+                "reference": "33211da0598e8f20a8d425945e3d452a87c50364",
                 "shasum": ""
             },
             "require": {
@@ -4726,12 +4726,13 @@
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
+                "phpunit/phpunit": "^4.5",
                 "zendframework/zend-serializer": "^2.6",
-                "zendframework/zend-session": "^2.5"
+                "zendframework/zend-session": "^2.6.2"
             },
             "suggest": {
-                "ext-apcu": "APCU, to use the APC storage adapter",
+                "ext-apc": "APC or compatible extension, to use the APC storage adapter",
+                "ext-apcu": "APCU >= 5.1.0, to use the APCu storage adapter",
                 "ext-dba": "DBA, to use the DBA storage adapter",
                 "ext-memcache": "Memcache >= 2.0.0 to use the Memcache storage adapter",
                 "ext-memcached": "Memcached >= 1.0.0 to use the Memcached storage adapter",
@@ -4746,8 +4747,12 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev",
-                    "dev-develop": "2.7-dev"
+                    "dev-master": "2.7-dev",
+                    "dev-develop": "2.8-dev"
+                },
+                "zf": {
+                    "component": "Zend\\Cache",
+                    "config-provider": "Zend\\Cache\\ConfigProvider"
                 }
             },
             "autoload": {
@@ -4765,7 +4770,7 @@
                 "cache",
                 "zf2"
             ],
-            "time": "2016-02-12 16:26:56"
+            "time": "2016-04-12 15:55:27"
         },
         {
             "name": "zendframework/zend-config",
@@ -5277,16 +5282,16 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.7.6",
+            "version": "2.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-stdlib.git",
-                "reference": "4499760badfada27ee600f5c2cfd47d5263ccf1b"
+                "reference": "0e44eb46788f65e09e077eb7f44d2659143bcc1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-stdlib/zipball/4499760badfada27ee600f5c2cfd47d5263ccf1b",
-                "reference": "4499760badfada27ee600f5c2cfd47d5263ccf1b",
+                "url": "https://api.github.com/repos/zendframework/zend-stdlib/zipball/0e44eb46788f65e09e077eb7f44d2659143bcc1f",
+                "reference": "0e44eb46788f65e09e077eb7f44d2659143bcc1f",
                 "shasum": ""
             },
             "require": {
@@ -5332,7 +5337,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2016-02-19 16:02:11"
+            "time": "2016-04-12 21:17:31"
         },
         {
             "name": "zetacomponents/base",

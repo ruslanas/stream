@@ -46,9 +46,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $this->sess = $this->getMockBuilder(\Stream\Session::class)->getMock();
 
-        $this->validator->use(['Session', $this->sess]);
-        $this->validator->use($pdo);
-        $this->validator->use(new \modules\Users\Decorators\User($pdo));
+        $this->validator->uses(['Session', $this->sess]);
+        $this->validator->uses($pdo);
+        $this->validator->uses(new \modules\Users\Decorators\User($pdo));
                 
     }
 

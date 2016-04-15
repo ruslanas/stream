@@ -14,7 +14,7 @@ class TaskTest extends \Stream\Test\DatabaseTestCase {
 
         $this->task = new Tasks\model\Task($this->pdo);
 
-        $this->task->use(['Session', $this->session]);
+        $this->task->uses(['Session', $this->session]);
 
     }
 
