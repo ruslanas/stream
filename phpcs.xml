@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="StreamStandard">
+    <description>Stream coding standard.</description>
+    <file>lib/Stream</file>
+    <file>modules</file>
+    <rule ref="PEAR"/>
+    <exclude-pattern>*/Test/*</exclude-pattern>
+    <exclude-pattern>*/templates/*</exclude-pattern>
+</ruleset>

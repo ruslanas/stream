@@ -1,3 +1,5 @@
 {
     "files.eol": "\n",
+    "phpcs.standard": "phpcs.xml",
+    "phpmd.rules": "cleancode,codesize,design,unusedcode,naming",
 }

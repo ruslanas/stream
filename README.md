@@ -41,7 +41,7 @@ Test and create code coverage report
 ------------------------------------
 
 ```bash
-php vendor/bin/phpunit --testdox --coverage-html report
+vendor/bin/phpunit --testdox --coverage-html report
 ```
 
 NginX configuration
