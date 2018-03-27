@@ -25,7 +25,6 @@
         <include name="webroot/components/bootstrap/dist/**"/>
         <include name="webroot/components/jquery/dist/**"/>
         <include name="webroot/components/angular*/*.js"/>
-        <include name="webroot/components/wiz-markdown/wizMarkdown/*.js"/>
     
     </fileset>
 

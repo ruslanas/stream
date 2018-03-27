@@ -19,7 +19,6 @@ class Controller extends PageController {
         $this->_scripts = array_merge($this->_scripts, [
 
             '/components/angular-sanitize/angular-sanitize.min.js',
-            '/components/wiz-markdown/wizMarkdown/wizMarkdown.js',
 
             "/js/app.js",
 
